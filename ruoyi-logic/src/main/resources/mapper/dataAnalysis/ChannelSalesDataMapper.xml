@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.dataAnalysis.mapper.ChannelSalesDataMapper">
+
+    <resultMap type="ChannelSalesData" id="ChannelSalesDataResult">
+        <result property="id"    column="id"    />
+        <result property="firstLevelCategory"    column="first_level_category"    />
+        <result property="category"    column="category"    />
+        <result property="tongtuSku"    column="tongtu_sku"    />
+        <result property="productName"    column="product_name"    />
+        <result property="operationGroupName"    column="operation_group_name"    />
+        <result property="operator"    column="operator"    />
+        <result property="developmentGroupName"    column="development_group_name"    />
+        <result property="productDeveloper"    column="product_developer"    />
+        <result property="channel"    column="channel"    />
+        <result property="channelAccount"    column="channel_account"    />
+        <result property="operationDepartment"    column="operation_department"    />
+        <result property="storeCode"    column="store_code"    />
+        <result property="region"    column="region"    />
+        <result property="country"    column="country"    />
+        <result property="countryRegion"    column="country_region"    />
+        <result property="brand"    column="brand"    />
+        <result property="salesMode"    column="sales_mode"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="paymentSettlementDate"    column="payment_settlement_date"    />
+        <result property="shippingWarehouse"    column="shipping_warehouse"    />
+        <result property="shippingQuantity"    column="shipping_quantity"    />
+        <result property="revenueRmb"    column="revenue_rmb"    />
+        <result property="productCost"    column="product_cost"    />
+        <result property="firstMileShipping"    column="first_mile_shipping"    />
+        <result property="packagingCost"    column="packaging_cost"    />
+        <result property="logisticsShipping"    column="logistics_shipping"    />
+        <result property="channelTransactionFeeRmb"    column="channel_transaction_fee_rmb"    />
+        <result property="taxes"    column="taxes"    />
+        <result property="refund"    column="refund"    />
+        <result property="reshipmentAmount"    column="reshipment_amount"    />
+        <result property="sampleCost"    column="sample_cost"    />
+        <result property="unsoldSubsidy"    column="unsold_subsidy"    />
+        <result property="orderGrossProfit"    column="order_gross_profit"    />
+        <result property="orderGrossProfitRate"    column="order_gross_profit_rate"    />
+        <result property="advertisingPromotion"    column="advertising_promotion"    />
+        <result property="storageFee"    column="storage_fee"    />
+        <result property="removalFee"    column="removal_fee"    />
+        <result property="returnProcessingFee"    column="return_processing_fee"    />
+        <result property="otherFees"    column="other_fees"    />
+        <result property="unsoldBudget"    column="unsold_budget"    />
+        <result property="handlingFee"    column="handling_fee"    />
+        <result property="orderNetProfit"    column="order_net_profit"    />
+        <result property="roi"    column="roi"    />
+        <result property="daysToPositiveCashFlow"    column="days_to_positive_cash_flow"    />
+        <result property="verificationFormula"    column="verification_formula"    />
+        <result property="isGrossProfitPositive"    column="is_gross_profit_positive"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectChannelSalesDataVo">
+        select id, first_level_category, category, tongtu_sku, product_name, operation_group_name, operator, development_group_name, product_developer, channel, channel_account, operation_department, store_code, region, country, country_region, brand, sales_mode, order_number, payment_settlement_date, shipping_warehouse, shipping_quantity, revenue_rmb, product_cost, first_mile_shipping, packaging_cost, logistics_shipping, channel_transaction_fee_rmb, taxes, refund, reshipment_amount, sample_cost, unsold_subsidy, order_gross_profit, order_gross_profit_rate, advertising_promotion, storage_fee, removal_fee, return_processing_fee, other_fees, unsold_budget, handling_fee, order_net_profit, roi, days_to_positive_cash_flow, verification_formula, is_gross_profit_positive, created_at, updated_at, update_by from channel_sales_data
+    </sql>
+
+    <select id="selectChannelSalesDataList" parameterType="ChannelSalesData" resultMap="ChannelSalesDataResult">
+        <include refid="selectChannelSalesDataVo"/>
+        <where>
+            <if test="firstLevelCategory != null  and firstLevelCategory != ''"> and first_level_category = #{firstLevelCategory}</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="tongtuSku != null  and tongtuSku != ''"> and tongtu_sku = #{tongtuSku}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="operationGroupName != null  and operationGroupName != ''"> and operation_group_name like concat('%', #{operationGroupName}, '%')</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="developmentGroupName != null  and developmentGroupName != ''"> and development_group_name like concat('%', #{developmentGroupName}, '%')</if>
+            <if test="productDeveloper != null  and productDeveloper != ''"> and product_developer = #{productDeveloper}</if>
+            <if test="channel != null  and channel != ''"> and channel = #{channel}</if>
+            <if test="channelAccount != null  and channelAccount != ''"> and channel_account = #{channelAccount}</if>
+            <if test="operationDepartment != null  and operationDepartment != ''"> and operation_department = #{operationDepartment}</if>
+            <if test="storeCode != null  and storeCode != ''"> and store_code = #{storeCode}</if>
+            <if test="region != null  and region != ''"> and region = #{region}</if>
+            <if test="country != null  and country != ''"> and country = #{country}</if>
+            <if test="countryRegion != null  and countryRegion != ''"> and country_region = #{countryRegion}</if>
+            <if test="brand != null  and brand != ''"> and brand = #{brand}</if>
+            <if test="salesMode != null  and salesMode != ''"> and sales_mode = #{salesMode}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
+            <if test="paymentSettlementDate != null  and paymentSettlementDate != ''"> and payment_settlement_date = #{paymentSettlementDate}</if>
+            <if test="shippingWarehouse != null  and shippingWarehouse != ''"> and shipping_warehouse = #{shippingWarehouse}</if>
+            <if test="shippingQuantity != null "> and shipping_quantity = #{shippingQuantity}</if>
+            <if test="revenueRmb != null "> and revenue_rmb = #{revenueRmb}</if>
+            <if test="productCost != null "> and product_cost = #{productCost}</if>
+            <if test="firstMileShipping != null "> and first_mile_shipping = #{firstMileShipping}</if>
+            <if test="packagingCost != null "> and packaging_cost = #{packagingCost}</if>
+            <if test="logisticsShipping != null "> and logistics_shipping = #{logisticsShipping}</if>
+            <if test="channelTransactionFeeRmb != null "> and channel_transaction_fee_rmb = #{channelTransactionFeeRmb}</if>
+            <if test="taxes != null "> and taxes = #{taxes}</if>
+            <if test="refund != null "> and refund = #{refund}</if>
+            <if test="reshipmentAmount != null "> and reshipment_amount = #{reshipmentAmount}</if>
+            <if test="sampleCost != null "> and sample_cost = #{sampleCost}</if>
+            <if test="unsoldSubsidy != null "> and unsold_subsidy = #{unsoldSubsidy}</if>
+            <if test="orderGrossProfit != null "> and order_gross_profit = #{orderGrossProfit}</if>
+            <if test="orderGrossProfitRate != null "> and order_gross_profit_rate = #{orderGrossProfitRate}</if>
+            <if test="advertisingPromotion != null "> and advertising_promotion = #{advertisingPromotion}</if>
+            <if test="storageFee != null "> and storage_fee = #{storageFee}</if>
+            <if test="removalFee != null "> and removal_fee = #{removalFee}</if>
+            <if test="returnProcessingFee != null "> and return_processing_fee = #{returnProcessingFee}</if>
+            <if test="otherFees != null "> and other_fees = #{otherFees}</if>
+            <if test="unsoldBudget != null "> and unsold_budget = #{unsoldBudget}</if>
+            <if test="handlingFee != null "> and handling_fee = #{handlingFee}</if>
+            <if test="orderNetProfit != null "> and order_net_profit = #{orderNetProfit}</if>
+            <if test="roi != null "> and roi = #{roi}</if>
+            <if test="daysToPositiveCashFlow != null "> and days_to_positive_cash_flow = #{daysToPositiveCashFlow}</if>
+            <if test="verificationFormula != null "> and verification_formula = #{verificationFormula}</if>
+            <if test="isGrossProfitPositive != null "> and is_gross_profit_positive = #{isGrossProfitPositive}</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+            <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
+        </where>
+    </select>
+
+    <select id="selectChannelSalesDataById" parameterType="Integer" resultMap="ChannelSalesDataResult">
+        <include refid="selectChannelSalesDataVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertChannelSalesData" parameterType="ChannelSalesData" useGeneratedKeys="true" keyProperty="id">
+        insert into channel_sales_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="firstLevelCategory != null">first_level_category,</if>
+            <if test="category != null">category,</if>
+            <if test="tongtuSku != null">tongtu_sku,</if>
+            <if test="productName != null">product_name,</if>
+            <if test="operationGroupName != null">operation_group_name,</if>
+            <if test="operator != null">operator,</if>
+            <if test="developmentGroupName != null">development_group_name,</if>
+            <if test="productDeveloper != null">product_developer,</if>
+            <if test="channel != null">channel,</if>
+            <if test="channelAccount != null">channel_account,</if>
+            <if test="operationDepartment != null">operation_department,</if>
+            <if test="storeCode != null">store_code,</if>
+            <if test="region != null">region,</if>
+            <if test="country != null">country,</if>
+            <if test="countryRegion != null">country_region,</if>
+            <if test="brand != null">brand,</if>
+            <if test="salesMode != null">sales_mode,</if>
+            <if test="orderNumber != null">order_number,</if>
+            <if test="paymentSettlementDate != null">payment_settlement_date,</if>
+            <if test="shippingWarehouse != null">shipping_warehouse,</if>
+            <if test="shippingQuantity != null">shipping_quantity,</if>
+            <if test="revenueRmb != null">revenue_rmb,</if>
+            <if test="productCost != null">product_cost,</if>
+            <if test="firstMileShipping != null">first_mile_shipping,</if>
+            <if test="packagingCost != null">packaging_cost,</if>
+            <if test="logisticsShipping != null">logistics_shipping,</if>
+            <if test="channelTransactionFeeRmb != null">channel_transaction_fee_rmb,</if>
+            <if test="taxes != null">taxes,</if>
+            <if test="refund != null">refund,</if>
+            <if test="reshipmentAmount != null">reshipment_amount,</if>
+            <if test="sampleCost != null">sample_cost,</if>
+            <if test="unsoldSubsidy != null">unsold_subsidy,</if>
+            <if test="orderGrossProfit != null">order_gross_profit,</if>
+            <if test="orderGrossProfitRate != null">order_gross_profit_rate,</if>
+            <if test="advertisingPromotion != null">advertising_promotion,</if>
+            <if test="storageFee != null">storage_fee,</if>
+            <if test="removalFee != null">removal_fee,</if>
+            <if test="returnProcessingFee != null">return_processing_fee,</if>
+            <if test="otherFees != null">other_fees,</if>
+            <if test="unsoldBudget != null">unsold_budget,</if>
+            <if test="handlingFee != null">handling_fee,</if>
+            <if test="orderNetProfit != null">order_net_profit,</if>
+            <if test="roi != null">roi,</if>
+            <if test="daysToPositiveCashFlow != null">days_to_positive_cash_flow,</if>
+            <if test="verificationFormula != null">verification_formula,</if>
+            <if test="isGrossProfitPositive != null">is_gross_profit_positive,</if>
+            <if test="updateBy != null">update_by,</if>
+            created_at
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="firstLevelCategory != null">#{firstLevelCategory},</if>
+            <if test="category != null">#{category},</if>
+            <if test="tongtuSku != null">#{tongtuSku},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="operationGroupName != null">#{operationGroupName},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="developmentGroupName != null">#{developmentGroupName},</if>
+            <if test="productDeveloper != null">#{productDeveloper},</if>
+            <if test="channel != null">#{channel},</if>
+            <if test="channelAccount != null">#{channelAccount},</if>
+            <if test="operationDepartment != null">#{operationDepartment},</if>
+            <if test="storeCode != null">#{storeCode},</if>
+            <if test="region != null">#{region},</if>
+            <if test="country != null">#{country},</if>
+            <if test="countryRegion != null">#{countryRegion},</if>
+            <if test="brand != null">#{brand},</if>
+            <if test="salesMode != null">#{salesMode},</if>
+            <if test="orderNumber != null">#{orderNumber},</if>
+            <if test="paymentSettlementDate != null">#{paymentSettlementDate},</if>
+            <if test="shippingWarehouse != null">#{shippingWarehouse},</if>
+            <if test="shippingQuantity != null">#{shippingQuantity},</if>
+            <if test="revenueRmb != null">#{revenueRmb},</if>
+            <if test="productCost != null">#{productCost},</if>
+            <if test="firstMileShipping != null">#{firstMileShipping},</if>
+            <if test="packagingCost != null">#{packagingCost},</if>
+            <if test="logisticsShipping != null">#{logisticsShipping},</if>
+            <if test="channelTransactionFeeRmb != null">#{channelTransactionFeeRmb},</if>
+            <if test="taxes != null">#{taxes},</if>
+            <if test="refund != null">#{refund},</if>
+            <if test="reshipmentAmount != null">#{reshipmentAmount},</if>
+            <if test="sampleCost != null">#{sampleCost},</if>
+            <if test="unsoldSubsidy != null">#{unsoldSubsidy},</if>
+            <if test="orderGrossProfit != null">#{orderGrossProfit},</if>
+            <if test="orderGrossProfitRate != null">#{orderGrossProfitRate},</if>
+            <if test="advertisingPromotion != null">#{advertisingPromotion},</if>
+            <if test="storageFee != null">#{storageFee},</if>
+            <if test="removalFee != null">#{removalFee},</if>
+            <if test="returnProcessingFee != null">#{returnProcessingFee},</if>
+            <if test="otherFees != null">#{otherFees},</if>
+            <if test="unsoldBudget != null">#{unsoldBudget},</if>
+            <if test="handlingFee != null">#{handlingFee},</if>
+            <if test="orderNetProfit != null">#{orderNetProfit},</if>
+            <if test="roi != null">#{roi},</if>
+            <if test="daysToPositiveCashFlow != null">#{daysToPositiveCashFlow},</if>
+            <if test="verificationFormula != null">#{verificationFormula},</if>
+            <if test="isGrossProfitPositive != null">#{isGrossProfitPositive},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateChannelSalesData" parameterType="ChannelSalesData">
+        update channel_sales_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="firstLevelCategory != null">first_level_category = #{firstLevelCategory},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="tongtuSku != null">tongtu_sku = #{tongtuSku},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="operationGroupName != null">operation_group_name = #{operationGroupName},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="developmentGroupName != null">development_group_name = #{developmentGroupName},</if>
+            <if test="productDeveloper != null">product_developer = #{productDeveloper},</if>
+            <if test="channel != null">channel = #{channel},</if>
+            <if test="channelAccount != null">channel_account = #{channelAccount},</if>
+            <if test="operationDepartment != null">operation_department = #{operationDepartment},</if>
+            <if test="storeCode != null">store_code = #{storeCode},</if>
+            <if test="region != null">region = #{region},</if>
+            <if test="country != null">country = #{country},</if>
+            <if test="countryRegion != null">country_region = #{countryRegion},</if>
+            <if test="brand != null">brand = #{brand},</if>
+            <if test="salesMode != null">sales_mode = #{salesMode},</if>
+            <if test="orderNumber != null">order_number = #{orderNumber},</if>
+            <if test="paymentSettlementDate != null">payment_settlement_date = #{paymentSettlementDate},</if>
+            <if test="shippingWarehouse != null">shipping_warehouse = #{shippingWarehouse},</if>
+            <if test="shippingQuantity != null">shipping_quantity = #{shippingQuantity},</if>
+            <if test="revenueRmb != null">revenue_rmb = #{revenueRmb},</if>
+            <if test="productCost != null">product_cost = #{productCost},</if>
+            <if test="firstMileShipping != null">first_mile_shipping = #{firstMileShipping},</if>
+            <if test="packagingCost != null">packaging_cost = #{packagingCost},</if>
+            <if test="logisticsShipping != null">logistics_shipping = #{logisticsShipping},</if>
+            <if test="channelTransactionFeeRmb != null">channel_transaction_fee_rmb = #{channelTransactionFeeRmb},</if>
+            <if test="taxes != null">taxes = #{taxes},</if>
+            <if test="refund != null">refund = #{refund},</if>
+            <if test="reshipmentAmount != null">reshipment_amount = #{reshipmentAmount},</if>
+            <if test="sampleCost != null">sample_cost = #{sampleCost},</if>
+            <if test="unsoldSubsidy != null">unsold_subsidy = #{unsoldSubsidy},</if>
+            <if test="orderGrossProfit != null">order_gross_profit = #{orderGrossProfit},</if>
+            <if test="orderGrossProfitRate != null">order_gross_profit_rate = #{orderGrossProfitRate},</if>
+            <if test="advertisingPromotion != null">advertising_promotion = #{advertisingPromotion},</if>
+            <if test="storageFee != null">storage_fee = #{storageFee},</if>
+            <if test="removalFee != null">removal_fee = #{removalFee},</if>
+            <if test="returnProcessingFee != null">return_processing_fee = #{returnProcessingFee},</if>
+            <if test="otherFees != null">other_fees = #{otherFees},</if>
+            <if test="unsoldBudget != null">unsold_budget = #{unsoldBudget},</if>
+            <if test="handlingFee != null">handling_fee = #{handlingFee},</if>
+            <if test="orderNetProfit != null">order_net_profit = #{orderNetProfit},</if>
+            <if test="roi != null">roi = #{roi},</if>
+            <if test="daysToPositiveCashFlow != null">days_to_positive_cash_flow = #{daysToPositiveCashFlow},</if>
+            <if test="verificationFormula != null">verification_formula = #{verificationFormula},</if>
+            <if test="isGrossProfitPositive != null">is_gross_profit_positive = #{isGrossProfitPositive},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            updated_at = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteChannelSalesDataById" parameterType="Integer">
+        delete from channel_sales_data where id = #{id}
+    </delete>
+
+    <delete id="deleteChannelSalesDataByIds" parameterType="String">
+        delete from channel_sales_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

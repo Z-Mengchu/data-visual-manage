@@ -73,8 +73,8 @@ export default {
       title: process.env.VUE_APP_TITLE,
       codeUrl: "",
       loginForm: {
-        username: "admin",
-        password: "admin123",
+        username: "",
+        password: "",
         rememberMe: false,
         code: "",
         uuid: ""
@@ -178,15 +178,15 @@ export default {
   padding: 25px 25px 5px 25px;
   z-index: 1;
   .el-input {
-    height: 38px;
+    height: 40px;
     input {
-      height: 38px;
+      height: 40px;
     }
   }
   .input-icon {
     height: 39px;
     width: 14px;
-    margin-left: 2px;
+    margin-left: 0px;
   }
 }
 .login-tip {
@@ -196,7 +196,7 @@ export default {
 }
 .login-code {
   width: 33%;
-  height: 38px;
+  height: 40px;
   float: right;
   img {
     cursor: pointer;
@@ -216,6 +216,7 @@ export default {
   letter-spacing: 1px;
 }
 .login-code-img {
-  height: 38px;
+  height: 40px;
+  padding-left: 12px;
 }
 </style>
