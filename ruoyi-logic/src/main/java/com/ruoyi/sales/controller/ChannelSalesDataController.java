@@ -1,8 +1,7 @@
-package com.ruoyi.dataAnalysis.controller;
+package com.ruoyi.sales.controller;
 
 import java.util.List;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.dataAnalysis.domain.ChannelSalesData;
-import com.ruoyi.dataAnalysis.service.IChannelSalesDataService;
+import com.ruoyi.sales.domain.ChannelSalesData;
+import com.ruoyi.sales.service.IChannelSalesDataService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2025-09-03
  */
 @RestController
-@RequestMapping("/dataAnalysis/salesData")
+@RequestMapping("/sale/data")
 public class ChannelSalesDataController extends BaseController
 {
     @Autowired
@@ -40,7 +39,7 @@ public class ChannelSalesDataController extends BaseController
     /**
      * 查询全渠道销售数据分析列表
      */
-    @PreAuthorize("@ss.hasPermi('dataAnalysis:salesData:list')")
+    @PreAuthorize("@ss.hasPermi('sale:data:list')")
     @GetMapping("/list")
     public TableDataInfo list(ChannelSalesData channelSalesData)
     {
@@ -52,7 +51,7 @@ public class ChannelSalesDataController extends BaseController
     /**
      * 导出全渠道销售数据分析列表
      */
-    @PreAuthorize("@ss.hasPermi('dataAnalysis:salesData:export')")
+    @PreAuthorize("@ss.hasPermi('sale:data:export')")
     @Log(title = "全渠道销售数据分析", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ChannelSalesData channelSalesData)
@@ -65,7 +64,7 @@ public class ChannelSalesDataController extends BaseController
     /**
      * 获取全渠道销售数据分析详细信息
      */
-    @PreAuthorize("@ss.hasPermi('dataAnalysis:salesData:query')")
+    @PreAuthorize("@ss.hasPermi('sale:data:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
@@ -75,18 +74,19 @@ public class ChannelSalesDataController extends BaseController
     /**
      * 新增全渠道销售数据分析
      */
-    @PreAuthorize("@ss.hasPermi('dataAnalysis:salesData:add')")
+    @PreAuthorize("@ss.hasPermi('sale:data:add')")
     @Log(title = "全渠道销售数据分析", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ChannelSalesData channelSalesData)
     {
+        channelSalesData.setUpdateBy(getUsername());
         return toAjax(channelSalesDataService.insertChannelSalesData(channelSalesData));
     }
 
     /**
      * 修改全渠道销售数据分析
      */
-    @PreAuthorize("@ss.hasPermi('dataAnalysis:salesData:edit')")
+    @PreAuthorize("@ss.hasPermi('sale:data:edit')")
     @Log(title = "全渠道销售数据分析", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ChannelSalesData channelSalesData)
@@ -98,7 +98,7 @@ public class ChannelSalesDataController extends BaseController
     /**
      * 删除全渠道销售数据分析
      */
-    @PreAuthorize("@ss.hasPermi('dataAnalysis:salesData:remove')")
+    @PreAuthorize("@ss.hasPermi('sale:data:remove')")
     @Log(title = "全渠道销售数据分析", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Integer[] ids)
@@ -110,7 +110,7 @@ public class ChannelSalesDataController extends BaseController
      * 导入数据
      */
     @Log(title = "销售数据管理", businessType = BusinessType.IMPORT)
-    @PreAuthorize("@ss.hasPermi('dataAnalysis:salesData:import')")
+    @PreAuthorize("@ss.hasPermi('sale:data:import')")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
     {

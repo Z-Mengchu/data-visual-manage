@@ -1,4 +1,4 @@
-package com.ruoyi.dataAnalysis.domain;
+package com.ruoyi.sales.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -23,6 +24,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class ChannelSalesData extends BaseEntity
 {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 主键ID */

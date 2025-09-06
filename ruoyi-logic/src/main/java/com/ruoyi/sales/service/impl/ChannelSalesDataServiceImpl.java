@@ -1,10 +1,8 @@
-package com.ruoyi.dataAnalysis.service.impl;
+package com.ruoyi.sales.service.impl;
 
 import java.util.List;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
 import jakarta.validation.Validator;
@@ -12,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.dataAnalysis.mapper.ChannelSalesDataMapper;
-import com.ruoyi.dataAnalysis.domain.ChannelSalesData;
-import com.ruoyi.dataAnalysis.service.IChannelSalesDataService;
+import com.ruoyi.sales.mapper.ChannelSalesDataMapper;
+import com.ruoyi.sales.domain.ChannelSalesData;
+import com.ruoyi.sales.service.IChannelSalesDataService;
 
 /**
  * 全渠道销售数据分析Service业务层处理
@@ -117,7 +115,7 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
     public String importSalesData(List<ChannelSalesData> salesDataList, boolean updateSupport, String operName) {
         if (StringUtils.isNull(salesDataList) || salesDataList.size() == 0)
         {
-            throw new ServiceException("导入用户数据不能为空！");
+            throw new ServiceException("导入数据不能为空！");
         }
         int successNum = 0;
         int failureNum = 0;
@@ -158,7 +156,7 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
             catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、订单号 " + salesData.getOrderNumber() + " 导入失败：";
+                String msg = "<br/>第 " + failureNum + "条数据导入失败：";
                 failureMsg.append(msg + e.getMessage());
                 log.error(msg, e);
             }

@@ -137,248 +137,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="付款日期/结算时间" prop="paymentSettlementDate">
-        <el-input
-          v-model="queryParams.paymentSettlementDate"
-          placeholder="请输入付款日期/结算时间"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="发货仓库" prop="shippingWarehouse">
-        <el-input
-          v-model="queryParams.shippingWarehouse"
-          placeholder="请输入发货仓库"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="发货数量" prop="shippingQuantity">
-        <el-input
-          v-model="queryParams.shippingQuantity"
-          placeholder="请输入发货数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="收入(人民币)" prop="revenueRmb">
-        <el-input
-          v-model="queryParams.revenueRmb"
-          placeholder="请输入收入(人民币)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="商品成本" prop="productCost">
-        <el-input
-          v-model="queryParams.productCost"
-          placeholder="请输入商品成本"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="头程运费" prop="firstMileShipping">
-        <el-input
-          v-model="queryParams.firstMileShipping"
-          placeholder="请输入头程运费"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="包装费用" prop="packagingCost">
-        <el-input
-          v-model="queryParams.packagingCost"
-          placeholder="请输入包装费用"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="物流商运费" prop="logisticsShipping">
-        <el-input
-          v-model="queryParams.logisticsShipping"
-          placeholder="请输入物流商运费"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="渠道成交费(人民币)" prop="channelTransactionFeeRmb">
-        <el-input
-          v-model="queryParams.channelTransactionFeeRmb"
-          placeholder="请输入渠道成交费(人民币)"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="税费" prop="taxes">
-        <el-input
-          v-model="queryParams.taxes"
-          placeholder="请输入税费"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="退款" prop="refund">
-        <el-input
-          v-model="queryParams.refund"
-          placeholder="请输入退款"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="补发金额" prop="reshipmentAmount">
-        <el-input
-          v-model="queryParams.reshipmentAmount"
-          placeholder="请输入补发金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="送样成本" prop="sampleCost">
-        <el-input
-          v-model="queryParams.sampleCost"
-          placeholder="请输入送样成本"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="滞销补贴" prop="unsoldSubsidy">
-        <el-input
-          v-model="queryParams.unsoldSubsidy"
-          placeholder="请输入滞销补贴"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="订单毛利" prop="orderGrossProfit">
-        <el-input
-          v-model="queryParams.orderGrossProfit"
-          placeholder="请输入订单毛利"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="订单毛利率" prop="orderGrossProfitRate">
-        <el-input
-          v-model="queryParams.orderGrossProfitRate"
-          placeholder="请输入订单毛利率"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="广告/促销" prop="advertisingPromotion">
-        <el-input
-          v-model="queryParams.advertisingPromotion"
-          placeholder="请输入广告/促销"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="仓储费" prop="storageFee">
-        <el-input
-          v-model="queryParams.storageFee"
-          placeholder="请输入仓储费"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="移除费" prop="removalFee">
-        <el-input
-          v-model="queryParams.removalFee"
-          placeholder="请输入移除费"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="退货处理费" prop="returnProcessingFee">
-        <el-input
-          v-model="queryParams.returnProcessingFee"
-          placeholder="请输入退货处理费"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="其他费用" prop="otherFees">
-        <el-input
-          v-model="queryParams.otherFees"
-          placeholder="请输入其他费用"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="滞销品预算" prop="unsoldBudget">
-        <el-input
-          v-model="queryParams.unsoldBudget"
-          placeholder="请输入滞销品预算"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="手续费" prop="handlingFee">
-        <el-input
-          v-model="queryParams.handlingFee"
-          placeholder="请输入手续费"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="订单净利" prop="orderNetProfit">
-        <el-input
-          v-model="queryParams.orderNetProfit"
-          placeholder="请输入订单净利"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="ROI" prop="roi">
-        <el-input
-          v-model="queryParams.roi"
-          placeholder="请输入ROI"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="产品现金流为正所需的天数" prop="daysToPositiveCashFlow">
-        <el-input
-          v-model="queryParams.daysToPositiveCashFlow"
-          placeholder="请输入产品现金流为正所需的天数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="验算公式" prop="verificationFormula">
-        <el-input
-          v-model="queryParams.verificationFormula"
-          placeholder="请输入验算公式"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="毛利是否大于0" prop="isGrossProfitPositive">
-        <el-select v-model="queryParams.isGrossProfitPositive" placeholder="请选择毛利是否大于0" clearable>
-          <el-option
-            v-for="dict in dict.type.logic_yes_no"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createdAt">
-        <el-date-picker clearable
-                        v-model="queryParams.createdAt"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择创建时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="更新时间" prop="updatedAt">
-        <el-date-picker clearable
-                        v-model="queryParams.updatedAt"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择更新时间">
-        </el-date-picker>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -393,7 +151,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['dataAnalysis:salesData:add']"
+          v-hasPermi="['sale:data:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -404,7 +162,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['dataAnalysis:salesData:edit']"
+          v-hasPermi="['sale:data:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -415,7 +173,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['dataAnalysis:salesData:remove']"
+          v-hasPermi="['sale:data:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -425,7 +183,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['dataAnalysis:salesData:export']"
+          v-hasPermi="['sale:data:export']"
         >导出</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -435,13 +193,14 @@
           icon="el-icon-upload2"
           size="mini"
           @click="handleImport"
-          v-hasPermi="['dataAnalysis:salesData:import']">导入</el-button>
+          v-hasPermi="['sale:data:import']"
+        >导入</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="salesDataList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" fixed="left"/>
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="一级品类" align="center" prop="firstLevelCategory" />
       <el-table-column label="品类" align="center" prop="category" />
@@ -503,21 +262,21 @@
           <span>{{ parseTime(scope.row.updatedAt, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150" fixed="right">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['dataAnalysis:salesData:edit']"
+            v-hasPermi="['sale:data:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['dataAnalysis:salesData:remove']"
+            v-hasPermi="['sale:data:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -724,7 +483,7 @@
 </template>
 
 <script>
-import { listSalesData, getSalesData, delSalesData, addSalesData, updateSalesData } from "@/api/dataAnalysis/salesData"
+import { listSalesData, getSalesData, delSalesData, addSalesData, updateSalesData } from "@/api/saleManage/salesData"
 import { getToken } from "@/utils/auth"
 
 export default {
@@ -821,7 +580,7 @@ export default {
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/dataAnalysis/salesData/importData"
+        url: process.env.VUE_APP_BASE_API + "/sale/data/importData"
       }
     }
   },
@@ -963,7 +722,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('dataAnalysis/salesData/export', {
+      this.download('sale/data/export', {
         ...this.queryParams
       }, `salesData_${new Date().getTime()}.xlsx`)
     },
@@ -974,7 +733,7 @@ export default {
     },
     /** 下载模板操作 */
     importTemplate() {
-      this.download('dataAnalysis/salesData/importTemplate', {
+      this.download('sale/data/importTemplate', {
       }, `channel_sales_data_template_${new Date().getTime()}.xlsx`)
     },
     // 文件上传中处理

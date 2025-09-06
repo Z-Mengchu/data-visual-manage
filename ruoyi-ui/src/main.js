@@ -59,6 +59,9 @@ Vue.component('ImagePreview', ImagePreview)
 Vue.use(directive)
 Vue.use(plugins)
 DictData.install()
+import ElementUI from 'element-ui';
+// 修改 el-dialog 默认点击遮照不关闭
+ElementUI.Dialog.props.closeOnClickModal.default = false;
 
 /**
  * If you don't want to use mock-server

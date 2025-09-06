@@ -1,16 +1,16 @@
-package com.ruoyi.dataAnalysis.mapper;
+package com.ruoyi.sales.service;
 
+import com.ruoyi.sales.domain.ChannelSalesData;
 import java.util.List;
-import com.ruoyi.dataAnalysis.domain.ChannelSalesData;
-import org.apache.ibatis.annotations.Select;
+
 
 /**
- * 全渠道销售数据分析Mapper接口
+ * 全渠道销售数据分析Service接口
  *
  * @author ZMJ
  * @date 2025-09-02
  */
-public interface ChannelSalesDataMapper
+public interface IChannelSalesDataService
 {
     /**
      * 查询全渠道销售数据分析
@@ -45,7 +45,15 @@ public interface ChannelSalesDataMapper
     public int updateChannelSalesData(ChannelSalesData channelSalesData);
 
     /**
-     * 删除全渠道销售数据分析
+     * 批量删除全渠道销售数据分析
+     *
+     * @param ids 需要删除的全渠道销售数据分析主键集合
+     * @return 结果
+     */
+    public int deleteChannelSalesDataByIds(Integer[] ids);
+
+    /**
+     * 删除全渠道销售数据分析信息
      *
      * @param id 全渠道销售数据分析主键
      * @return 结果
@@ -53,16 +61,12 @@ public interface ChannelSalesDataMapper
     public int deleteChannelSalesDataById(Integer id);
 
     /**
-     * 批量删除全渠道销售数据分析
+     * 导入销售数据
      *
-     * @param ids 需要删除的数据主键集合
+     * @param salesDataList 销售数据列表
+     * @param updateSupport 是否更新已经存在的销售数据
+     * @param operName 操作用户
      * @return 结果
      */
-    public int deleteChannelSalesDataByIds(Integer[] ids);
-
-    /**
-     * 根据订单号查询数据
-     */
-    @Select("select * from channel_sales_data where order_number = #{orderNumber}")
-    public ChannelSalesData selectChannelSalesDataByOrderNumber(String orderNumber);
+    String importSalesData(List<ChannelSalesData> salesDataList, boolean updateSupport, String operName);
 }

@@ -12,18 +12,10 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -447,13 +439,15 @@ public class ExcelUtil<T>
                     }
                     else if (Date.class == fieldType)
                     {
-                        if (val instanceof String)
-                        {
-                            val = DateUtils.parseDate(val);
-                        }
-                        else if (val instanceof Double)
-                        {
-                            val = DateUtil.getJavaDate((Double) val);
+                        try {
+                            if (val instanceof String) {
+                                val = DateUtils.parseDate(val);
+                            } else if (val instanceof Double) {
+                                val = DateUtil.getJavaDate((Double) val);
+                            }
+                        } catch (Exception dateEx) {
+                            log.warn("日期转换失败，字段: {}, 值: {}", field.getName(), val);
+                            val = null; // 设置为null而不是抛出异常
                         }
                     }
                     else if (Boolean.TYPE == fieldType || Boolean.class == fieldType)
@@ -488,11 +482,13 @@ public class ExcelUtil<T>
                         {
                             StringBuilder propertyString = new StringBuilder();
                             List<PictureData> images = pictures.get(row.getRowNum() + "_" + entry.getKey());
-                            for (PictureData picture : images)
-                            {
-                                byte[] data = picture.getData();
-                                String fileName = FileUtils.writeImportBytes(data);
-                                propertyString.append(fileName).append(SEPARATOR);
+                            if (CollectionUtils.isNotEmpty(images)){
+                                for (PictureData picture : images)
+                                {
+                                    byte[] data = picture.getData();
+                                    String fileName = FileUtils.writeImportBytes(data);
+                                    propertyString.append(fileName).append(SEPARATOR);
+                                }
                             }
                             val = StringUtils.stripEnd(propertyString.toString(), SEPARATOR);
                         }
@@ -1674,7 +1670,7 @@ public class ExcelUtil<T>
                             case NUMERIC -> val = evaluatedValue.getNumberValue();
                             case STRING -> val = evaluatedValue.getStringValue();
                             case BOOLEAN -> val = evaluatedValue.getBooleanValue();
-                            case ERROR -> val = evaluatedValue.getErrorValue();
+                            case ERROR -> val = "";
                         }
                     }else val = cell.getNumericCellValue();
                     if (DateUtil.isCellDateFormatted(cell))
