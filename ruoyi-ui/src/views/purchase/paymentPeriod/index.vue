@@ -279,6 +279,27 @@
           <dict-tag :options="dict.type.logic_yes_no" :value="scope.row.isPaid"/>
         </template>
       </el-table-column>
+      <el-table-column label="是否已逾期" align="center" prop="isOverdue">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.logic_yes_no" :value="scope.row.isOverdue"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="距到期天数" align="center" prop="daysUntilDue">
+        <template slot-scope="scope" v-if="scope.row.daysUntilDue">
+          <el-tag type="success"
+                  v-if="scope.row.daysUntilDue > 10">
+            {{ scope.row.daysUntilDue }}
+          </el-tag>
+          <el-tag type="warning"
+                  v-if="scope.row.daysUntilDue > 5 && scope.row.daysUntilDue <= 10">
+            {{ scope.row.daysUntilDue }}
+          </el-tag>
+          <el-tag type="danger"
+                  v-if="scope.row.daysUntilDue <= 5">
+            {{ scope.row.daysUntilDue }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createdAt" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createdAt) }}</span>
@@ -493,6 +514,8 @@ export default {
         duePaymentDate: null,
         purchaseDepartment: null,
         isPaid: null,
+        isOverDue: null,
+        daysUntilDue: null,
         createdAt: null,
         updatedAt: null,
       },

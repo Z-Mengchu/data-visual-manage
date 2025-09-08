@@ -40,7 +40,9 @@ public class PurchasePaymentPeriodServiceImpl implements IPurchasePaymentPeriodS
     @Override
     public PurchasePaymentPeriod selectPurchasePaymentPeriodById(Integer id)
     {
-        return purchasePaymentPeriodMapper.selectPurchasePaymentPeriodById(id);
+        PurchasePaymentPeriod purchasePaymentPeriod = purchasePaymentPeriodMapper.selectPurchasePaymentPeriodById(id);
+        purchasePaymentPeriod.calculateOverdueStatus();
+        return purchasePaymentPeriod;
     }
 
     /**
@@ -52,7 +54,11 @@ public class PurchasePaymentPeriodServiceImpl implements IPurchasePaymentPeriodS
     @Override
     public List<PurchasePaymentPeriod> selectPurchasePaymentPeriodList(PurchasePaymentPeriod purchasePaymentPeriod)
     {
-        return purchasePaymentPeriodMapper.selectPurchasePaymentPeriodList(purchasePaymentPeriod);
+        List<PurchasePaymentPeriod> purchasePaymentPeriodList = purchasePaymentPeriodMapper.selectPurchasePaymentPeriodList(purchasePaymentPeriod);
+        for (PurchasePaymentPeriod paymentPeriod : purchasePaymentPeriodList) {
+            paymentPeriod.calculateOverdueStatus();
+        }
+        return purchasePaymentPeriodList;
     }
 
     /**

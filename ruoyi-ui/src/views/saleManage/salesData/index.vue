@@ -200,7 +200,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="salesDataList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" fixed="left"/>
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="一级品类" align="center" prop="firstLevelCategory" />
       <el-table-column label="品类" align="center" prop="category" />
@@ -254,12 +254,12 @@
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createdAt" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createdAt, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createdAt) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新时间" align="center" prop="updatedAt" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updatedAt, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updatedAt) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="120" fixed="right">
@@ -437,22 +437,6 @@
               :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createdAt">
-          <el-date-picker clearable
-                          v-model="form.createdAt"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择创建时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="更新时间" prop="updatedAt">
-          <el-date-picker clearable
-                          v-model="form.updatedAt"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择更新时间">
-          </el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

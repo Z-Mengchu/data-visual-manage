@@ -3,6 +3,8 @@ package com.ruoyi.purchase.domain;
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
@@ -116,6 +118,13 @@ public class PurchasePaymentPeriod extends BaseEntity
     @Excel(name = "是否已付款", readConverterExp = "0=否,1=是")
     private String isPaid;
 
+    // 计算字段
+    @Excel(name = "是否逾期", readConverterExp = "0=否,1=是", type = Excel.Type.EXPORT)
+    private String isOverdue; // 是否已逾期
+
+    @Excel(name = "距到期天数", type = Excel.Type.EXPORT)
+    private Integer daysUntilDue; // 距到期天数
+
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
@@ -123,5 +132,20 @@ public class PurchasePaymentPeriod extends BaseEntity
     /** 更新时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedAt;
+
+    public void calculateOverdueStatus() {
+        if (duePaymentDate == null || "1".equals(isPaid)) {
+            this.isOverdue = "0";
+            this.daysUntilDue = null;
+            return;
+        }
+
+        Date now = new Date();
+        long diff = duePaymentDate.getTime() - now.getTime();
+        long daysDiff = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+
+        this.daysUntilDue = Integer.valueOf(String.valueOf(daysDiff));
+        this.isOverdue = daysDiff < 0 ? "1" : "0";
+    }
 
 }
