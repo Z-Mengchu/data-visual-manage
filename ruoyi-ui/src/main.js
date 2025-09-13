@@ -19,6 +19,7 @@ import './permission' // permission control
 import { getDicts } from "@/api/system/dict/data"
 import { getConfigKey } from "@/api/system/config"
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@/utils/ruoyi"
+import dataV from '@jiaminghi/data-view';
 // 分页组件
 import Pagination from "@/components/Pagination"
 // 自定义表格工具组件
@@ -56,12 +57,30 @@ Vue.component('FileUpload', FileUpload)
 Vue.component('ImageUpload', ImageUpload)
 Vue.component('ImagePreview', ImagePreview)
 
+// 引入全局css
+// import './assets/scss/style.scss';
+// 按需引入vue-awesome图标
+import Icon from 'vue-awesome/components/Icon';
+import 'vue-awesome/icons/chart-bar.js';
+import 'vue-awesome/icons/chart-area.js';
+import 'vue-awesome/icons/chart-pie.js';
+import 'vue-awesome/icons/chart-line.js';
+import 'vue-awesome/icons/align-left.js';
+import 'vue-awesome/icons/award.js';
+import 'vue-awesome/icons/shopping-bag.js';
+import 'vue-awesome/icons/map-pin.js';
+import 'vue-awesome/icons/globe.js';
+
+Vue.component('icon', Icon);
 Vue.use(directive)
 Vue.use(plugins)
+Vue.use(dataV);
 DictData.install()
 import ElementUI from 'element-ui';
 // 修改 el-dialog 默认点击遮照不关闭
 ElementUI.Dialog.props.closeOnClickModal.default = false;
+import * as echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 /**
  * If you don't want to use mock-server

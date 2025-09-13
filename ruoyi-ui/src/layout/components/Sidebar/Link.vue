@@ -7,6 +7,9 @@
 <script>
 import { isExternal } from '@/utils/validate'
 
+//需要在新标签页打开的路由
+const blankList = ['/sales-dashboard']
+
 export default {
   props: {
     to: {

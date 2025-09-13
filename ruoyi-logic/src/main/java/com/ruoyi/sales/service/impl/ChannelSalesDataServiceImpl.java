@@ -1,6 +1,9 @@
 package com.ruoyi.sales.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
@@ -172,4 +175,6 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
         }
         return successMsg.toString();
     }
+
+
 }

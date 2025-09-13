@@ -1,6 +1,8 @@
 package com.ruoyi.sales.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.sales.domain.ChannelSalesData;
 import org.apache.ibatis.annotations.Select;
 
