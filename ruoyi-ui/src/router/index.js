@@ -91,8 +91,7 @@ export const constantRoutes = [
   {
     path: '/sales-dashboard',
     component: () => import('@/views/saleManage/dataVisual/SalesDashboard'),
-    name: 'SalesDashboard',
-    meta: { title: '销售数据大屏', icon: 'dashboard' }
+    hidden: true,
   }
 ]
 

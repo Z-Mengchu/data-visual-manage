@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.sales.mapper.TEMUOrderDetailsMapper">
+
+    <resultMap type="TEMUOrderDetails" id="TEMUOrderDetailsResult">
+        <result property="id"    column="id"    />
+        <result property="shipmentDate"    column="shipment_date"    />
+        <result property="isReplenishment"    column="is_replenishment"    />
+        <result property="tongtuSku"    column="tongtu_sku"    />
+        <result property="productName"    column="product_name"    />
+        <result property="category"    column="category"    />
+        <result property="shipmentQuantity"    column="shipment_quantity"    />
+        <result property="channel"    column="channel"    />
+        <result property="channelAccount"    column="channel_account"    />
+        <result property="salesSite"    column="sales_site"    />
+        <result property="shipmentWarehouse"    column="shipment_warehouse"    />
+        <result property="packageNumber"    column="package_number"    />
+        <result property="shippingMethod"    column="shipping_method"    />
+        <result property="logisticsNumber"    column="logistics_number"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="buyerName"    column="buyer_name"    />
+        <result property="countryRegion"    column="country_region"    />
+        <result property="paymentDate"    column="payment_date"    />
+        <result property="productDeveloper"    column="product_developer"    />
+        <result property="receiptCurrency"    column="receipt_currency"    />
+        <result property="totalOrderPrice"    column="total_order_price"    />
+        <result property="totalOrderPriceCny"    column="total_order_price_cny"    />
+        <result property="sellingPrice"    column="selling_price"    />
+        <result property="sellingPriceCny"    column="selling_price_cny"    />
+        <result property="productCost"    column="product_cost"    />
+        <result property="channelFeeCny"    column="channel_fee_cny"    />
+        <result property="incomeCny"    column="income_cny"    />
+        <result property="firstLegShippingCost"    column="first_leg_shipping_cost"    />
+        <result property="firstLegCustomsFee"    column="first_leg_customs_fee"    />
+        <result property="firstLegOtherFee"    column="first_leg_other_fee"    />
+        <result property="packagingMaterial"    column="packaging_material"    />
+        <result property="packagingCost"    column="packaging_cost"    />
+        <result property="tongtuShippingCost"    column="tongtu_shipping_cost"    />
+        <result property="logisticsShippingCost"    column="logistics_shipping_cost"    />
+        <result property="orderNotes"    column="order_notes"    />
+        <result property="sortedOrderNumber"    column="sorted_order_number"    />
+        <result property="firstLegCost"    column="first_leg_cost"    />
+        <result property="refundAmount"    column="refund_amount"    />
+        <result property="replenishmentCost"    column="replenishment_cost"    />
+        <result property="otherCosts"    column="other_costs"    />
+        <result property="backendRefundSubsidy"    column="backend_refund_subsidy"    />
+        <result property="advertisingFee"    column="advertising_fee"    />
+        <result property="clearanceSubsidy"    column="clearance_subsidy"    />
+        <result property="usPlatformLabelFee"    column="us_platform_label_fee"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="grossProfit"    column="gross_profit"    />
+        <result property="grossProfitRate"    column="gross_profit_rate"    />
+        <result property="distributionCommission"    column="distribution_commission"    />
+        <result property="tdActualGrossProfit"    column="td_actual_gross_profit"    />
+        <result property="tdActualGrossProfitRate"    column="td_actual_gross_profit_rate"    />
+        <result property="operator"    column="operator"    />
+        <result property="developer"    column="developer"    />
+        <result property="orderQuantity"    column="order_quantity"    />
+        <result property="remarks"    column="remarks"    />
+    </resultMap>
+
+    <sql id="selectTEMUOrderDetailsVo">
+        select id, shipment_date, is_replenishment, tongtu_sku, product_name, category, shipment_quantity, channel, channel_account, sales_site, shipment_warehouse, package_number, shipping_method, logistics_number, order_number, buyer_name, country_region, payment_date, product_developer, receipt_currency, total_order_price, total_order_price_cny, selling_price, selling_price_cny, product_cost, channel_fee_cny, income_cny, first_leg_shipping_cost, first_leg_customs_fee, first_leg_other_fee, packaging_material, packaging_cost, tongtu_shipping_cost, logistics_shipping_cost, order_notes, sorted_order_number, first_leg_cost, refund_amount, replenishment_cost, other_costs, backend_refund_subsidy, advertising_fee, clearance_subsidy, us_platform_label_fee, ratio, gross_profit, gross_profit_rate, distribution_commission, td_actual_gross_profit, td_actual_gross_profit_rate, operator, developer, order_quantity, remarks from temu_order_details
+    </sql>
+
+    <select id="selectTEMUOrderDetailsList" parameterType="TEMUOrderDetails" resultMap="TEMUOrderDetailsResult">
+        <include refid="selectTEMUOrderDetailsVo"/>
+        <where>
+            <if test="params.beginShipmentDate != null and params.beginShipmentDate != '' and params.endShipmentDate != null and params.endShipmentDate != ''"> and shipment_date between #{params.beginShipmentDate} and #{params.endShipmentDate}</if>
+            <if test="isReplenishment != null  and isReplenishment != ''"> and is_replenishment = #{isReplenishment}</if>
+            <if test="tongtuSku != null  and tongtuSku != ''"> and tongtu_sku = #{tongtuSku}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="shipmentQuantity != null "> and shipment_quantity = #{shipmentQuantity}</if>
+            <if test="channel != null  and channel != ''"> and channel = #{channel}</if>
+            <if test="channelAccount != null  and channelAccount != ''"> and channel_account = #{channelAccount}</if>
+            <if test="salesSite != null  and salesSite != ''"> and sales_site = #{salesSite}</if>
+            <if test="shipmentWarehouse != null  and shipmentWarehouse != ''"> and shipment_warehouse = #{shipmentWarehouse}</if>
+            <if test="packageNumber != null  and packageNumber != ''"> and package_number = #{packageNumber}</if>
+            <if test="shippingMethod != null  and shippingMethod != ''"> and shipping_method = #{shippingMethod}</if>
+            <if test="logisticsNumber != null  and logisticsNumber != ''"> and logistics_number = #{logisticsNumber}</if>
+            <if test="buyerName != null  and buyerName != ''"> and buyer_name like concat('%', #{buyerName}, '%')</if>
+            <if test="countryRegion != null  and countryRegion != ''"> and country_region = #{countryRegion}</if>
+            <if test="params.beginPaymentDate != null and params.beginPaymentDate != '' and params.endPaymentDate != null and params.endPaymentDate != ''"> and payment_date between #{params.beginPaymentDate} and #{params.endPaymentDate}</if>
+            <if test="productDeveloper != null  and productDeveloper != ''"> and product_developer = #{productDeveloper}</if>
+            <if test="receiptCurrency != null  and receiptCurrency != ''"> and receipt_currency = #{receiptCurrency}</if>
+            <if test="totalOrderPrice != null "> and total_order_price = #{totalOrderPrice}</if>
+            <if test="totalOrderPriceCny != null "> and total_order_price_cny = #{totalOrderPriceCny}</if>
+            <if test="sellingPrice != null "> and selling_price = #{sellingPrice}</if>
+            <if test="sellingPriceCny != null "> and selling_price_cny = #{sellingPriceCny}</if>
+            <if test="productCost != null "> and product_cost = #{productCost}</if>
+            <if test="channelFeeCny != null "> and channel_fee_cny = #{channelFeeCny}</if>
+            <if test="incomeCny != null "> and income_cny = #{incomeCny}</if>
+            <if test="firstLegShippingCost != null "> and first_leg_shipping_cost = #{firstLegShippingCost}</if>
+            <if test="firstLegCustomsFee != null "> and first_leg_customs_fee = #{firstLegCustomsFee}</if>
+            <if test="firstLegOtherFee != null "> and first_leg_other_fee = #{firstLegOtherFee}</if>
+            <if test="packagingMaterial != null  and packagingMaterial != ''"> and packaging_material = #{packagingMaterial}</if>
+            <if test="packagingCost != null "> and packaging_cost = #{packagingCost}</if>
+            <if test="tongtuShippingCost != null "> and tongtu_shipping_cost = #{tongtuShippingCost}</if>
+            <if test="logisticsShippingCost != null "> and logistics_shipping_cost = #{logisticsShippingCost}</if>
+            <if test="orderNotes != null  and orderNotes != ''"> and order_notes = #{orderNotes}</if>
+            <if test="sortedOrderNumber != null  and sortedOrderNumber != ''"> and sorted_order_number = #{sortedOrderNumber}</if>
+            <if test="firstLegCost != null "> and first_leg_cost = #{firstLegCost}</if>
+            <if test="refundAmount != null "> and refund_amount = #{refundAmount}</if>
+            <if test="replenishmentCost != null "> and replenishment_cost = #{replenishmentCost}</if>
+            <if test="otherCosts != null "> and other_costs = #{otherCosts}</if>
+            <if test="backendRefundSubsidy != null "> and backend_refund_subsidy = #{backendRefundSubsidy}</if>
+            <if test="advertisingFee != null "> and advertising_fee = #{advertisingFee}</if>
+            <if test="clearanceSubsidy != null "> and clearance_subsidy = #{clearanceSubsidy}</if>
+            <if test="usPlatformLabelFee != null "> and us_platform_label_fee = #{usPlatformLabelFee}</if>
+            <if test="ratio != null "> and ratio = #{ratio}</if>
+            <if test="grossProfit != null "> and gross_profit = #{grossProfit}</if>
+            <if test="grossProfitRate != null "> and gross_profit_rate = #{grossProfitRate}</if>
+            <if test="distributionCommission != null "> and distribution_commission = #{distributionCommission}</if>
+            <if test="tdActualGrossProfit != null "> and td_actual_gross_profit = #{tdActualGrossProfit}</if>
+            <if test="tdActualGrossProfitRate != null "> and td_actual_gross_profit_rate = #{tdActualGrossProfitRate}</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="developer != null  and developer != ''"> and developer = #{developer}</if>
+            <if test="orderQuantity != null "> and order_quantity = #{orderQuantity}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+        </where>
+    </select>
+
+    <select id="selectTEMUOrderDetailsByOrderNumber" parameterType="String" resultMap="TEMUOrderDetailsResult">
+        <include refid="selectTEMUOrderDetailsVo"/>
+        where order_number = #{orderNumber}
+    </select>
+
+    <insert id="insertTEMUOrderDetails" parameterType="TEMUOrderDetails">
+        insert into temu_order_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="shipmentDate != null">shipment_date,</if>
+            <if test="isReplenishment != null and isReplenishment != ''">is_replenishment,</if>
+            <if test="tongtuSku != null and tongtuSku != ''">tongtu_sku,</if>
+            <if test="productName != null and productName != ''">product_name,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="shipmentQuantity != null">shipment_quantity,</if>
+            <if test="channel != null and channel != ''">channel,</if>
+            <if test="channelAccount != null and channelAccount != ''">channel_account,</if>
+            <if test="salesSite != null and salesSite != ''">sales_site,</if>
+            <if test="shipmentWarehouse != null and shipmentWarehouse != ''">shipment_warehouse,</if>
+            <if test="packageNumber != null and packageNumber != ''">package_number,</if>
+            <if test="shippingMethod != null and shippingMethod != ''">shipping_method,</if>
+            <if test="logisticsNumber != null and logisticsNumber != ''">logistics_number,</if>
+            <if test="orderNumber != null and orderNumber != ''">order_number,</if>
+            <if test="buyerName != null and buyerName != ''">buyer_name,</if>
+            <if test="countryRegion != null and countryRegion != ''">country_region,</if>
+            <if test="paymentDate != null">payment_date,</if>
+            <if test="productDeveloper != null and productDeveloper != ''">product_developer,</if>
+            <if test="receiptCurrency != null and receiptCurrency != ''">receipt_currency,</if>
+            <if test="totalOrderPrice != null">total_order_price,</if>
+            <if test="totalOrderPriceCny != null">total_order_price_cny,</if>
+            <if test="sellingPrice != null">selling_price,</if>
+            <if test="sellingPriceCny != null">selling_price_cny,</if>
+            <if test="productCost != null">product_cost,</if>
+            <if test="channelFeeCny != null">channel_fee_cny,</if>
+            <if test="incomeCny != null">income_cny,</if>
+            <if test="firstLegShippingCost != null">first_leg_shipping_cost,</if>
+            <if test="firstLegCustomsFee != null">first_leg_customs_fee,</if>
+            <if test="firstLegOtherFee != null">first_leg_other_fee,</if>
+            <if test="packagingMaterial != null and packagingMaterial != ''">packaging_material,</if>
+            <if test="packagingCost != null">packaging_cost,</if>
+            <if test="tongtuShippingCost != null">tongtu_shipping_cost,</if>
+            <if test="logisticsShippingCost != null">logistics_shipping_cost,</if>
+            <if test="orderNotes != null and orderNotes != ''">order_notes,</if>
+            <if test="sortedOrderNumber != null and sortedOrderNumber != ''">sorted_order_number,</if>
+            <if test="firstLegCost != null">first_leg_cost,</if>
+            <if test="refundAmount != null">refund_amount,</if>
+            <if test="replenishmentCost != null">replenishment_cost,</if>
+            <if test="otherCosts != null">other_costs,</if>
+            <if test="backendRefundSubsidy != null">backend_refund_subsidy,</if>
+            <if test="advertisingFee != null">advertising_fee,</if>
+            <if test="clearanceSubsidy != null">clearance_subsidy,</if>
+            <if test="usPlatformLabelFee != null">us_platform_label_fee,</if>
+            <if test="ratio != null">ratio,</if>
+            <if test="grossProfit != null">gross_profit,</if>
+            <if test="grossProfitRate != null">gross_profit_rate,</if>
+            <if test="distributionCommission != null">distribution_commission,</if>
+            <if test="tdActualGrossProfit != null">td_actual_gross_profit,</if>
+            <if test="tdActualGrossProfitRate != null">td_actual_gross_profit_rate,</if>
+            <if test="operator != null and operator != ''">operator,</if>
+            <if test="developer != null and developer != ''">developer,</if>
+            <if test="orderQuantity != null">order_quantity,</if>
+            <if test="remarks != null and remarks != ''">remarks,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="shipmentDate != null">#{shipmentDate},</if>
+            <if test="isReplenishment != null and isReplenishment != ''">#{isReplenishment},</if>
+            <if test="tongtuSku != null and tongtuSku != ''">#{tongtuSku},</if>
+            <if test="productName != null and productName != ''">#{productName},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="shipmentQuantity != null">#{shipmentQuantity},</if>
+            <if test="channel != null and channel != ''">#{channel},</if>
+            <if test="channelAccount != null and channelAccount != ''">#{channelAccount},</if>
+            <if test="salesSite != null and salesSite != ''">#{salesSite},</if>
+            <if test="shipmentWarehouse != null and shipmentWarehouse != ''">#{shipmentWarehouse},</if>
+            <if test="packageNumber != null and packageNumber != ''">#{packageNumber},</if>
+            <if test="shippingMethod != null and shippingMethod != ''">#{shippingMethod},</if>
+            <if test="logisticsNumber != null and logisticsNumber != ''">#{logisticsNumber},</if>
+            <if test="orderNumber != null and orderNumber != ''">#{orderNumber},</if>
+            <if test="buyerName != null and buyerName != ''">#{buyerName},</if>
+            <if test="countryRegion != null and countryRegion != ''">#{countryRegion},</if>
+            <if test="paymentDate != null">#{paymentDate},</if>
+            <if test="productDeveloper != null and productDeveloper != ''">#{productDeveloper},</if>
+            <if test="receiptCurrency != null and receiptCurrency != ''">#{receiptCurrency},</if>
+            <if test="totalOrderPrice != null">#{totalOrderPrice},</if>
+            <if test="totalOrderPriceCny != null">#{totalOrderPriceCny},</if>
+            <if test="sellingPrice != null">#{sellingPrice},</if>
+            <if test="sellingPriceCny != null">#{sellingPriceCny},</if>
+            <if test="productCost != null">#{productCost},</if>
+            <if test="channelFeeCny != null">#{channelFeeCny},</if>
+            <if test="incomeCny != null">#{incomeCny},</if>
+            <if test="firstLegShippingCost != null">#{firstLegShippingCost},</if>
+            <if test="firstLegCustomsFee != null">#{firstLegCustomsFee},</if>
+            <if test="firstLegOtherFee != null">#{firstLegOtherFee},</if>
+            <if test="packagingMaterial != null and packagingMaterial != ''">#{packagingMaterial},</if>
+            <if test="packagingCost != null">#{packagingCost},</if>
+            <if test="tongtuShippingCost != null">#{tongtuShippingCost},</if>
+            <if test="logisticsShippingCost != null">#{logisticsShippingCost},</if>
+            <if test="orderNotes != null and orderNotes != ''">#{orderNotes},</if>
+            <if test="sortedOrderNumber != null and sortedOrderNumber != ''">#{sortedOrderNumber},</if>
+            <if test="firstLegCost != null">#{firstLegCost},</if>
+            <if test="refundAmount != null">#{refundAmount},</if>
+            <if test="replenishmentCost != null">#{replenishmentCost},</if>
+            <if test="otherCosts != null">#{otherCosts},</if>
+            <if test="backendRefundSubsidy != null">#{backendRefundSubsidy},</if>
+            <if test="advertisingFee != null">#{advertisingFee},</if>
+            <if test="clearanceSubsidy != null">#{clearanceSubsidy},</if>
+            <if test="usPlatformLabelFee != null">#{usPlatformLabelFee},</if>
+            <if test="ratio != null">#{ratio},</if>
+            <if test="grossProfit != null">#{grossProfit},</if>
+            <if test="grossProfitRate != null">#{grossProfitRate},</if>
+            <if test="distributionCommission != null">#{distributionCommission},</if>
+            <if test="tdActualGrossProfit != null">#{tdActualGrossProfit},</if>
+            <if test="tdActualGrossProfitRate != null">#{tdActualGrossProfitRate},</if>
+            <if test="operator != null and operator != ''">#{operator},</if>
+            <if test="developer != null and developer != ''">#{developer},</if>
+            <if test="orderQuantity != null">#{orderQuantity},</if>
+            <if test="remarks != null and remarks != ''">#{remarks},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTEMUOrderDetails" parameterType="TEMUOrderDetails">
+        update temu_order_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="id != null">id = #{id},</if>
+            <if test="shipmentDate != null">shipment_date = #{shipmentDate},</if>
+            <if test="isReplenishment != null and isReplenishment != ''">is_replenishment = #{isReplenishment},</if>
+            <if test="tongtuSku != null and tongtuSku != ''">tongtu_sku = #{tongtuSku},</if>
+            <if test="productName != null and productName != ''">product_name = #{productName},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="shipmentQuantity != null">shipment_quantity = #{shipmentQuantity},</if>
+            <if test="channel != null and channel != ''">channel = #{channel},</if>
+            <if test="channelAccount != null and salesSite != ''">channel_account = #{channelAccount},</if>
+            <if test="salesSite != null and salesSite != ''">sales_site = #{salesSite},</if>
+            <if test="shipmentWarehouse != null and shipmentWarehouse != ''">shipment_warehouse = #{shipmentWarehouse},</if>
+            <if test="packageNumber != null and packageNumber != ''">package_number = #{packageNumber},</if>
+            <if test="shippingMethod != null and shippingMethod != ''">shipping_method = #{shippingMethod},</if>
+            <if test="logisticsNumber != null and logisticsNumber != ''">logistics_number = #{logisticsNumber},</if>
+            <if test="buyerName != null and buyerName != ''">buyer_name = #{buyerName},</if>
+            <if test="countryRegion != null and countryRegion != ''">country_region = #{countryRegion},</if>
+            <if test="paymentDate != null">payment_date = #{paymentDate},</if>
+            <if test="productDeveloper != null and productDeveloper != ''">product_developer = #{productDeveloper},</if>
+            <if test="receiptCurrency != null and receiptCurrency != ''">receipt_currency = #{receiptCurrency},</if>
+            <if test="totalOrderPrice != null">total_order_price = #{totalOrderPrice},</if>
+            <if test="totalOrderPriceCny != null">total_order_price_cny = #{totalOrderPriceCny},</if>
+            <if test="sellingPrice != null">selling_price = #{sellingPrice},</if>
+            <if test="sellingPriceCny != null">selling_price_cny = #{sellingPriceCny},</if>
+            <if test="productCost != null">product_cost = #{productCost},</if>
+            <if test="channelFeeCny != null">channel_fee_cny = #{channelFeeCny},</if>
+            <if test="incomeCny != null">income_cny = #{incomeCny},</if>
+            <if test="firstLegShippingCost != null">first_leg_shipping_cost = #{firstLegShippingCost},</if>
+            <if test="firstLegCustomsFee != null">first_leg_customs_fee = #{firstLegCustomsFee},</if>
+            <if test="firstLegOtherFee != null">first_leg_other_fee = #{firstLegOtherFee},</if>
+            <if test="packagingMaterial != null and packagingMaterial != ''">packaging_material = #{packagingMaterial},</if>
+            <if test="packagingCost != null">packaging_cost = #{packagingCost},</if>
+            <if test="tongtuShippingCost != null">tongtu_shipping_cost = #{tongtuShippingCost},</if>
+            <if test="logisticsShippingCost != null">logistics_shipping_cost = #{logisticsShippingCost},</if>
+            <if test="orderNotes != null and orderNotes != ''">order_notes = #{orderNotes},</if>
+            <if test="sortedOrderNumber != null and sortedOrderNumber != ''">sorted_order_number = #{sortedOrderNumber},</if>
+            <if test="firstLegCost != null">first_leg_cost = #{firstLegCost},</if>
+            <if test="refundAmount != null">refund_amount = #{refundAmount},</if>
+            <if test="replenishmentCost != null">replenishment_cost = #{replenishmentCost},</if>
+            <if test="otherCosts != null">other_costs = #{otherCosts},</if>
+            <if test="backendRefundSubsidy != null">backend_refund_subsidy = #{backendRefundSubsidy},</if>
+            <if test="advertisingFee != null">advertising_fee = #{advertisingFee},</if>
+            <if test="clearanceSubsidy != null">clearance_subsidy = #{clearanceSubsidy},</if>
+            <if test="usPlatformLabelFee != null">us_platform_label_fee = #{usPlatformLabelFee},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+            <if test="grossProfit != null">gross_profit = #{grossProfit},</if>
+            <if test="grossProfitRate != null">gross_profit_rate = #{grossProfitRate},</if>
+            <if test="distributionCommission != null">distribution_commission = #{distributionCommission},</if>
+            <if test="tdActualGrossProfit != null">td_actual_gross_profit = #{tdActualGrossProfit},</if>
+            <if test="tdActualGrossProfitRate != null">td_actual_gross_profit_rate = #{tdActualGrossProfitRate},</if>
+            <if test="operator != null and operator != ''">operator = #{operator},</if>
+            <if test="developer != null and developer != ''">developer = #{developer},</if>
+            <if test="orderQuantity != null">order_quantity = #{orderQuantity},</if>
+            <if test="remarks != null and remarks != ''">remarks = #{remarks},</if>
+        </trim>
+        where order_number = #{orderNumber}
+    </update>
+
+    <delete id="deleteTEMUOrderDetailsByOrderNumber" parameterType="String">
+        delete from temu_order_details where order_number = #{orderNumber}
+    </delete>
+
+    <delete id="deleteTEMUOrderDetailsByOrderNumbers" parameterType="String">
+        delete from temu_order_details where order_number in
+        <foreach item="orderNumber" collection="array" open="(" separator="," close=")">
+            #{orderNumber}
+        </foreach>
+    </delete>
+</mapper>

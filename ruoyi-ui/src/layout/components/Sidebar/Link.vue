@@ -26,6 +26,11 @@ export default {
         return 'a'
       }
       return 'router-link'
+    },
+    isNewPage() {
+      return blankList.some(item => {
+        return item === this.to
+      })
     }
   },
   methods: {
@@ -35,6 +40,12 @@ export default {
           href: to,
           target: '_blank',
           rel: 'noopener'
+        }
+      }
+      if (this.isNewPage) {
+        return {
+          to: to,
+          target: '_blank'
         }
       }
       return {
