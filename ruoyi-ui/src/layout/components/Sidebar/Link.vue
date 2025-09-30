@@ -28,9 +28,10 @@ export default {
       return 'router-link'
     },
     isNewPage() {
-      return blankList.some(item => {
+      /*return blankList.some(item => {
         return item === this.to
-      })
+      })*/
+      return this.to === '/sales-dashboard';
     }
   },
   methods: {
@@ -42,12 +43,13 @@ export default {
           rel: 'noopener'
         }
       }
-      if (this.isNewPage) {
+      /*if (this.isNewPage) {
         return {
-          to: to,
-          target: '_blank'
+          to: to.replace('/sales-dashboard', '/sales-dashboard'),
+          target: '_blank',
+          rel: 'noopener'
         }
-      }
+      }*/
       return {
         to: to
       }

@@ -36,9 +36,9 @@ export function updateTemu(data) {
 }
 
 // 删除Temu订单明细
-export function delTemu(orderNumber) {
+export function delTemu(ids) {
   return request({
-    url: '/temu/details/' + orderNumber,
+    url: '/temu/details/' + ids,
     method: 'delete'
   })
 }

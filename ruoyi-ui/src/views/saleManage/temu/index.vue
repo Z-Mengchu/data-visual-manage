@@ -209,6 +209,7 @@
 
     <el-table v-loading="loading" :data="temuList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="发货日期" align="center" prop="shipmentDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.shipmentDate, '{y}-{m}-{d}') }}</span>
@@ -274,7 +275,7 @@
       <el-table-column label="开发员" align="center" prop="developer" />
       <el-table-column label="订单数量" align="center" prop="orderQuantity" />
       <el-table-column label="备注" align="center" prop="remarks" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -757,9 +758,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const orderNumbers = row.orderNumber || this.ids
-      this.$modal.confirm('是否确认删除Temu订单明细编号为"' + orderNumbers + '"的数据项？').then(function() {
-        return delTemu(orderNumbers)
+      const ids = row.id || this.ids
+      this.$modal.confirm('是否确认删除Temu订单明细编号为"' + ids + '"的数据项？').then(function() {
+        return delTemu(id)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess("删除成功")

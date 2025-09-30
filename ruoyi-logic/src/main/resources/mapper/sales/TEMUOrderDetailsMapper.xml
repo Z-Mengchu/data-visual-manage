@@ -185,6 +185,7 @@
             <if test="developer != null and developer != ''">developer,</if>
             <if test="orderQuantity != null">order_quantity,</if>
             <if test="remarks != null and remarks != ''">remarks,</if>
+            created_at
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -241,6 +242,7 @@
             <if test="developer != null and developer != ''">#{developer},</if>
             <if test="orderQuantity != null">#{orderQuantity},</if>
             <if test="remarks != null and remarks != ''">#{remarks},</if>
+            sysdate()
         </trim>
     </insert>
 
@@ -300,18 +302,19 @@
             <if test="developer != null and developer != ''">developer = #{developer},</if>
             <if test="orderQuantity != null">order_quantity = #{orderQuantity},</if>
             <if test="remarks != null and remarks != ''">remarks = #{remarks},</if>
+            update_time = sysdate()
         </trim>
         where order_number = #{orderNumber}
     </update>
 
-    <delete id="deleteTEMUOrderDetailsByOrderNumber" parameterType="String">
-        delete from temu_order_details where order_number = #{orderNumber}
+    <delete id="deleteTEMUOrderDetailsById" parameterType="Integer">
+        delete from temu_order_details where id = #{id}
     </delete>
 
-    <delete id="deleteTEMUOrderDetailsByOrderNumbers" parameterType="String">
-        delete from temu_order_details where order_number in
-        <foreach item="orderNumber" collection="array" open="(" separator="," close=")">
-            #{orderNumber}
+    <delete id="deleteTEMUOrderDetailsByIds" parameterType="Integer">
+        delete from temu_order_details where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
         </foreach>
     </delete>
 </mapper>

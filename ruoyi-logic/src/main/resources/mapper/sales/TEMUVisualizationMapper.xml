@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.sales.mapper.TEMUVisualizationMapper" >
+
+    <!-- 核心KPI数据查询 -->
+    <select id="selectKpiData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        COALESCE(SUM(income_cny), 0) as totalIncome,
+        COALESCE(SUM(gross_profit), 0) as totalGrossProfit,
+        COALESCE(SUM(td_actual_gross_profit), 0) as totalTdActualGrossProfit,
+        COALESCE(AVG(gross_profit_rate), 0) as avgGrossProfitRate,
+        CASE
+        WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0
+        ELSE COALESCE(SUM(refund_amount), 0) / COALESCE(SUM(income_cny), 0)
+        END as refundRatio,
+        CASE
+        WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0
+        ELSE COALESCE(SUM(product_cost), 0) / COALESCE(SUM(income_cny), 0)
+        END as costRatio,
+        COUNT(DISTINCT order_number) as totalOrders,
+        COALESCE(SUM(shipment_quantity), 0) as totalShipmentQuantity
+        FROM temu_order_details
+        <include refid="visualWhereCondition"/>
+    </select>
+
+    <!-- 平均指标查询 -->
+    <select id="selectAverageMetrics" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        CASE
+        WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0
+        ELSE COALESCE(SUM(refund_amount), 0) / COALESCE(SUM(income_cny), 0)
+        END as averageRefundRate,
+        COALESCE(AVG(gross_profit_rate), 0) as averageGrossProfitRate,
+        COUNT(DISTINCT order_number) as totalOrders,
+        COALESCE(SUM(income_cny), 0) as totalIncome,
+        COALESCE(SUM(refund_amount), 0) as totalRefundAmount
+        FROM temu_order_details
+        <include refid="visualWhereCondition"/>
+    </select>
+
+    <!-- 趋势数据查询 -->
+    <select id="selectTrendData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        DATE_FORMAT(payment_date, '%Y-%m-%d') as date,
+        COALESCE(SUM(income_cny), 0) as revenue,
+        COALESCE(SUM(gross_profit), 0) as grossProfit,
+        COALESCE(SUM(td_actual_gross_profit), 0) as tdActualGrossProfit,
+        COALESCE(AVG(gross_profit_rate), 0) as grossProfitRate,
+        CASE
+        WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0
+        ELSE COALESCE(SUM(refund_amount), 0) / COALESCE(SUM(income_cny), 0)
+        END as refundRate
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND payment_date IS NOT NULL
+        </where>
+        GROUP BY DATE_FORMAT(payment_date, '%Y-%m-%d')
+        ORDER BY DATE_FORMAT(payment_date, '%Y-%m-%d')
+    </select>
+
+    <!-- 开发员桑基图数据 -->
+    <select id="selectDeveloperSankeyData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        developer as source,
+        category as target,
+        COALESCE(SUM(td_actual_gross_profit), 0) as value,
+        COUNT(*) as orderCount
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND developer IS NOT NULL
+            AND category IS NOT NULL
+        </where>
+        GROUP BY developer, category
+        HAVING value != 0
+    </select>
+
+    <!-- 开发员排行榜数据 -->
+    <select id="selectDeveloperRankingData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        developer as name,
+        COALESCE(SUM(td_actual_gross_profit), 0) as value,
+        COUNT(DISTINCT order_number) as orderCount,
+        COALESCE(SUM(income_cny), 0) as revenue
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND developer IS NOT NULL
+        </where>
+        GROUP BY developer
+        ORDER BY value DESC
+        LIMIT 10
+    </select>
+
+    <!-- 品类矩形树图数据 -->
+    <select id="selectCategoryTreemapData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        category as name,
+        COALESCE(SUM(income_cny), 0) as value,
+        COALESCE(SUM(td_actual_gross_profit), 0) as profit,
+        COUNT(DISTINCT order_number) as orderCount,
+        CASE
+        WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0
+        ELSE COALESCE(SUM(refund_amount), 0) / COALESCE(SUM(income_cny), 0)
+        END as refundRate
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND category IS NOT NULL
+        </where>
+        GROUP BY category
+    </select>
+
+    <!-- 品类排行榜数据 -->
+    <select id="selectCategoryRankingData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        category as name,
+        COALESCE(SUM(td_actual_gross_profit), 0) as value,
+        COALESCE(SUM(income_cny), 0) as revenue,
+        COUNT(DISTINCT order_number) as orderCount
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND category IS NOT NULL
+        </where>
+        GROUP BY category
+        ORDER BY value DESC
+        LIMIT 10
+    </select>
+
+    <!-- 明细表格数据 -->
+    <select id="selectDetailTableData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        order_number as orderNumber,
+        product_name as productName,
+        category,
+        developer,
+        operator,
+        shipment_date as shipmentDate,
+        payment_date as paymentDate,
+        income_cny as income,
+        gross_profit as grossProfit,
+        td_actual_gross_profit as tdActualGrossProfit,
+        gross_profit_rate as grossProfitRate,
+        td_actual_gross_profit_rate as tdActualGrossProfitRate,
+        refund_amount as refundAmount,
+        shipment_quantity as shipmentQuantity
+        FROM temu_order_details
+        <include refid="visualWhereCondition"/>
+        ORDER BY payment_date DESC
+        LIMIT 100
+    </select>
+
+    <!-- 预警数据 -->
+    <select id="selectAlertData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        '高退款率' as alertType,
+        category as item,
+        CASE
+        WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0
+        ELSE COALESCE(SUM(refund_amount), 0) / COALESCE(SUM(income_cny), 0)
+        END as value
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND category IS NOT NULL
+        </where>
+        GROUP BY category
+        HAVING value &gt; 0.1
+
+        UNION ALL
+
+        SELECT
+        '负毛利产品' as alertType,
+        product_name as item,
+        COALESCE(SUM(td_actual_gross_profit), 0) as value
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND product_name IS NOT NULL
+        </where>
+        GROUP BY product_name
+        HAVING value &lt; 0
+    </select>
+
+    <!-- 筛选选项 -->
+    <select id="selectFilterOptions" resultType="java.util.Map">
+        SELECT
+            GROUP_CONCAT(DISTINCT DATE_FORMAT(payment_date, '%Y-%m-%d') ORDER BY payment_date DESC) as dates,
+            GROUP_CONCAT(DISTINCT category) as categories,
+            GROUP_CONCAT(DISTINCT developer) as developers,
+            GROUP_CONCAT(DISTINCT operator) as operators,
+            GROUP_CONCAT(DISTINCT country_region) as countries
+        FROM temu_order_details
+        WHERE payment_date IS NOT NULL
+    </select>
+
+    <!-- 运营员透视数据 -->
+    <select id="selectOperatorPerspectiveData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        operator as groupName,
+        COALESCE(SUM(income_cny), 0) as income,
+        COALESCE(SUM(refund_amount), 0) as refundAmount,
+        COALESCE(SUM(product_cost), 0) as productCost,
+        COALESCE(SUM(first_leg_cost), 0) as firstLegCost,
+        COALESCE(SUM(channel_fee_cny), 0) as channelFee,
+        COALESCE(SUM(logistics_shipping_cost), 0) as logisticsShippingCost,
+        COALESCE(SUM(us_platform_label_fee), 0) as usPlatformLabelFee,
+        COALESCE(SUM(other_costs), 0) as otherCosts,
+        COALESCE(SUM(backend_refund_subsidy), 0) as backendRefundSubsidy,
+        COALESCE(SUM(advertising_fee), 0) as advertisingFee,
+        COALESCE(SUM(replenishment_cost), 0) as replenishmentCost,
+        COALESCE(SUM(packaging_cost), 0) as packagingCost,
+        COALESCE(SUM(clearance_subsidy), 0) as clearanceSubsidy,
+        COALESCE(SUM(gross_profit), 0) as grossProfit,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(gross_profit), 0) / COALESCE(SUM(income_cny), 0) END as grossProfitRate,
+        COALESCE(SUM(distribution_commission), 0) as distributionCommission,
+        COALESCE(SUM(td_actual_gross_profit), 0) as tdActualGrossProfit,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(td_actual_gross_profit), 0) / COALESCE(SUM(income_cny), 0) END as tdActualGrossProfitRate,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(product_cost), 0) / COALESCE(SUM(income_cny), 0) END as productCostRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(first_leg_cost), 0) / COALESCE(SUM(income_cny), 0) END as firstLegCostRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(logistics_shipping_cost), 0) / COALESCE(SUM(income_cny), 0) END as logisticsShippingCostRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(refund_amount), 0) / COALESCE(SUM(income_cny), 0) END as refundRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(replenishment_cost), 0) / COALESCE(SUM(income_cny), 0) END as replenishmentCostRatio
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND operator IS NOT NULL
+        </where>
+        GROUP BY operator
+        <if test="sortField != null and sortField != '' and sortOrder != null and sortOrder != ''">
+            ORDER BY ${sortField} ${sortOrder}
+        </if>
+        <if test="sortField == null or sortField == ''">
+            ORDER BY income DESC
+        </if>
+    </select>
+
+    <!-- 开发员透视数据 -->
+    <select id="selectDeveloperPerspectiveData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        developer as groupName,
+        COALESCE(SUM(income_cny), 0) as income,
+        COALESCE(SUM(refund_amount), 0) as refundAmount,
+        COALESCE(SUM(product_cost), 0) as productCost,
+        COALESCE(SUM(first_leg_cost), 0) as firstLegCost,
+        COALESCE(SUM(channel_fee_cny), 0) as channelFee,
+        COALESCE(SUM(logistics_shipping_cost), 0) as logisticsShippingCost,
+        COALESCE(SUM(other_costs), 0) as otherCosts,
+        COALESCE(SUM(backend_refund_subsidy), 0) as backendRefundSubsidy,
+        COALESCE(SUM(advertising_fee), 0) as advertisingFee,
+        COALESCE(SUM(replenishment_cost), 0) as replenishmentCost,
+        COALESCE(SUM(packaging_cost), 0) as packagingCost,
+        COALESCE(SUM(clearance_subsidy), 0) as clearanceSubsidy,
+        COALESCE(SUM(gross_profit), 0) as grossProfit,
+        COALESCE(SUM(distribution_commission), 0) as distributionCommission,
+        COALESCE(SUM(td_actual_gross_profit), 0) as tdActualGrossProfit
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND developer IS NOT NULL
+        </where>
+        GROUP BY developer
+        <if test="sortField != null and sortField != '' and sortOrder != null and sortOrder != ''">
+            ORDER BY ${sortField} ${sortOrder}
+        </if>
+        <if test="sortField == null or sortField == ''">
+            ORDER BY income DESC
+        </if>
+    </select>
+
+    <!-- 品类透视数据 -->
+    <select id="selectCategoryPerspectiveData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        category as groupName,
+        COALESCE(SUM(income_cny), 0) as income,
+        COALESCE(SUM(refund_amount), 0) as refundAmount,
+        COALESCE(SUM(product_cost), 0) as productCost,
+        COALESCE(SUM(first_leg_cost), 0) as firstLegCost,
+        COALESCE(SUM(channel_fee_cny), 0) as channelFee,
+        COALESCE(SUM(logistics_shipping_cost), 0) as logisticsShippingCost,
+        COALESCE(SUM(us_platform_label_fee), 0) as usPlatformLabelFee,
+        COALESCE(SUM(other_costs), 0) as otherCosts,
+        COALESCE(SUM(backend_refund_subsidy), 0) as backendRefundSubsidy,
+        COALESCE(SUM(advertising_fee), 0) as advertisingFee,
+        COALESCE(SUM(replenishment_cost), 0) as replenishmentCost,
+        COALESCE(SUM(packaging_cost), 0) as packagingCost,
+        COALESCE(SUM(clearance_subsidy), 0) as clearanceSubsidy,
+        COALESCE(SUM(gross_profit), 0) as grossProfit,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(gross_profit), 0) / COALESCE(SUM(income_cny), 0) END as grossProfitRate,
+        COALESCE(SUM(distribution_commission), 0) as distributionCommission,
+        COALESCE(SUM(td_actual_gross_profit), 0) as tdActualGrossProfit,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(td_actual_gross_profit), 0) / COALESCE(SUM(income_cny), 0) END as tdActualGrossProfitRate,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(product_cost), 0) / COALESCE(SUM(income_cny), 0) END as productCostRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(first_leg_cost), 0) / COALESCE(SUM(income_cny), 0) END as firstLegCostRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(logistics_shipping_cost), 0) / COALESCE(SUM(income_cny), 0) END as logisticsShippingCostRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(refund_amount), 0) / COALESCE(SUM(income_cny), 0) END as refundRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(replenishment_cost), 0) / COALESCE(SUM(income_cny), 0) END as replenishmentCostRatio
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND category IS NOT NULL
+        </where>
+        GROUP BY category
+        <if test="sortField != null and sortField != '' and sortOrder != null and sortOrder != ''">
+            ORDER BY ${sortField} ${sortOrder}
+        </if>
+        <if test="sortField == null or sortField == ''">
+            ORDER BY income DESC
+        </if>
+    </select>
+
+    <!-- 运营员发货仓库数据 -->
+    <select id="selectOperatorWarehouseData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        operator as groupName,
+        shipment_warehouse as warehouseName,
+        COALESCE(SUM(income_cny), 0) as income,
+        COALESCE(SUM(refund_amount), 0) as refundAmount,
+        COALESCE(SUM(product_cost), 0) as productCost,
+        COALESCE(SUM(first_leg_cost), 0) as firstLegCost,
+        COALESCE(SUM(channel_fee_cny), 0) as channelFee,
+        COALESCE(SUM(logistics_shipping_cost), 0) as logisticsShippingCost,
+        COALESCE(SUM(us_platform_label_fee), 0) as usPlatformLabelFee,
+        COALESCE(SUM(other_costs), 0) as otherCosts,
+        COALESCE(SUM(backend_refund_subsidy), 0) as backendRefundSubsidy,
+        COALESCE(SUM(advertising_fee), 0) as advertisingFee,
+        COALESCE(SUM(replenishment_cost), 0) as replenishmentCost,
+        COALESCE(SUM(packaging_cost), 0) as packagingCost,
+        COALESCE(SUM(clearance_subsidy), 0) as clearanceSubsidy,
+        COALESCE(SUM(gross_profit), 0) as grossProfit,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(gross_profit), 0) / COALESCE(SUM(income_cny), 0) END as grossProfitRate,
+        COALESCE(SUM(distribution_commission), 0) as distributionCommission,
+        COALESCE(SUM(td_actual_gross_profit), 0) as tdActualGrossProfit,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(td_actual_gross_profit), 0) / COALESCE(SUM(income_cny), 0) END as tdActualGrossProfitRate,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(product_cost), 0) / COALESCE(SUM(income_cny), 0) END as productCostRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(first_leg_cost), 0) / COALESCE(SUM(income_cny), 0) END as firstLegCostRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(logistics_shipping_cost), 0) / COALESCE(SUM(income_cny), 0) END as logisticsShippingCostRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(refund_amount), 0) / COALESCE(SUM(income_cny), 0) END as refundRatio,
+        CASE WHEN COALESCE(SUM(income_cny), 0) = 0 THEN 0 ELSE COALESCE(SUM(replenishment_cost), 0) / COALESCE(SUM(income_cny), 0) END as replenishmentCostRatio
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND operator IS NOT NULL
+            AND shipment_warehouse IS NOT NULL
+        </where>
+        GROUP BY operator, shipment_warehouse
+    </select>
+
+    <!-- 运营员发货仓库数据 -->
+    <select id="selectDeveloperWarehouseData" parameterType="com.ruoyi.sales.dto.TEMUVisualQuery" resultType="java.util.Map">
+        SELECT
+        developer as groupName,
+        shipment_warehouse as warehouseName,
+        COALESCE(SUM(income_cny), 0) as income,
+        COALESCE(SUM(refund_amount), 0) as refundAmount,
+        COALESCE(SUM(product_cost), 0) as productCost,
+        COALESCE(SUM(first_leg_cost), 0) as firstLegCost,
+        COALESCE(SUM(channel_fee_cny), 0) as channelFee,
+        COALESCE(SUM(logistics_shipping_cost), 0) as logisticsShippingCost,
+        COALESCE(SUM(other_costs), 0) as otherCosts,
+        COALESCE(SUM(backend_refund_subsidy), 0) as backendRefundSubsidy,
+        COALESCE(SUM(advertising_fee), 0) as advertisingFee,
+        COALESCE(SUM(replenishment_cost), 0) as replenishmentCost,
+        COALESCE(SUM(packaging_cost), 0) as packagingCost,
+        COALESCE(SUM(clearance_subsidy), 0) as clearanceSubsidy,
+        COALESCE(SUM(gross_profit), 0) as grossProfit,
+        COALESCE(SUM(distribution_commission), 0) as distributionCommission,
+        COALESCE(SUM(td_actual_gross_profit), 0) as tdActualGrossProfit
+        FROM temu_order_details
+        <where>
+            <include refid="visualWhereCondition"/>
+            AND developer IS NOT NULL
+            AND shipment_warehouse IS NOT NULL
+        </where>
+        GROUP BY developer, shipment_warehouse
+    </select>
+
+    <!-- 可视化查询条件 -->
+    <sql id="visualWhereCondition">
+        <where>
+            <if test="startDate != null"> AND payment_date >= #{startDate}</if>
+            <if test="endDate != null"> AND payment_date &lt;= #{endDate}</if>
+            <if test="category != null and category != ''"> AND category = #{category}</if>
+            <if test="developer != null and developer != ''"> AND developer = #{developer}</if>
+            <if test="operator != null and operator != ''"> AND operator = #{operator}</if>
+            <if test="countryRegion != null and countryRegion != ''"> AND country_region = #{countryRegion}</if>
+        </where>
+    </sql>
+</mapper>

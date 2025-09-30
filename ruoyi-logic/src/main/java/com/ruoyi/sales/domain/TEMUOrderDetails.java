@@ -237,6 +237,14 @@ public class TEMUOrderDetails extends BaseEntity
     @Excel(name = "订单数量")
     private Integer orderQuantity;
 
+    /** 创建时间 */
+    @Excel(name = "创建时间")
+    private Date createAt;
+
+    /** 更新时间 */
+    @Excel(name = "更新时间")
+    private Date updateAt;
+
     /** 备注 */
     @Excel(name = "备注")
     private String remarks;

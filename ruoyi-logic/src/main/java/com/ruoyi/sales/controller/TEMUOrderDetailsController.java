@@ -99,10 +99,10 @@ public class TEMUOrderDetailsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('temu:details:remove')")
     @Log(title = "Temu订单明细", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{orderNumbers}")
-    public AjaxResult remove(@PathVariable String[] orderNumbers)
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Integer[] ids)
     {
-        return toAjax(tEMUOrderDetailsService.deleteTEMUOrderDetailsByOrderNumbers(orderNumbers));
+        return toAjax(tEMUOrderDetailsService.deleteTEMUOrderDetailsByIds(ids));
     }
 
 

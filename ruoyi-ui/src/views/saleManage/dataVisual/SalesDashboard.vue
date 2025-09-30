@@ -65,7 +65,7 @@
         <div class="d-flex jc-center">
           <dv-decoration-8 class="dv-dec-8" :color="decorationColor" />
           <div class="title">
-            <span class="title-text">销售数据可视化大屏</span>
+            <span class="title-text">TEMU数据可视化大屏</span>
             <dv-decoration-6
               class="dv-dec-6"
               :reverse="true"
@@ -98,9 +98,7 @@
           </div>
           <div class="react-right mr-4 react-l-s">
             <span class="react-after"></span>
-            <span class="text"
-            >{{ dateYear }} {{ dateWeek }} {{ dateDay }}</span
-            >
+            <span class="text">{{ dateYear }} {{ dateWeek }} {{ dateDay }}</span>
           </div>
         </div>
       </div>

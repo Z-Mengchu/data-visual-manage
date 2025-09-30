@@ -87,9 +87,9 @@ public class TEMUOrderDetailsServiceImpl implements ITEMUOrderDetailsService
      * @return 结果
      */
     @Override
-    public int deleteTEMUOrderDetailsByOrderNumbers(String[] orderNumbers)
+    public int deleteTEMUOrderDetailsByIds(Integer[] ids)
     {
-        return TEMUOrderDetailsMapper.deleteTEMUOrderDetailsByOrderNumbers(orderNumbers);
+        return TEMUOrderDetailsMapper.deleteTEMUOrderDetailsByIds(ids);
     }
 
     /**
@@ -99,9 +99,9 @@ public class TEMUOrderDetailsServiceImpl implements ITEMUOrderDetailsService
      * @return 结果
      */
     @Override
-    public int deleteTEMUOrderDetailsByOrderNumber(String orderNumber)
+    public int deleteTEMUOrderDetailsById(Integer id)
     {
-        return TEMUOrderDetailsMapper.deleteTEMUOrderDetailsByOrderNumber(orderNumber);
+        return TEMUOrderDetailsMapper.deleteTEMUOrderDetailsById(id);
     }
 
     /**

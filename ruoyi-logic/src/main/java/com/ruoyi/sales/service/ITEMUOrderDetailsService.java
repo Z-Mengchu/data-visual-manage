@@ -49,7 +49,7 @@ public interface ITEMUOrderDetailsService
      * @param orderNumbers 需要删除的Temu订单明细主键集合
      * @return 结果
      */
-    public int deleteTEMUOrderDetailsByOrderNumbers(String[] orderNumbers);
+    public int deleteTEMUOrderDetailsByIds(Integer[] ids);
 
     /**
      * 删除Temu订单明细信息
@@ -57,7 +57,7 @@ public interface ITEMUOrderDetailsService
      * @param orderNumber Temu订单明细主键
      * @return 结果
      */
-    public int deleteTEMUOrderDetailsByOrderNumber(String orderNumber);
+    public int deleteTEMUOrderDetailsById(Integer id);
 
     /**
      * 导入Temu数据
