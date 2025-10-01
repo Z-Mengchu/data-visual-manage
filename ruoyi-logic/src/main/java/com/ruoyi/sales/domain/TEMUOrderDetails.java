@@ -239,7 +239,7 @@ public class TEMUOrderDetails extends BaseEntity
 
     /** 创建时间 */
     @Excel(name = "创建时间")
-    private Date createAt;
+    private Date createdAt;
 
     /** 更新时间 */
     @Excel(name = "更新时间")

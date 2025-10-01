@@ -17,8 +17,8 @@
                 <el-date-picker
                   v-model="filterParams.startDate"
                   type="date"
-                  placeholder="开始日期"
-                  value-format="YYYY-MM-DD"
+                  placeholder="付款日期开始"
+                  value-format="yyyy-MM-dd"
                   @change="handleFilterChange"
                 />
               </div>
@@ -26,8 +26,8 @@
                 <el-date-picker
                   v-model="filterParams.endDate"
                   type="date"
-                  placeholder="结束日期"
-                  value-format="YYYY-MM-DD"
+                  placeholder="付款日期结束"
+                  value-format="yyyy-MM-dd"
                   @change="handleFilterChange"
                 />
               </div>
@@ -39,7 +39,7 @@
 
           <!-- 主内容区域 -->
           <div class="dashboard-content">
-            <!-- 第一行：三个透视图表 -->
+            <!-- 第一行-->
             <div class="content-row first-row">
               <div class="content-cell">
                 <DevelopmentPerspective
@@ -197,7 +197,7 @@ export default {
 <style scoped>
 .temu-dashboard {
   background-color: rgb(9, 18, 32);
-  background-image: url("../../../assets/images/pageBg.png");
+  background-image: url("../../../assets/images/bg.jpg");
   width: 100%;
   height: 100vh;
   overflow: hidden;

@@ -109,7 +109,7 @@ public class TEMUOrderDetailsController extends BaseController
     /**
      * 导入数据
      */
-    @Log(title = "销售数据管理", businessType = BusinessType.IMPORT)
+    @Log(title = "TEMU数据管理", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('sale:data:import')")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file) throws Exception
@@ -129,6 +129,6 @@ public class TEMUOrderDetailsController extends BaseController
     public void importTemplate(HttpServletResponse response)
     {
         ExcelUtil<TEMUOrderDetails> util = new ExcelUtil<>(TEMUOrderDetails.class);
-        util.importTemplateExcel(response, "全渠道销售数据模板");
+        util.importTemplateExcel(response, "TEMU数据模板");
     }
 }

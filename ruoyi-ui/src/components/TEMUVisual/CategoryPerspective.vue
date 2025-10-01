@@ -1,7 +1,7 @@
 <template>
   <dv-border-box-8 class="perspective-container">
     <div class="perspective-header">
-      <span class="title">透视-品类</span>
+      <span class="title">品类数据透视</span>
       <div class="chart-controls">
         <div class="field-selector">
           <span class="selector-label">数据维度:</span>

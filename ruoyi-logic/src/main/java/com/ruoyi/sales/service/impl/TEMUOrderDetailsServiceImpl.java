@@ -83,7 +83,7 @@ public class TEMUOrderDetailsServiceImpl implements ITEMUOrderDetailsService
     /**
      * 批量删除Temu订单明细
      *
-     * @param orderNumbers 需要删除的Temu订单明细主键
+     * @param ids 需要删除的Temu订单明细主键
      * @return 结果
      */
     @Override
@@ -95,7 +95,7 @@ public class TEMUOrderDetailsServiceImpl implements ITEMUOrderDetailsService
     /**
      * 删除Temu订单明细信息
      *
-     * @param orderNumber Temu订单明细主键
+     * @param id Temu订单明细主键
      * @return 结果
      */
     @Override

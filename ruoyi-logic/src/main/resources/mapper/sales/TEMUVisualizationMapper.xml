@@ -379,13 +379,11 @@
 
     <!-- 可视化查询条件 -->
     <sql id="visualWhereCondition">
-        <where>
-            <if test="startDate != null"> AND payment_date >= #{startDate}</if>
-            <if test="endDate != null"> AND payment_date &lt;= #{endDate}</if>
-            <if test="category != null and category != ''"> AND category = #{category}</if>
-            <if test="developer != null and developer != ''"> AND developer = #{developer}</if>
-            <if test="operator != null and operator != ''"> AND operator = #{operator}</if>
-            <if test="countryRegion != null and countryRegion != ''"> AND country_region = #{countryRegion}</if>
-        </where>
+        <if test="startDate != null"> AND payment_date >= #{startDate}</if>
+        <if test="endDate != null"> AND payment_date &lt;= #{endDate}</if>
+        <if test="category != null and category != ''"> AND category = #{category}</if>
+        <if test="developer != null and developer != ''"> AND developer = #{developer}</if>
+        <if test="operator != null and operator != ''"> AND operator = #{operator}</if>
+        <if test="countryRegion != null and countryRegion != ''"> AND country_region = #{countryRegion}</if>
     </sql>
 </mapper>

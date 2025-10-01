@@ -58,11 +58,13 @@
         <result property="operator"    column="operator"    />
         <result property="developer"    column="developer"    />
         <result property="orderQuantity"    column="order_quantity"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updateAt"    column="update_at"    />
         <result property="remarks"    column="remarks"    />
     </resultMap>
 
     <sql id="selectTEMUOrderDetailsVo">
-        select id, shipment_date, is_replenishment, tongtu_sku, product_name, category, shipment_quantity, channel, channel_account, sales_site, shipment_warehouse, package_number, shipping_method, logistics_number, order_number, buyer_name, country_region, payment_date, product_developer, receipt_currency, total_order_price, total_order_price_cny, selling_price, selling_price_cny, product_cost, channel_fee_cny, income_cny, first_leg_shipping_cost, first_leg_customs_fee, first_leg_other_fee, packaging_material, packaging_cost, tongtu_shipping_cost, logistics_shipping_cost, order_notes, sorted_order_number, first_leg_cost, refund_amount, replenishment_cost, other_costs, backend_refund_subsidy, advertising_fee, clearance_subsidy, us_platform_label_fee, ratio, gross_profit, gross_profit_rate, distribution_commission, td_actual_gross_profit, td_actual_gross_profit_rate, operator, developer, order_quantity, remarks from temu_order_details
+        select id, shipment_date, is_replenishment, tongtu_sku, product_name, category, shipment_quantity, channel, channel_account, sales_site, shipment_warehouse, package_number, shipping_method, logistics_number, order_number, buyer_name, country_region, payment_date, product_developer, receipt_currency, total_order_price, total_order_price_cny, selling_price, selling_price_cny, product_cost, channel_fee_cny, income_cny, first_leg_shipping_cost, first_leg_customs_fee, first_leg_other_fee, packaging_material, packaging_cost, tongtu_shipping_cost, logistics_shipping_cost, order_notes, sorted_order_number, first_leg_cost, refund_amount, replenishment_cost, other_costs, backend_refund_subsidy, advertising_fee, clearance_subsidy, us_platform_label_fee, ratio, gross_profit, gross_profit_rate, distribution_commission, td_actual_gross_profit, td_actual_gross_profit_rate, operator, developer, order_quantity, created_at, update_at, remarks from temu_order_details
     </sql>
 
     <select id="selectTEMUOrderDetailsList" parameterType="TEMUOrderDetails" resultMap="TEMUOrderDetailsResult">
@@ -249,7 +251,6 @@
     <update id="updateTEMUOrderDetails" parameterType="TEMUOrderDetails">
         update temu_order_details
         <trim prefix="SET" suffixOverrides=",">
-            <if test="id != null">id = #{id},</if>
             <if test="shipmentDate != null">shipment_date = #{shipmentDate},</if>
             <if test="isReplenishment != null and isReplenishment != ''">is_replenishment = #{isReplenishment},</if>
             <if test="tongtuSku != null and tongtuSku != ''">tongtu_sku = #{tongtuSku},</if>
@@ -282,6 +283,7 @@
             <if test="packagingCost != null">packaging_cost = #{packagingCost},</if>
             <if test="tongtuShippingCost != null">tongtu_shipping_cost = #{tongtuShippingCost},</if>
             <if test="logisticsShippingCost != null">logistics_shipping_cost = #{logisticsShippingCost},</if>
+            <if test="orderNumber != null and orderNumber != ''">order_number = #{orderNumber},</if>
             <if test="orderNotes != null and orderNotes != ''">order_notes = #{orderNotes},</if>
             <if test="sortedOrderNumber != null and sortedOrderNumber != ''">sorted_order_number = #{sortedOrderNumber},</if>
             <if test="firstLegCost != null">first_leg_cost = #{firstLegCost},</if>
@@ -302,9 +304,9 @@
             <if test="developer != null and developer != ''">developer = #{developer},</if>
             <if test="orderQuantity != null">order_quantity = #{orderQuantity},</if>
             <if test="remarks != null and remarks != ''">remarks = #{remarks},</if>
-            update_time = sysdate()
+            update_at = sysdate()
         </trim>
-        where order_number = #{orderNumber}
+        where id = #{id}
     </update>
 
     <delete id="deleteTEMUOrderDetailsById" parameterType="Integer">

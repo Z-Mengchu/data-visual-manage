@@ -113,9 +113,7 @@ export default {
     },
     formatNumber(num) {
       const number = Number(num) || 0;
-      if (number >= 1000000) {
-        return (number / 1000000).toFixed(1) + 'M';
-      } else if (number >= 10000) {
+      if (number >= 10000) {
         return (number / 10000).toFixed(1) + '万';
       }
       return number.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
