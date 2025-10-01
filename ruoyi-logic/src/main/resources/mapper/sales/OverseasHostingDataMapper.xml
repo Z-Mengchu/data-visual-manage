@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.sales.mapper.OverseasHostingDataMapper">
+
+    <resultMap type="OverseasHostingData" id="OverseasHostingDataResult">
+        <result property="id"    column="id"    />
+        <result property="store"    column="store"    />
+        <result property="settlementTime"    column="settlement_time"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="productId"    column="product_id"    />
+        <result property="brand"    column="brand"    />
+        <result property="sku"    column="sku"    />
+        <result property="category"    column="category"    />
+        <result property="feeItem"    column="fee_item"    />
+        <result property="amountCny"    column="amount_cny"    />
+        <result property="platformTransactionNumber"    column="platform_transaction_number"    />
+        <result property="limitedSupplyPriceTaskId"    column="limited_supply_price_task_id"    />
+        <result property="revenue"    column="revenue"    />
+        <result property="refund"    column="refund"    />
+        <result property="allocationRatio"    column="allocation_ratio"    />
+        <result property="purchaseCost"    column="purchase_cost"    />
+        <result property="firstMileCost"    column="first_mile_cost"    />
+        <result property="logisticsFee"    column="logistics_fee"    />
+        <result property="packagingCost"    column="packaging_cost"    />
+        <result property="otherCosts"    column="other_costs"    />
+        <result property="reshipmentCost"    column="reshipment_cost"    />
+        <result property="grossProfit"    column="gross_profit"    />
+        <result property="grossProfitMargin"    column="gross_profit_margin"    />
+        <result property="developer"    column="developer"    />
+        <result property="operator"    column="operator"    />
+        <result property="shippingWarehouse"    column="shipping_warehouse"    />
+    </resultMap>
+
+    <sql id="selectOverseasHostingDataVo">
+        select id, store, settlement_time, order_number, product_id, brand, sku, category, fee_item, amount_cny, platform_transaction_number, limited_supply_price_task_id, revenue, refund, allocation_ratio, purchase_cost, first_mile_cost, logistics_fee, packaging_cost, other_costs, reshipment_cost, gross_profit, gross_profit_margin, developer, operator, shipping_warehouse from overseas_hosting_data
+    </sql>
+
+    <select id="selectOverseasHostingDataList" parameterType="OverseasHostingData" resultMap="OverseasHostingDataResult">
+        <include refid="selectOverseasHostingDataVo"/>
+        <where>
+            <if test="store != null and store != ''"> and store = #{store}</if>
+            <if test="params.beginSettlementTime != null and params.beginSettlementTime != '' and params.endSettlementTime != null and params.endSettlementTime != ''"> and settlement_time between #{params.beginSettlementTime} and #{params.endSettlementTime}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
+            <if test="productId != null  and productId != ''"> and product_id = #{productId}</if>
+            <if test="brand != null  and brand != ''"> and brand = #{brand}</if>
+            <if test="sku != null  and sku != ''"> and sku = #{sku}</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="feeItem != null  and feeItem != ''"> and fee_item = #{feeItem}</if>
+            <if test="amountCny != null "> and amount_cny = #{amountCny}</if>
+            <if test="platformTransactionNumber != null  and platformTransactionNumber != ''"> and platform_transaction_number = #{platformTransactionNumber}</if>
+            <if test="limitedSupplyPriceTaskId != null  and limitedSupplyPriceTaskId != ''"> and limited_supply_price_task_id = #{limitedSupplyPriceTaskId}</if>
+            <if test="revenue != null "> and revenue = #{revenue}</if>
+            <if test="refund != null "> and refund = #{refund}</if>
+            <if test="allocationRatio != null "> and allocation_ratio = #{allocationRatio}</if>
+            <if test="purchaseCost != null "> and purchase_cost = #{purchaseCost}</if>
+            <if test="firstMileCost != null "> and first_mile_cost = #{firstMileCost}</if>
+            <if test="logisticsFee != null "> and logistics_fee = #{logisticsFee}</if>
+            <if test="packagingCost != null "> and packaging_cost = #{packagingCost}</if>
+            <if test="otherCosts != null "> and other_costs = #{otherCosts}</if>
+            <if test="reshipmentCost != null "> and reshipment_cost = #{reshipmentCost}</if>
+            <if test="grossProfit != null "> and gross_profit = #{grossProfit}</if>
+            <if test="grossProfitMargin != null "> and gross_profit_margin = #{grossProfitMargin}</if>
+            <if test="developer != null  and developer != ''"> and developer = #{developer}</if>
+            <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
+            <if test="shippingWarehouse != null  and shippingWarehouse != ''"> and shipping_warehouse = #{shippingWarehouse}</if>
+        </where>
+    </select>
+
+    <select id="selectOverseasHostingDataById" parameterType="Integer" resultMap="OverseasHostingDataResult">
+        <include refid="selectOverseasHostingDataVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOverseasHostingData" parameterType="OverseasHostingData" useGeneratedKeys="true" keyProperty="id">
+        insert into overseas_hosting_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="store != null and store != ''">store,</if>
+            <if test="settlementTime != null">settlement_time,</if>
+            <if test="orderNumber != null and orderNumber != ''">order_number,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="brand != null">brand,</if>
+            <if test="sku != null">sku,</if>
+            <if test="category != null">category,</if>
+            <if test="feeItem != null and feeItem != ''">fee_item,</if>
+            <if test="amountCny != null">amount_cny,</if>
+            <if test="platformTransactionNumber != null">platform_transaction_number,</if>
+            <if test="limitedSupplyPriceTaskId != null">limited_supply_price_task_id,</if>
+            <if test="revenue != null">revenue,</if>
+            <if test="refund != null">refund,</if>
+            <if test="allocationRatio != null">allocation_ratio,</if>
+            <if test="purchaseCost != null">purchase_cost,</if>
+            <if test="firstMileCost != null">first_mile_cost,</if>
+            <if test="logisticsFee != null">logistics_fee,</if>
+            <if test="packagingCost != null">packaging_cost,</if>
+            <if test="otherCosts != null">other_costs,</if>
+            <if test="reshipmentCost != null">reshipment_cost,</if>
+            <if test="grossProfit != null">gross_profit,</if>
+            <if test="grossProfitMargin != null">gross_profit_margin,</if>
+            <if test="developer != null">developer,</if>
+            <if test="operator != null">operator,</if>
+            <if test="shippingWarehouse != null">shipping_warehouse,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="store != null and store != ''">#{store},</if>
+            <if test="settlementTime != null">#{settlementTime},</if>
+            <if test="orderNumber != null and orderNumber != ''">#{orderNumber},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="brand != null">#{brand},</if>
+            <if test="sku != null">#{sku},</if>
+            <if test="category != null">#{category},</if>
+            <if test="feeItem != null and feeItem != ''">#{feeItem},</if>
+            <if test="amountCny != null">#{amountCny},</if>
+            <if test="platformTransactionNumber != null">#{platformTransactionNumber},</if>
+            <if test="limitedSupplyPriceTaskId != null">#{limitedSupplyPriceTaskId},</if>
+            <if test="revenue != null">#{revenue},</if>
+            <if test="refund != null">#{refund},</if>
+            <if test="allocationRatio != null">#{allocationRatio},</if>
+            <if test="purchaseCost != null">#{purchaseCost},</if>
+            <if test="firstMileCost != null">#{firstMileCost},</if>
+            <if test="logisticsFee != null">#{logisticsFee},</if>
+            <if test="packagingCost != null">#{packagingCost},</if>
+            <if test="otherCosts != null">#{otherCosts},</if>
+            <if test="reshipmentCost != null">#{reshipmentCost},</if>
+            <if test="grossProfit != null">#{grossProfit},</if>
+            <if test="grossProfitMargin != null">#{grossProfitMargin},</if>
+            <if test="developer != null">#{developer},</if>
+            <if test="operator != null">#{operator},</if>
+            <if test="shippingWarehouse != null">#{shippingWarehouse},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOverseasHostingData" parameterType="OverseasHostingData">
+        update overseas_hosting_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="store != null and store != ''">store = #{store},</if>
+            <if test="settlementTime != null">settlement_time = #{settlementTime},</if>
+            <if test="orderNumber != null and orderNumber != ''">order_number = #{orderNumber},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="brand != null">brand = #{brand},</if>
+            <if test="sku != null">sku = #{sku},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="feeItem != null and feeItem != ''">fee_item = #{feeItem},</if>
+            <if test="amountCny != null">amount_cny = #{amountCny},</if>
+            <if test="platformTransactionNumber != null">platform_transaction_number = #{platformTransactionNumber},</if>
+            <if test="limitedSupplyPriceTaskId != null">limited_supply_price_task_id = #{limitedSupplyPriceTaskId},</if>
+            <if test="revenue != null">revenue = #{revenue},</if>
+            <if test="refund != null">refund = #{refund},</if>
+            <if test="allocationRatio != null">allocation_ratio = #{allocationRatio},</if>
+            <if test="purchaseCost != null">purchase_cost = #{purchaseCost},</if>
+            <if test="firstMileCost != null">first_mile_cost = #{firstMileCost},</if>
+            <if test="logisticsFee != null">logistics_fee = #{logisticsFee},</if>
+            <if test="packagingCost != null">packaging_cost = #{packagingCost},</if>
+            <if test="otherCosts != null">other_costs = #{otherCosts},</if>
+            <if test="reshipmentCost != null">reshipment_cost = #{reshipmentCost},</if>
+            <if test="grossProfit != null">gross_profit = #{grossProfit},</if>
+            <if test="grossProfitMargin != null">gross_profit_margin = #{grossProfitMargin},</if>
+            <if test="developer != null">developer = #{developer},</if>
+            <if test="operator != null">operator = #{operator},</if>
+            <if test="shippingWarehouse != null">shipping_warehouse = #{shippingWarehouse},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOverseasHostingDataById" parameterType="Integer">
+        delete from overseas_hosting_data where id = #{id}
+    </delete>
+
+    <delete id="deleteOverseasHostingDataByIds" parameterType="String">
+        delete from overseas_hosting_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
