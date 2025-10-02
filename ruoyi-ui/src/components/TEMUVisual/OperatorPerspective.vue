@@ -510,7 +510,7 @@ export default {
 
 .legend-percentage {
   font-size: 11px;
-  color: #73c0de;
+  color: #ffffff;
   font-weight: bold;
   min-width: 50px;
   text-align: right;

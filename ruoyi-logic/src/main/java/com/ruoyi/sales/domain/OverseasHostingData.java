@@ -45,7 +45,7 @@ public class OverseasHostingData extends BaseEntity
     private String orderNumber;
 
     /** 商品ID，允许NULL（处理#N/A等无效值） */
-    @Excel(name = "商品ID", readConverterExp = "#N/A=NULL")
+    @Excel(name = "商品ID")
     private String productId;
 
     /** 品牌名称 */
@@ -57,7 +57,7 @@ public class OverseasHostingData extends BaseEntity
     private String sku;
 
     /** 商品类目 */
-    @Excel(name = "类目", readConverterExp = "#N/A=NULL")
+    @Excel(name = "类目")
     private String category;
 
     /** 费用项，例如供货款、处罚费等 */

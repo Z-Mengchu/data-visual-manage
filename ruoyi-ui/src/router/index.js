@@ -99,6 +99,12 @@ export const constantRoutes = [
     component: () => import('@/views/saleManage/temu/TEMUVisualDashboard'),
     name: 'TEMUDashboard',
     meta: { title: 'TEMU数据大屏', icon: 'dashboard' }
+  },
+  {
+    path: '/overseas-dashboard',
+    component: () => import('@/views/saleManage/overseas/dashboard'),
+    name: 'OverseasDashboard',
+    meta: { title: '海外托管数据大屏', icon: 'dashboard' }
   }
 ]
 

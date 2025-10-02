@@ -57,8 +57,6 @@ Vue.component('FileUpload', FileUpload)
 Vue.component('ImageUpload', ImageUpload)
 Vue.component('ImagePreview', ImagePreview)
 
-// 引入全局css
-// import './assets/scss/style.scss';
 // 按需引入vue-awesome图标
 import Icon from 'vue-awesome/components/Icon';
 import 'vue-awesome/icons/chart-bar.js';
@@ -81,6 +79,9 @@ import ElementUI from 'element-ui';
 ElementUI.Dialog.props.closeOnClickModal.default = false;
 import * as echarts from 'echarts'
 Vue.prototype.$echarts = echarts
+
+import geoJson from '../node_modules/echarts4/map/json/china.json'
+echarts.registerMap('china', geoJson);
 
 /**
  * If you don't want to use mock-server

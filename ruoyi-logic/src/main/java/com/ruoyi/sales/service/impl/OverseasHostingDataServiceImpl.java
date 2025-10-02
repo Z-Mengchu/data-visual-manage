@@ -121,15 +121,16 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
-        for (OverseasHostingData OverseasData : overseasHostingData)
+        for (OverseasHostingData overseasData : overseasHostingData)
         {
             try
             {
-                BeanValidators.validateWithException(validator, OverseasData);
-                OverseasData.setUpdateBy(operName);
-                overseasHostingDataMapper.insertOverseasHostingData(OverseasData);
+                if (overseasData.getCategory().equals("42")) overseasData.setCategory("");
+                BeanValidators.validateWithException(validator, overseasData);
+                overseasData.setUpdateBy(operName);
+                overseasHostingDataMapper.insertOverseasHostingData(overseasData);
                 successNum++;
-                successMsg.append("<br/>" + successNum + "、订单号 " + OverseasData.getOrderNumber() + " 导入成功");
+                successMsg.append("<br/>" + successNum + "、订单号 " + overseasData.getOrderNumber() + " 导入成功");
             }
             catch (Exception e)
             {
