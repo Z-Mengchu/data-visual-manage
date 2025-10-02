@@ -2,6 +2,8 @@ package com.ruoyi.sales.mapper;
 
 import java.util.List;
 import com.ruoyi.sales.domain.OverseasHostingData;
+import com.ruoyi.sales.domain.OverseasHostingDimensionSummary;
+import com.ruoyi.sales.domain.FeeItemSummary;
 
 /**
  * 海外托管业务数据管理Mapper接口
@@ -58,4 +60,53 @@ public interface OverseasHostingDataMapper
      * @return 结果
      */
     public int deleteOverseasHostingDataByIds(Integer[] ids);
+
+    /**
+     * 按运营分组汇总数据
+     *
+     * @return 运营维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> selectSummaryByOperator();
+
+    /**
+     * 按开发员分组汇总数据
+     *
+     * @return 开发员维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> selectSummaryByDeveloper();
+
+    /**
+     * 按品牌分组汇总数据
+     *
+     * @return 品牌维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> selectSummaryByBrand();
+
+    /**
+     * 按仓库分组汇总数据
+     *
+     * @return 仓库维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> selectSummaryByWarehouse();
+
+    /**
+     * 按类目分组汇总数据
+     *
+     * @return 类目维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> selectSummaryByCategory();
+
+    /**
+     * 按SKU分组汇总数据
+     *
+     * @return SKU维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> selectSummaryBySku();
+
+    /**
+     * 按费用项分组汇总金额
+     *
+     * @return 费用项汇总列表
+     */
+    public List<FeeItemSummary> selectSummaryByFeeItem();
 }

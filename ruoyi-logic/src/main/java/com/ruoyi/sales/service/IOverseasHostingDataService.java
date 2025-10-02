@@ -1,7 +1,10 @@
 package com.ruoyi.sales.service;
 
 import java.util.List;
+
+import com.ruoyi.sales.domain.FeeItemSummary;
 import com.ruoyi.sales.domain.OverseasHostingData;
+import com.ruoyi.sales.domain.OverseasHostingDimensionSummary;
 import com.ruoyi.sales.domain.TEMUOrderDetails;
 
 /**
@@ -68,4 +71,53 @@ public interface IOverseasHostingDataService
      * @return 结果
      */
     public String importOverseasData(List<OverseasHostingData> overseasHostingData, String operName);
+
+    /**
+     * 按运营分组汇总数据
+     *
+     * @return 运营维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> getSummaryByOperator();
+
+    /**
+     * 按开发员分组汇总数据
+     *
+     * @return 开发员维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> getSummaryByDeveloper();
+
+    /**
+     * 按品牌分组汇总数据
+     *
+     * @return 品牌维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> getSummaryByBrand();
+
+    /**
+     * 按仓库分组汇总数据
+     *
+     * @return 仓库维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> getSummaryByWarehouse();
+
+    /**
+     * 按类目分组汇总数据
+     *
+     * @return 类目维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> getSummaryByCategory();
+
+    /**
+     * 按SKU分组汇总数据
+     *
+     * @return SKU维度汇总列表
+     */
+    public List<OverseasHostingDimensionSummary> getSummaryBySku();
+
+    /**
+     * 按费用项分组汇总金额
+     *
+     * @return 费用项汇总列表
+     */
+    public List<FeeItemSummary> getSummaryByFeeItem();
 }

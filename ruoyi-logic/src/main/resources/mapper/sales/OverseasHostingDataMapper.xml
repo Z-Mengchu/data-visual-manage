@@ -32,6 +32,24 @@
         <result property="operator"    column="operator"    />
         <result property="shippingWarehouse"    column="shipping_warehouse"    />
     </resultMap>
+    <!-- 维度汇总结果映射 -->
+    <resultMap type="OverseasHostingDimensionSummary" id="DimensionSummaryResult">
+        <result property="groupValue"    column="group_value"    />
+        <result property="revenueSum"    column="revenue_sum"    />
+        <result property="refundSum"    column="refund_sum"    />
+        <result property="purchaseCostSum"    column="purchase_cost_sum"    />
+        <result property="firstMileCostSum"    column="first_mile_cost_sum"    />
+        <result property="logisticsFeeSum"    column="logistics_fee_sum"    />
+        <result property="packagingCostSum"    column="packaging_cost_sum"    />
+        <result property="otherCostsSum"    column="other_costs_sum"    />
+        <result property="reshipmentCostSum"    column="reshipment_cost_sum"    />
+        <result property="grossProfitSum"    column="gross_profit_sum"    />
+    </resultMap>
+    <!-- 费用项汇总结果映射 -->
+    <resultMap type="FeeItemSummary" id="FeeItemSummaryResult">
+        <result property="feeItem"    column="fee_item"    />
+        <result property="amountCnySum"    column="amount_cny_sum"    />
+    </resultMap>
 
     <sql id="selectOverseasHostingDataVo">
         select id, store, settlement_time, order_number, product_id, brand, sku, category, fee_item, amount_cny, platform_transaction_number, limited_supply_price_task_id, revenue, refund, allocation_ratio, purchase_cost, first_mile_cost, logistics_fee, packaging_cost, other_costs, reshipment_cost, gross_profit, gross_profit_margin, developer, operator, shipping_warehouse from overseas_hosting_data
@@ -173,4 +191,116 @@
             #{id}
         </foreach>
     </delete>
+
+    <!-- 按运营分组汇总 -->
+    <select id="selectSummaryByOperator" resultMap="DimensionSummaryResult">
+        SELECT
+            operator as group_value,
+            COALESCE(SUM(revenue), 0) as revenue_sum,
+            COALESCE(SUM(refund), 0) as refund_sum,
+            COALESCE(SUM(purchase_cost), 0) as purchase_cost_sum,
+            COALESCE(SUM(first_mile_cost), 0) as first_mile_cost_sum,
+            COALESCE(SUM(logistics_fee), 0) as logistics_fee_sum,
+            COALESCE(SUM(packaging_cost), 0) as packaging_cost_sum,
+            COALESCE(SUM(other_costs), 0) as other_costs_sum,
+            COALESCE(SUM(reshipment_cost), 0) as reshipment_cost_sum,
+            COALESCE(SUM(gross_profit), 0) as gross_profit_sum
+        FROM overseas_hosting_data
+        WHERE operator IS NOT NULL AND operator != ''
+        GROUP BY operator
+    </select>
+    <!-- 按开发员分组汇总 -->
+    <select id="selectSummaryByDeveloper" resultMap="DimensionSummaryResult">
+        SELECT
+            developer as group_value,
+            COALESCE(SUM(revenue), 0) as revenue_sum,
+            COALESCE(SUM(refund), 0) as refund_sum,
+            COALESCE(SUM(purchase_cost), 0) as purchase_cost_sum,
+            COALESCE(SUM(first_mile_cost), 0) as first_mile_cost_sum,
+            COALESCE(SUM(logistics_fee), 0) as logistics_fee_sum,
+            COALESCE(SUM(packaging_cost), 0) as packaging_cost_sum,
+            COALESCE(SUM(other_costs), 0) as other_costs_sum,
+            COALESCE(SUM(reshipment_cost), 0) as reshipment_cost_sum,
+            COALESCE(SUM(gross_profit), 0) as gross_profit_sum
+        FROM overseas_hosting_data
+        WHERE developer IS NOT NULL AND developer != ''
+        GROUP BY developer
+    </select>
+    <!-- 按品牌分组汇总 -->
+    <select id="selectSummaryByBrand" resultMap="DimensionSummaryResult">
+        SELECT
+            brand as group_value,
+            COALESCE(SUM(revenue), 0) as revenue_sum,
+            COALESCE(SUM(refund), 0) as refund_sum,
+            COALESCE(SUM(purchase_cost), 0) as purchase_cost_sum,
+            COALESCE(SUM(first_mile_cost), 0) as first_mile_cost_sum,
+            COALESCE(SUM(logistics_fee), 0) as logistics_fee_sum,
+            COALESCE(SUM(packaging_cost), 0) as packaging_cost_sum,
+            COALESCE(SUM(other_costs), 0) as other_costs_sum,
+            COALESCE(SUM(reshipment_cost), 0) as reshipment_cost_sum,
+            COALESCE(SUM(gross_profit), 0) as gross_profit_sum
+        FROM overseas_hosting_data
+        WHERE brand IS NOT NULL AND brand != ''
+        GROUP BY brand
+    </select>
+    <!-- 按仓库分组汇总 -->
+    <select id="selectSummaryByWarehouse" resultMap="DimensionSummaryResult">
+        SELECT
+            shipping_warehouse as group_value,
+            COALESCE(SUM(revenue), 0) as revenue_sum,
+            COALESCE(SUM(refund), 0) as refund_sum,
+            COALESCE(SUM(purchase_cost), 0) as purchase_cost_sum,
+            COALESCE(SUM(first_mile_cost), 0) as first_mile_cost_sum,
+            COALESCE(SUM(logistics_fee), 0) as logistics_fee_sum,
+            COALESCE(SUM(packaging_cost), 0) as packaging_cost_sum,
+            COALESCE(SUM(other_costs), 0) as other_costs_sum,
+            COALESCE(SUM(reshipment_cost), 0) as reshipment_cost_sum,
+            COALESCE(SUM(gross_profit), 0) as gross_profit_sum
+        FROM overseas_hosting_data
+        WHERE shipping_warehouse IS NOT NULL AND shipping_warehouse != ''
+        GROUP BY shipping_warehouse
+    </select>
+    <!-- 按类目分组汇总 -->
+    <select id="selectSummaryByCategory" resultMap="DimensionSummaryResult">
+        SELECT
+            category as group_value,
+            COALESCE(SUM(revenue), 0) as revenue_sum,
+            COALESCE(SUM(refund), 0) as refund_sum,
+            COALESCE(SUM(purchase_cost), 0) as purchase_cost_sum,
+            COALESCE(SUM(first_mile_cost), 0) as first_mile_cost_sum,
+            COALESCE(SUM(logistics_fee), 0) as logistics_fee_sum,
+            COALESCE(SUM(packaging_cost), 0) as packaging_cost_sum,
+            COALESCE(SUM(other_costs), 0) as other_costs_sum,
+            COALESCE(SUM(reshipment_cost), 0) as reshipment_cost_sum,
+            COALESCE(SUM(gross_profit), 0) as gross_profit_sum
+        FROM overseas_hosting_data
+        WHERE category IS NOT NULL AND category != ''
+        GROUP BY category
+    </select>
+    <!-- 按SKU分组汇总 -->
+    <select id="selectSummaryBySku" resultMap="DimensionSummaryResult">
+        SELECT
+            sku as group_value,
+            COALESCE(SUM(revenue), 0) as revenue_sum,
+            COALESCE(SUM(refund), 0) as refund_sum,
+            COALESCE(SUM(purchase_cost), 0) as purchase_cost_sum,
+            COALESCE(SUM(first_mile_cost), 0) as first_mile_cost_sum,
+            COALESCE(SUM(logistics_fee), 0) as logistics_fee_sum,
+            COALESCE(SUM(packaging_cost), 0) as packaging_cost_sum,
+            COALESCE(SUM(other_costs), 0) as other_costs_sum,
+            COALESCE(SUM(reshipment_cost), 0) as reshipment_cost_sum,
+            COALESCE(SUM(gross_profit), 0) as gross_profit_sum
+        FROM overseas_hosting_data
+        WHERE sku IS NOT NULL AND sku != ''
+        GROUP BY sku
+    </select>
+    <!-- 按费用项分组汇总金额 -->
+    <select id="selectSummaryByFeeItem" resultMap="FeeItemSummaryResult">
+        SELECT
+            fee_item,
+            COALESCE(SUM(amount_cny), 0) as amount_cny_sum
+        FROM overseas_hosting_data
+        WHERE fee_item IS NOT NULL AND fee_item != ''
+        GROUP BY fee_item
+    </select>
 </mapper>
