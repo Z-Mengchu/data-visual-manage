@@ -721,7 +721,8 @@ export default {
     Rose_diagram() {
       let mapChart = this.$echarts.init(
         document.getElementById("Rose_diagram")
-      ); //图表初始化，china-map是绑定的元素
+      );
+      //图表初始化，china-map是绑定的元素
       window.onresize = mapChart.resize; //如果容器变大小，自适应从新构图
       let option = {
         color: [
