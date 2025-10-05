@@ -31,34 +31,53 @@
             <el-col :span="6">
               <!-- 饼图部分 -->
               <div class="left_box1">
-                <dv-border-box-12>
+                <dv-border-box-12 style="padding-top: 10px">
+                  <!-- 标题和选择器行 -->
+                  <div class="chart-header">
+                    <p class="chart-title">运营员数据汇总图</p>
+                    <el-select
+                      v-model="operatorDimension"
+                      placeholder="选择数据维度"
+                      size="mini"
+                      @change="handleOperatorDimensionChange"
+                      class="chart-dimension-selector"
+                    >
+                      <el-option
+                        v-for="item in dimensionOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
                   <div id="Rose_diagram"></div>
                   <dv-active-ring-chart
-                    :config="config"
+                    :config="ringChartConfig"
                     class="left_box1_rose_right"
                   />
-                  <div
-                    class="rose_text"
-                    v-for="(item, index) in numberData"
-                    :key="index"
-                  >
-                    <p>
-                      <span class="coin">￥</span>
-                      <span class="rose_text_nmb">{{
-                          item.number.number
-                        }}</span>
-                    </p>
-                    <p>
-                      <span>{{ item.text }}</span>
-                      <span class="colorYellow">(件)</span>
-                    </p>
-                  </div>
                 </dv-border-box-12>
               </div>
               <!-- 柱状图部分 -->
               <div class="left_box2">
                 <dv-border-box-12 style="padding-top: 10px">
-                  <p style="margin-left: 15px">数据统计图</p>
+                  <!-- 标题和选择器行 -->
+                  <div class="chart-header">
+                    <p class="chart-title">开发员数据汇总图</p>
+                    <el-select
+                      v-model="developerDimension"
+                      placeholder="选择数据维度"
+                      size="mini"
+                      @change="handleDeveloperDimensionChange"
+                      class="chart-dimension-selector"
+                    >
+                      <el-option
+                        v-for="item in dimensionOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
                   <div id="columnar"></div>
                 </dv-border-box-12>
               </div>
@@ -75,8 +94,53 @@
             </el-col>
             <!-- 第二列 -->
             <el-col :span="12">
-              <!-- 中国地图 -->
-              <div id="china-map"></div>
+              <!-- 指标模块 -->
+              <div class="kpi_box">
+                <div class="kpi_content">
+                  <el-row :gutter="20" style="height: 100%;">
+                    <el-col :span="6" v-for="(item, index) in kpiData" :key="index">
+                      <dv-border-box-12 style="height: 150px;">
+                        <div class="kpi_item">
+                          <dv-digital-flop
+                            :config="item.config"
+                            style="width: 100%; height: 60px;"
+                          />
+                          <div class="kpi_label">{{ item.label }}</div>
+                        </div>
+                      </dv-border-box-12>
+                    </el-col>
+                  </el-row>
+                </div>
+              </div>
+              <!-- 中间模块 -->
+              <div class="center_box">
+                <el-row :gutter="10">
+                  <!-- 左边模块 - 40%宽度 -->
+                  <el-col :span="10">
+                    <div class="center_box_left">
+                      <dv-border-box-12>
+                        <!-- 左侧内容 -->
+                        <div class="center_left_content">
+                          <dv-decoration-3 style="width:200px;height:15px;"/>
+                          <div id="center_left_chart"></div>
+                        </div>
+                      </dv-border-box-12>
+                    </div>
+                  </el-col>
+                  <!-- 右边模块 - 60%宽度 -->
+                  <el-col :span="14">
+                    <div class="center_box_right">
+                      <dv-border-box-12>
+                        <!-- 右侧内容 -->
+                        <div class="center_right_content">
+                          <dv-decoration-1 style="width:200px;height:15px;"/>
+                          <div id="center_right_chart"></div>
+                        </div>
+                      </dv-border-box-12>
+                    </div>
+                  </el-col>
+                </el-row>
+              </div>
               <!-- 折线图 -->
               <div class="line_center">
                 <dv-border-box-8>
@@ -88,10 +152,27 @@
             <el-col :span="6">
               <!-- 轮播排行榜部分 -->
               <div class="right_box1">
-                <dv-border-box-12>
-                  <dv-decoration-7 style="width: 100%; height: 30px"
-                  >销 售 排 行 榜</dv-decoration-7
-                  >
+                <dv-border-box-12 style="padding-top: 10px">
+                  <!-- 标题和选择器行 -->
+                  <div class="chart-header">
+                    <dv-decoration-7 style="width: 100%; height: 20px"
+                    >SKU 排 行 榜</dv-decoration-7
+                    >
+                    <el-select
+                      v-model="skuDimension"
+                      placeholder="选择数据维度"
+                      size="mini"
+                      @change="handleSkuDimensionChange"
+                      class="chart-dimension-selector"
+                    >
+                      <el-option
+                        v-for="item in dimensionOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
                   <dv-scroll-ranking-board
                     :config="config"
                     style="width: 95%; height: 87%; margin-left: 2%"
@@ -100,14 +181,52 @@
               </div>
               <!-- 虚线柱状图部分 -->
               <div class="right_box2">
-                <dv-border-box-12 :reverse="true">
+                <dv-border-box-12 :reverse="true" style="padding-top: 10px">
+                  <!-- 标题和选择器行 -->
+                  <div class="chart-header">
+                    <p class="chart-title">品牌类目数据汇总图</p>
+                    <el-select
+                      v-model="brandCategoryDimension"
+                      placeholder="选择数据维度"
+                      size="mini"
+                      @change="handleBrandCategoryDimensionChange"
+                      class="chart-dimension-selector"
+                    >
+                      <el-option
+                        v-for="item in dimensionOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
                   <div id="dotter_bar"></div>
                 </dv-border-box-12>
               </div>
-              <!-- 部分 -->
+              <!-- 饼状图部分 -->
               <div class="right_box3">
-                <dv-border-box-12 :reverse="true">
-                  <dv-conical-column-chart :config="cone" class="cone_box" />
+                <dv-border-box-12 :reverse="true"  style="padding-top: 10px">
+                  <!-- 标题和选择器行 -->
+                  <div class="chart-header">
+                    <dv-decoration-7 style="width: 100%; height: 20px"
+                    >仓 库 数 据 汇 总 图</dv-decoration-7
+                    >
+                    <el-select
+                      v-model="warehouseDimension"
+                      placeholder="选择数据维度"
+                      size="mini"
+                      @change="handleWarehouseDimensionChange"
+                      class="chart-dimension-selector"
+                    >
+                      <el-option
+                        v-for="item in dimensionOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                  <div id="pie_chart" class="pie_chart"/>
                 </dv-border-box-12>
               </div>
             </el-col>
@@ -122,6 +241,10 @@
 import drawMixin from "@/utils/drawMixin"; //自适应缩放
 import { formatTime2 } from "@/utils/index.js"; //日期格式转换
 import * as echarts from "echarts";
+import { getSummaryByOperator, getSummaryByDeveloper, getSummaryByFeeItem,
+  getSummaryBySku, getSummaryByWarehouse, getSummaryByBrand,
+  getSummaryByBrandAndCategory, getSummaryByMonthly, getSummaryByTotal, getSummaryByCoreExpenses } from "@/api/saleManage/overseas/dashboard"
+
 export default {
   mixins: [drawMixin],
   data() {
@@ -138,79 +261,118 @@ export default {
       dateWeek: null,
       //周几
       weekday: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+      // 运营员当前数据维度
+      operatorDimension: 'revenueSum',
+      // 开发员当前数据维度
+      developerDimension: 'revenueSum',
+      // SKU当前数据维度
+      skuDimension: 'revenueSum',
+      // 仓库当前数据维度
+      warehouseDimension: 'revenueSum',
+      // 品牌类目当前数据维度
+      brandCategoryDimension: 'revenueSum',
+      // 数据维度选项
+      dimensionOptions: [
+        { label: '收入', value: 'revenueSum' },
+        { label: '退款', value: 'refundSum' },
+        { label: '采购成本', value: 'purchaseCostSum' },
+        { label: '头程成本', value: 'firstMileCostSum' },
+        { label: '物流费', value: 'logisticsFeeSum' },
+        { label: '包装费用', value: 'packagingCostSum' },
+        { label: '其他费用', value: 'otherCostsSum' },
+        { label: '补发费用', value: 'reshipmentCostSum' },
+        { label: '毛利', value: 'grossProfitSum' }
+      ],
+      // 运营员汇总数据
+      operatorSummaryData: [],
+      // 开发员汇总数据
+      developerSummaryData: [],
+      // 费用项汇总数据
+      feeItemSummaryData: [],
+      // SKU汇总数据
+      skuSummaryData: [],
+      // 仓库汇总数据
+      warehouseSummaryData: [],
+      // 品牌汇总数据
+      brandSummaryData: [],
+      // 品牌类目汇总数据
+      brandCategorySummaryData: [],
+      // 月度汇总数据
+      monthlySummaryData: [],
+      // 总体统计数据
+      totalSummaryData: {},
+      // 核心费用项数据
+      coreExpensesData: {},
+      // 圆环图配置
+      ringChartConfig: {
+        data: [],
+        digitalFlopStyle: {
+          fontSize: 20
+        },
+        color: ['#37a2da', '#32c5e9', '#9fe6b8', '#ffdb5c', '#ff9f7f', '#fb7293', '#e7bcf3', '#8378ea'],
+        animationCurve: 'easeOutBack'
+      },
       //轮播排行榜
       config: {
-        data: [
-          {
-            name: "周口",
-            value: 55,
-          },
-          {
-            name: "南阳",
-            value: 120,
-          },
-          {
-            name: "西峡",
-            value: 78,
-          },
-          {
-            name: "驻马店",
-            value: 66,
-          },
-          {
-            name: "新乡",
-            value: 80,
-          },
-          {
-            name: "信阳",
-            value: 45,
-          },
-          {
-            name: "漯河",
-            value: 29,
-          },
-        ],
+        data: [],
+        unit: '元'
       },
-      //左侧饼图文字
-      numberData: [
-        {
-          number: {
-            number: 15,
-          },
-          text: "今日构建总量",
-        },
-        {
-          number: {
-            number: 1144,
-          },
-          text: "总共完成数量",
-        },
-        {
-          number: {
-            number: 361,
-          },
-          text: "正在编译数量",
-        },
-      ],
       //左侧轮播表格配置项
       board_info: {
-        header: ["人员", "月产量", "月合格率"],
-        data: [
-          ["张三", "10830", "90%"],
-          ["张四", "13500", "92%"],
-          ["张五", "10350", "97%"],
-          ["张六", "13300", "94%"],
-          ["张七", "12500", "95%"],
-          ["张八", "11500", "96%"],
-          ["张九", "12500", "89%"],
-          ["王六", "10360", "95%"],
-          ["王二", "10567", "91%"],
-          ["李四", "15721", "99%"],
-        ],
+        header: ["费用项", "金额（CNY）"],
+        data: [],
         evenRowBGC: "#020308",
         oddRowBGC: "#382B47",
         headerBGC: "#020308",
       },
+      // KPI指标数据
+      kpiData: [
+        {
+          label: '总收入',
+          config: {
+            number: [0],
+            content: '{nt}',
+            style: {
+              fontSize: 24,
+              fill: '#3de7c9'
+            }
+          }
+        },
+        {
+          label: '总订单',
+          config: {
+            number: [0],
+            content: '{nt}',
+            style: {
+              fontSize: 24,
+              fill: '#3de7c9'
+            }
+          }
+        },
+        {
+          label: '总毛利',
+          config: {
+            number: [0],
+            content: '{nt}',
+            style: {
+              fontSize: 24,
+              fill: '#3de7c9'
+            }
+          }
+        },
+        {
+          label: '毛利率',
+          config: {
+            number: [0],
+            toFixed: 2,
+            content: '{nt}%',
+            style: {
+              fontSize: 24,
+              fill: '#3de7c9'
+            }
+          }
+        }
+      ],
       // 定义颜色
       colorList: {
         linearYtoG: {
@@ -282,39 +444,17 @@ export default {
           ],
         },
       },
-      //锥形柱状图
-      cone: {
+      // 饼状图数据
+      pieChartData: {
         data: [
-          {
-            name: "周口",
-            value: 55,
-          },
-          {
-            name: "南阳",
-            value: 120,
-          },
-          {
-            name: "西峡",
-            value: 71,
-          },
-          {
-            name: "驻马店",
-            value: 66,
-          },
-          {
-            name: "新乡",
-            value: 80,
-          },
-          {
-            name: "信阳",
-            value: 35,
-          },
-          {
-            name: "漯河",
-            value: 15,
-          },
-        ],
-        showValue: true,
+          { name: "周口", value: 55 },
+          { name: "南阳", value: 120 },
+          { name: "西峡", value: 71 },
+          { name: "驻马店", value: 66 },
+          { name: "新乡", value: 80 },
+          { name: "信阳", value: 35 },
+          { name: "漯河", value: 15 }
+        ]
       },
     };
   },
@@ -322,24 +462,53 @@ export default {
   mounted() {
     //获取实时时间
     this.timeFn();
-    //加载loading图
-    this.cancelLoading();
     //中国地图
-    this.china_map();
-    //左侧玫瑰饼图
-    this.Rose_diagram();
+    // this.china_map();
+    //获取运营员汇总数据
+    this.getOperatorSummaryData();
+    //获取开发员汇总数据
+    this.getDeveloperSummaryData();
+    //获取费用项汇总数据
+    this.getFeeItemSummaryData();
+    //获取SKU汇总数据
+    this.getSkuSummaryData();
+    //获取仓库汇总数据
+    this.getWarehouseSummaryData();
+    //获取品牌汇总数据
+    this.getBrandSummaryData();
+    //获取品牌类目汇总数据
+    this.getBrandCategorySummaryData();
+    //获取月度汇总数据
+    this.getMonthlySummaryData();
+    //获取总体统计数据
+    this.getTotalSummaryData();
+    //获取核心费用项数据
+    this.getCoreExpensesData();
     //左侧柱状图
     this.columnar();
     //中间折线图
     this.line_center_diagram();
     //虚线柱状图
     this.dotter_bar();
+    //饼状图
+    this.pie_chart();
+    //中间左侧图表
+    this.center_left_chart();
+    //中间右侧图表
+    this.center_right_chart();
   },
   beforeDestroy() {
     //离开时删除计时器
     clearInterval(this.timing);
   },
   methods: {
+    formatNumber(num) {
+      const number = Number(num) || 0;
+      if (number >= 10000) {
+        return (number / 10000).toFixed(1) + '万';
+      }
+      return number.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
     //右上角当前日期时间显示：每一秒更新一次最新时间
     timeFn() {
       this.timing = setInterval(() => {
@@ -351,379 +520,432 @@ export default {
         this.dateWeek = this.weekday[new Date().getDay()];
       }, 1000);
     },
-    //loading图
-    cancelLoading() {
-      setTimeout(() => {
-        this.loading = false;
-      }, 500);
-    },
-    //中国地图
-    china_map() {
-      let mapChart = this.$echarts.init(document.getElementById("china-map")); //图表初始化，china-map是绑定的元素
-      window.onresize = mapChart.resize; //如果容器变大小，自适应从新构图
-      let series = []; //存放循环配置项
-      let res = []; //存放射线的起始点和结束点位置
-      let province = []; //存放有射线的省的名字，以此来拿到对应省份的坐标
-      //提前存好的所有省份坐标，用于后面根据名字拿到对应的左边
-      let chinaGeoCoordMap = {
-        新疆: [86.9023, 41.148],
-        西藏: [87.8695, 31.6846],
-        内蒙古: [110.5977, 41.3408],
-        青海: [95.2402, 35.4199],
-        四川: [102.9199, 30.1904],
-        黑龙江: [128.1445, 46.7156],
-        甘肃: [102.7129, 38.166],
-        云南: [101.0652, 24.6807],
-        广西: [108.7813, 23.6426],
-        湖南: [111.5332, 27.3779],
-        陕西: [108.5996, 33.7396],
-        广东: [113.8668, 22.8076],
-        吉林: [126.1746, 43.5938],
-        河北: [115.4004, 38.1688],
-        湖北: [112.2363, 30.8572],
-        贵州: [106.6113, 26.6385],
-        山东: [118.2402, 36.2307],
-        江西: [115.7156, 27.99],
-        河南: [113.0668, 33.8818],
-        辽宁: [123.0438, 41.0889],
-        山西: [112.4121, 36.6611],
-        安徽: [117.2461, 31.0361],
-        福建: [118.3008, 25.9277],
-        浙江: [120.498, 29.0918],
-        江苏: [119.8586, 32.915],
-        重庆: [107.7539, 29.8904],
-        宁夏: [105.9961, 37.1096],
-        海南: [109.9512, 19.2041],
-        台湾: [120.8254, 23.5986],
-        北京: [116.4551, 40.2539],
-        天津: [117.4219, 39.4189],
-        上海: [121.4648, 31.2891],
-        香港: [114.6178, 22.3242],
-        澳门: [113.5547, 21.6484],
-      };
-      //后台给的数据模拟
-      let lineData = [
-        {
-          val: 32, //数据
-          blat: [86.9023, 41.148], //发射点
-          elon: [87.8695, 31.6846], //接收点
-          bcitysim: "新疆", //发射省的名字
-          ecitysim: "西藏", //接收省的名字
-        },
-        {
-          val: 31,
-          blat: [87.8695, 31.6846],
-          elon: [95.2402, 35.4199],
-          bcitysim: "西藏",
-          ecitysim: "青海",
-        },
-        {
-          val: 33,
-          blat: [86.9023, 41.148],
-          elon: [95.2402, 35.4199],
-          bcitysim: "新疆",
-          ecitysim: "青海",
-        },
-        {
-          val: 33,
-          blat: [116.4551, 40.2539],
-          elon: [119.8586, 32.915],
-          bcitysim: "北京",
-          ecitysim: "江苏",
-        },
-        {
-          val: 33,
-          blat: [120.8254, 23.5986],
-          elon: [109.9512, 19.2041],
-          bcitysim: "台湾",
-          ecitysim: "海南",
-        },
-        {
-          val: 33,
-          blat: [120.498, 29.0918],
-          elon: [115.7156, 27.99],
-          bcitysim: "浙江",
-          ecitysim: "江西",
-        },
-        {
-          val: 33,
-          blat: [117.2461, 31.0361],
-          elon: [119.8586, 32.915],
-          bcitysim: "安徽",
-          ecitysim: "江苏",
-        },
-        {
-          val: 33,
-          blat: [117.2461, 31.0361],
-          elon: [105.9961, 37.1096],
-          bcitysim: "安徽",
-          ecitysim: "宁夏",
-        },
-        {
-          val: 33,
-          blat: [117.2461, 31.0361],
-          elon: [107.7539, 29.8904],
-          bcitysim: "安徽",
-          ecitysim: "重庆",
-        },
-        {
-          val: 33,
-          blat: [117.2461, 31.0361],
-          elon: [123.0438, 41.0889],
-          bcitysim: "安徽",
-          ecitysim: "辽宁",
-        },
-        {
-          val: 33,
-          blat: [119.8586, 32.915],
-          elon: [102.7129, 38.166],
-          bcitysim: "江苏",
-          ecitysim: "甘肃",
-        },
-        {
-          val: 33,
-          blat: [119.8586, 32.915],
-          elon: [128.1445, 46.7156],
-          bcitysim: "江苏",
-          ecitysim: "黑龙江",
-        },
-        {
-          val: 33,
-          blat: [119.8586, 32.915],
-          elon: [110.5977, 41.3408],
-          bcitysim: "江苏",
-          ecitysim: "内蒙古",
-        },
-        {
-          val: 33,
-          blat: [119.8586, 32.915],
-          elon: [101.0652, 24.6807],
-          bcitysim: "江苏",
-          ecitysim: "云南",
-        },
-        {
-          val: 33,
-          blat: [119.8586, 32.915],
-          elon: [86.9023, 41.148],
-          bcitysim: "江苏",
-          ecitysim: "新疆",
-        },
-        {
-          val: 33,
-          blat: [86.9023, 41.148],
-          elon: [110.5977, 41.3408],
-          bcitysim: "新疆",
-          ecitysim: "内蒙古",
-        },
-        {
-          val: 33,
-          blat: [86.9023, 41.148],
-          elon: [102.9199, 30.1904],
-          bcitysim: "新疆",
-          ecitysim: "四川",
-        },
-      ];
-      //循环拿到处理好的数据
-      for (var i = 0; i < lineData.length; i++) {
-        province.push(lineData[i].bcitysim); //存进去每个省的名字
-        province.push(lineData[i].ecitysim); //存进去每个省的名字
-        res.push({
-          fromName: lineData[i].bcitysim, //发射的省名，保存用于弹框显示
-          toName: lineData[i].ecitysim, //接收的省名，保存用于弹框显示
-          coords: [
-            lineData[i].blat, //发射
-            lineData[i].elon, //接收
-          ],
-          count: lineData[i].val, //数据
-        });
+    // 获取运营员汇总数据
+    async getOperatorSummaryData() {
+      try {
+        const response = await getSummaryByOperator();
+        this.operatorSummaryData = response.data;
+        // 初始化饼图和圆环图
+        this.Rose_diagram();
+        this.updateRingChartData();
+      } catch (error) {
+        console.error('获取运营员汇总数据失败:', error);
       }
-      let index_data = new Set(province); //把省的名字去重
-      let data_res = []; //定义一个新的变量存放省的坐标
-
-      //注意这里一定要用name和value的形式。不是这个格式的散点图显示不出来
-      index_data.forEach((item) => {
-        data_res.push({
-          name: item, //每个省的名字
-          value: chinaGeoCoordMap[item], //每个省的坐标
-        });
-      });
-      //循环往series内添加配置项
-      series.push(
-        {
-          //射线效果图层
-          type: "lines", //类型：射线
-          zlevel: 1, //类似图层效果
-          effect: {
-            show: true, //是否显示图标
-            symbol: "arrow", //箭头图标
-            symbolSize: 5, //图标大小
-            trailLength: 0.02, //特效尾迹长度[0,1]值越大，尾迹越长重
-          },
-          label: {
-            show: true,
-          },
-          lineStyle: {
-            color: "#fff",
-            normal: {
-              color: "#00A0FF",
-              width: 1, //尾迹线条宽度
-              opacity: 0.5, //尾迹线条透明度
-              curveness: 0.1, //尾迹线条曲直度
-            },
-          },
-          //提示框信息
-          tooltip: {
-            formatter: function (param) {
-              return (
-                param.data.fromName +
-                ">" +
-                param.data.toName +
-                "<br>数量：" +
-                param.data.count
-              );
-            },
-          },
-          data: res, //拿到射线的起始点和结束点
-        },
-        //散点图
-        {
-          type: "effectScatter",//散点图
-          coordinateSystem: "geo",//这个不能删，删了不显示
-          zlevel: 1,
-          rippleEffect: {
-            //涟漪特效
-            period: 4, //动画时间，值越小速度越快
-            brushType: "stroke", //波纹绘制方式 stroke, fill
-            scale: 4, //波纹圆环最大限制，值越大波纹越大
-          },
-          //设置文字部分
-          label: {
-            normal: {
-              show: true, //省份名显示隐藏
-              position: "right", //省份名显示位置
-              offset: [5, 0], //省份名偏移设置
-              formatter: function (params) {
-                //圆环显示省份名
-                return params.name;  //这个名字是根据data中的name来显示的
-              },
-              fontSize: 12,//文字大小
-            },
-            emphasis: {
-              show: true,
-            },
-          },
-          symbol: "circle",//散点图
-          symbolSize: 5,//散点大小
-          itemStyle: {//散点样式
-            normal: {
-              show: true,
-              color: "#fff",
-            },
-          },
-          data: data_res, //处理好后的散点图坐标数组
-        },
-        //点击高亮
-        {
-          type: "map",
-          mapType: "china",
-          zlevel: 1,
-          roam: true,
-          geoIndex: 0,
-          tooltip: {
-            show: true,
-          },
-          itemStyle: {
-            areaColor: "#00196d",
-            borderColor: "#0a53e9",
-          },
-          emphasis: {
-            show: true,
-            label: {
-              normal: {
-                show: true, // 是否显示对应地名
-                textStyle: {
-                  color: "#fff",
-                },
-              },
-            },
-            itemStyle: {
-              areaColor: "#00196d",
-              borderColor: "#0a53e9",
-            },
-          },
+    },
+    // 获取开发员汇总数据
+    async getDeveloperSummaryData() {
+      try {
+        const response = await getSummaryByDeveloper();
+        this.developerSummaryData = response.data;
+        // 初始化柱状图
+        this.columnar();
+      } catch (error) {
+        console.error('获取开发员汇总数据失败:', error);
+      }
+    },
+    // 获取仓库汇总数据
+    async getWarehouseSummaryData() {
+      try {
+        const response = await getSummaryByWarehouse();
+        this.warehouseSummaryData = response.data;
+        // 更新饼状图数据
+        this.updatePieChartData();
+      } catch (error) {
+        console.error('获取仓库汇总数据失败:', error);
+      }
+    },
+    // 获取品牌汇总数据
+    async getBrandSummaryData() {
+      try {
+        const response = await getSummaryByBrand();
+        this.brandSummaryData = response.data;
+      } catch (error) {
+        console.error('获取品牌汇总数据失败:', error);
+      }
+    },
+    // 获取品牌类目汇总数据
+    async getBrandCategorySummaryData() {
+      try {
+        const response = await getSummaryByBrandAndCategory();
+        this.brandCategorySummaryData = response.data;
+        // 更新虚线柱状图数据
+        this.updateDotterBarData();
+      } catch (error) {
+        console.error('获取品牌类目汇总数据失败:', error);
+      }
+    },
+    // 获取月度汇总数据
+    async getMonthlySummaryData() {
+      try {
+        const response = await getSummaryByMonthly();
+        this.monthlySummaryData = response.data;
+        // 更新折线图数据
+        this.updateLineChartData();
+      } catch (error) {
+        console.error('获取月度汇总数据失败:', error);
+      }
+    },
+    // 获取总体统计数据
+    async getTotalSummaryData() {
+      try {
+        const response = await getSummaryByTotal();
+        this.totalSummaryData = response.data;
+        // 更新KPI指标数据
+        this.updateKpiData();
+      } catch (error) {
+        console.error('获取总体统计数据失败:', error);
+      }
+    },
+    // 获取核心费用项数据
+    async getCoreExpensesData() {
+      try {
+        const response = await getSummaryByCoreExpenses();
+        this.coreExpensesData = response.data;
+        // 更新中间模块图表数据
+        this.updateCenterCharts();
+      } catch (error) {
+        console.error('获取核心费用项数据失败:', error);
+      }
+    },
+    // 处理运营员数据维度变化
+    handleOperatorDimensionChange() {
+      this.Rose_diagram();
+      this.updateRingChartData();
+    },
+    // 处理开发人员数据维度变化
+    handleDeveloperDimensionChange() {
+      this.columnar();
+    },
+    // 处理SKU数据维度变化
+    handleSkuDimensionChange() {
+      this.updateRankingData();
+    },
+    // 处理仓库数据维度变化
+    handleWarehouseDimensionChange() {
+      this.updatePieChartData();
+    },
+    // 处理品牌类目数据维度变化
+    handleBrandCategoryDimensionChange() {
+      this.updateDotterBarData();
+    },
+    // 获取SKU汇总数据
+    async getSkuSummaryData() {
+      try {
+        const response = await getSummaryBySku();
+        this.skuSummaryData = response.data;
+        // 更新排行榜数据
+        this.updateRankingData();
+      } catch (error) {
+        console.error('获取SKU汇总数据失败:', error);
+      }
+    },
+    // 更新排行榜数据
+    updateRankingData() {
+      if (!this.skuSummaryData || this.skuSummaryData.length === 0) return;
+      // 处理SKU数据
+      const rankingData = this.skuSummaryData.map(item => {
+        let value = 0;
+        // 根据当前选择的维度获取对应的数值
+        switch (this.skuDimension) {
+          case 'revenueSum':
+            value = item.revenueSum || 0;
+            break;
+          case 'refundSum':
+            value = item.refundSum || 0;
+            break;
+          case 'purchaseCostSum':
+            value = item.purchaseCostSum || 0;
+            break;
+          case 'firstMileCostSum':
+            value = item.firstMileCostSum || 0;
+            break;
+          case 'logisticsFeeSum':
+            value = item.logisticsFeeSum || 0;
+            break;
+          case 'packagingCostSum':
+            value = item.packagingCostSum || 0;
+            break;
+          case 'otherCostsSum':
+            value = item.otherCostsSum || 0;
+            break;
+          case 'reshipmentCostSum':
+            value = item.reshipmentCostSum || 0;
+            break;
+          case 'grossProfitSum':
+            value = item.grossProfitSum || 0;
+            break;
+          default:
+            value = item.revenueSum || 0;
         }
-      );
-      //配置
-      let option = {
-        //title可要可不要
-
-        // title: {
-        //   text: "查查的地图",
-        //   textStyle: {
-        //     color: "#ffffff",
-        //   },
-        // },
-        legend: {
-          show: true,
-          selected: {},
-          x: "left",
-          orient: "vertical",
-          textStyle: {
-            color: "white",
-          },
-          data: [],
-        },
-        //鼠标移上去的弹框
-        tooltip: {
-          trigger: "item",
-          show: true,
-        },
-        //geo：这是重点
-        geo: {
-          map: "china", //中国地图
-          zoom: 1.2, //缩放倍数
-          roam: false, //是否允许缩放和拖拽地图
-          label: {
-            normal: {
-              show: true, // 是否显示省份名字，现在是隐藏的状态，因为和散点图的名字重叠了。如果需要就true
-              textStyle: {
-                //名字的样式
-                color: "#fff",
-              },
-            },
-            emphasis: {
-              show: true,
-            },
-          },
-          //地图样式
-          itemStyle: {
-            normal: {
-              borderColor: "#293171", //地图边框颜色
-              borderWidth: "2", //地图边框粗细
-              areaColor: "#0A0F33", //地图背景色
-            },
-            //省份地图阴影
-            emphasis: {
-              areaColor: null,
-              shadowOffsetX: 0,
-              shadowOffsetY: 0,
-              shadowBlur: 20,
-              borderWidth: 0,
-              shadowColor: "#fff",
-            },
-          },
-        },
-        series: series, //图表配置
+        return {
+          name: item.groupValue || '未知SKU',
+          value: Number(value)
+        };
+      }).filter(item => item.value > 0)
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 100); // 取前100名
+      // 更新排行榜配置
+      this.config = {
+        ...this.config,
+        data: rankingData,
+        unit: '元'
       };
-      mapChart.setOption(option); //生成图表
+    },
+    // 更新饼状图数据
+    updatePieChartData() {
+      if (!this.warehouseSummaryData || this.warehouseSummaryData.length === 0) return;
+
+      // 处理仓库数据
+      const pieData = this.warehouseSummaryData.map(item => {
+        let value = 0;
+        // 根据当前选择的维度获取对应的数值
+        switch (this.warehouseDimension) {
+          case 'revenueSum':
+            value = item.revenueSum || 0;
+            break;
+          case 'refundSum':
+            value = item.refundSum || 0;
+            break;
+          case 'purchaseCostSum':
+            value = item.purchaseCostSum || 0;
+            break;
+          case 'firstMileCostSum':
+            value = item.firstMileCostSum || 0;
+            break;
+          case 'logisticsFeeSum':
+            value = item.logisticsFeeSum || 0;
+            break;
+          case 'packagingCostSum':
+            value = item.packagingCostSum || 0;
+            break;
+          case 'otherCostsSum':
+            value = item.otherCostsSum || 0;
+            break;
+          case 'reshipmentCostSum':
+            value = item.reshipmentCostSum || 0;
+            break;
+          case 'grossProfitSum':
+            value = item.grossProfitSum || 0;
+            break;
+          default:
+            value = item.revenueSum || 0;
+        }
+        return {
+          name: item.groupValue || '未知仓库',
+          value: Number(value)
+        };
+      }).filter(item => item.value > 0);
+      // 重新渲染饼状图
+      this.pie_chart(pieData);
+    },
+    // 更新虚线柱状图数据
+    updateDotterBarData() {
+      if (!this.brandSummaryData || this.brandSummaryData.length === 0) return;
+      // 处理品牌数据
+      const chartData = this.brandSummaryData.map(item => {
+        let value = 0;
+        // 根据当前选择的维度获取对应的数值
+        switch (this.brandCategoryDimension) {
+          case 'revenueSum':
+            value = item.revenueSum || 0;
+            break;
+          case 'refundSum':
+            value = item.refundSum || 0;
+            break;
+          case 'purchaseCostSum':
+            value = item.purchaseCostSum || 0;
+            break;
+          case 'firstMileCostSum':
+            value = item.firstMileCostSum || 0;
+            break;
+          case 'logisticsFeeSum':
+            value = item.logisticsFeeSum || 0;
+            break;
+          case 'packagingCostSum':
+            value = item.packagingCostSum || 0;
+            break;
+          case 'otherCostsSum':
+            value = item.otherCostsSum || 0;
+            break;
+          case 'reshipmentCostSum':
+            value = item.reshipmentCostSum || 0;
+            break;
+          case 'grossProfitSum':
+            value = item.grossProfitSum || 0;
+            break;
+          default:
+            value = item.revenueSum || 0;
+        }
+        return {
+          name: item.groupValue || '未知品牌',
+          value: Number(value)
+        };
+      }).filter(item => item.value > 0)
+      // 重新渲染虚线柱状图
+      this.dotter_bar(chartData);
+    },
+    // 更新折线图数据
+    updateLineChartData() {
+      if (!this.monthlySummaryData || this.monthlySummaryData.length === 0) return;
+      // 重新渲染折线图
+      this.line_center_diagram();
+    },
+    // 更新KPI指标数据
+    updateKpiData() {
+      if (!this.totalSummaryData) return;
+      this.kpiData = [
+        {
+          label: '总收入',
+          config: {
+            number: [Number(this.totalSummaryData.total_revenue) || 0],
+            content: '{nt}',
+            style: {
+              fontSize: 24,
+              fill: '#3de7c9'
+            }
+          }
+        },
+        {
+          label: '总订单',
+          config: {
+            number: [Number(this.totalSummaryData.total_orders) || 0],
+            content: '{nt}',
+            style: {
+              fontSize: 24,
+              fill: '#3de7c9'
+            }
+          }
+        },
+        {
+          label: '总毛利',
+          config: {
+            number: [Number(this.totalSummaryData.total_gross_profit) || 0],
+            content: '{nt}',
+            style: {
+              fontSize: 24,
+              fill: '#3de7c9'
+            }
+          }
+        },
+        {
+          label: '毛利率',
+          config: {
+            number: [Number(this.totalSummaryData.gross_profit_margin) || 0],
+            toFixed: 2,
+            content: '{nt}%',
+            style: {
+              fontSize: 24,
+              fill: '#3de7c9'
+            }
+          }
+        }
+      ];
+    },
+    // 更新中间模块图表数据
+    updateCenterCharts() {
+      if (!this.coreExpensesData) return;
+      // 重新渲染中间模块图表
+      this.center_left_chart();
+      this.center_right_chart();
+    },
+    // 获取运营员当前维度显示名称
+    getOperatorDimensionLabel() {
+      const option = this.dimensionOptions.find(item => item.value === this.operatorDimension);
+      return option ? option.label : '收入';
+    },
+    // 获取开发员维度显示名称
+    getDeveloperDimensionLabel() {
+      const option = this.dimensionOptions.find(item => item.value === this.developerDimension);
+      return option ? option.label : '收入';
+    },
+    // 获取仓库维度显示名称
+    getWarehouseDimensionLabel() {
+      const option = this.dimensionOptions.find(item => item.value === this.warehouseDimension);
+      return option ? option.label : '收入';
+    },
+    // 获取品牌类目维度显示名称
+    getBrandCategoryDimensionLabel() {
+      const option = this.dimensionOptions.find(item => item.value === this.brandCategoryDimension);
+      return option ? option.label : '收入';
+    },
+    // 获取费用项汇总数据
+    async getFeeItemSummaryData() {
+      try {
+        const response = await getSummaryByFeeItem();
+        this.feeItemSummaryData = response.data;
+        // 更新轮播表格数据
+        this.updateBoardData();
+      } catch (error) {
+        console.error('获取费用项汇总数据失败:', error);
+      }
+    },
+    // 更新轮播表格数据
+    updateBoardData() {
+      if (!this.feeItemSummaryData || this.feeItemSummaryData.length === 0) return;
+
+      // 将费用项数据转换为轮播表格格式
+      const tableData = this.feeItemSummaryData.map(item => {
+        return [
+          item.feeItem || '未知费用项',
+          this.formatNumber(item.amountCnySum || 0)
+        ];
+      });
+
+      // 更新轮播表格配置
+      this.board_info = {
+        ...this.board_info,
+        data: tableData
+      };
     },
     //玫瑰饼图
     Rose_diagram() {
       let mapChart = this.$echarts.init(
         document.getElementById("Rose_diagram")
       );
-      //图表初始化，china-map是绑定的元素
+      //图表初始化
       window.onresize = mapChart.resize; //如果容器变大小，自适应从新构图
+
+      // 处理运营员数据
+      const chartData = this.operatorSummaryData.map(item => {
+        let value = 0;
+        // 根据当前选择的维度获取对应的数值
+        switch (this.operatorDimension) {
+          case 'revenueSum':
+            value = item.revenueSum || 0;
+            break;
+          case 'refundSum':
+            value = item.refundSum || 0;
+            break;
+          case 'purchaseCostSum':
+            value = item.purchaseCostSum || 0;
+            break;
+          case 'firstMileCostSum':
+            value = item.firstMileCostSum || 0;
+            break;
+          case 'logisticsFeeSum':
+            value = item.logisticsFeeSum || 0;
+            break;
+          case 'packagingCostSum':
+            value = item.packagingCostSum || 0;
+            break;
+          case 'otherCostsSum':
+            value = item.otherCostsSum || 0;
+            break;
+          case 'reshipmentCostSum':
+            value = item.reshipmentCostSum || 0;
+            break;
+          case 'grossProfitSum':
+            value = item.grossProfitSum || 0;
+            break;
+          default:
+            value = item.revenueSum || 0;
+        }
+
+        return {
+          value: Number(value),
+          name: item.groupValue || '未知运营员'
+        };
+      });
       let option = {
         color: [
           "#37a2da",
@@ -737,7 +959,20 @@ export default {
         ],
         tooltip: {
           trigger: "item",
-          formatter: "{a} <br/>{b} : {c} ({d}%)",
+          formatter:  (params) => {
+            const value = this.formatNumber(params.value);
+            const percentage = params.percent.toFixed(1);
+            return `${params.seriesName} <br/>${params.name} : ${value} (${percentage}%)`;
+          },
+          axisPointer: {
+            type: 'shadow'
+          },
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          textStyle: {
+            color: '#fff',
+            fontSize: 12
+          },
+          extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);'
         },
         toolbox: {
           show: true,
@@ -748,41 +983,128 @@ export default {
           icon: "circle",
           bottom: 0,
           x: "center",
-          data: ["data1", "data2", "data3", "data4", "data5", "data6"],
+          data: chartData.map(item => item.name),
           textStyle: {
             color: "#fff",
           },
         },
         series: [
           {
-            name: "通过率统计",
+            name: `运营员${this.getOperatorDimensionLabel()}统计`,
             type: "pie",
             radius: [10, 50],
             roseType: "area",
             center: ["50%", "40%"],
-            data: [
-              { value: 10, name: "data1" },
-              { value: 5, name: "data2" },
-              { value: 15, name: "data3" },
-              { value: 25, name: "data4" },
-              { value: 20, name: "data5" },
-              { value: 35, name: "data6" },
-            ],
+            data: chartData,
           },
         ],
       };
       mapChart.setOption(option); //生成图表
     },
+    // 更新圆环图数据
+    updateRingChartData() {
+      if (!this.operatorSummaryData || this.operatorSummaryData.length === 0) return;
+      // 为每个运营员创建圆环图数据项
+      // 更新圆环图数据
+      this.ringChartConfig.data = this.operatorSummaryData.map(item => {
+        let value = 0;
+        // 根据当前选择的维度获取对应的数值
+        switch (this.operatorDimension) {
+          case 'revenueSum':
+            value = item.revenueSum || 0;
+            break;
+          case 'refundSum':
+            value = item.refundSum || 0;
+            break;
+          case 'purchaseCostSum':
+            value = item.purchaseCostSum || 0;
+            break;
+          case 'firstMileCostSum':
+            value = item.firstMileCostSum || 0;
+            break;
+          case 'logisticsFeeSum':
+            value = item.logisticsFeeSum || 0;
+            break;
+          case 'packagingCostSum':
+            value = item.packagingCostSum || 0;
+            break;
+          case 'otherCostsSum':
+            value = item.otherCostsSum || 0;
+            break;
+          case 'reshipmentCostSum':
+            value = item.reshipmentCostSum || 0;
+            break;
+          case 'grossProfitSum':
+            value = item.grossProfitSum || 0;
+            break;
+          default:
+            value = item.revenueSum || 0;
+        }
+
+        return {
+          name: item.groupValue || '未知运营员',
+          value: Number(value)
+        };
+      }).filter(item => item.value > 0);
+      this.ringChartConfig = {...this.ringChartConfig}
+    },
     //柱状图
     columnar() {
-      let mapChart = this.$echarts.init(document.getElementById("columnar")); //图表初始化，china-map是绑定的元素
+      let mapChart = this.$echarts.init(document.getElementById("columnar"));
       window.onresize = mapChart.resize; //如果容器变大小，自适应从新构图
+      // 处理开发员数据
+      const chartData = this.developerSummaryData.map(item => {
+        let value = 0;
+        // 根据当前选择的维度获取对应的数值
+        switch (this.developerDimension) {
+          case 'revenueSum':
+            value = item.revenueSum || 0;
+            break;
+          case 'refundSum':
+            value = item.refundSum || 0;
+            break;
+          case 'purchaseCostSum':
+            value = item.purchaseCostSum || 0;
+            break;
+          case 'firstMileCostSum':
+            value = item.firstMileCostSum || 0;
+            break;
+          case 'logisticsFeeSum':
+            value = item.logisticsFeeSum || 0;
+            break;
+          case 'packagingCostSum':
+            value = item.packagingCostSum || 0;
+            break;
+          case 'otherCostsSum':
+            value = item.otherCostsSum || 0;
+            break;
+          case 'reshipmentCostSum':
+            value = item.reshipmentCostSum || 0;
+            break;
+          case 'grossProfitSum':
+            value = item.grossProfitSum || 0;
+            break;
+          default:
+            value = item.revenueSum || 0;
+        }
+        return {
+          name: item.groupValue || '未知开发员',
+          value: Number(value)
+        };
+      });
+      // 提取名称和数值
+      const names = chartData.map(item => item.name);
+      const values = chartData.map(item => item.value);
       let option = {
         title: {
           text: "",
         },
         tooltip: {
           trigger: "axis",
+          formatter: (params) => {
+            const value = this.formatNumber(params[0].value);
+            return `${this.getDeveloperDimensionLabel()}<br/>${params[0].name} : ${value}`;
+          },
           backgroundColor: "rgba(255,255,255,0.1)",
           axisPointer: {
             type: "shadow",
@@ -791,55 +1113,26 @@ export default {
               backgroundColor: "#7B7DDC",
             },
           },
+          textStyle: {
+            color: '#fff',
+            fontSize: 12
+          },
+          extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);'
         },
         legend: {
-          data: ["已贯通", "计划贯通", "贯通率"],
+          data: [this.getDeveloperDimensionLabel()],
           textStyle: {
             color: "#B4B4B4",
           },
           top: "0%",
         },
         grid: {
-          x: "8%",
-          width: "95%",
+          x: "11%",
+          width: "87%",
           y: "4%",
         },
         xAxis: {
-          data: [
-            "市区",
-            "万州",
-            "江北",
-            "南岸",
-            "北碚",
-            "綦南",
-            "长寿",
-            "永川",
-            "璧山",
-            "江津",
-            "城口",
-            "大足",
-            "垫江",
-            "丰都",
-            "奉节",
-            "合川",
-            "江津区",
-            "开州",
-            "南川",
-            "彭水",
-            "黔江",
-            "石柱",
-            "铜梁",
-            "潼南",
-            "巫山",
-            "巫溪",
-            "武隆",
-            "秀山",
-            "酉阳",
-            "云阳",
-            "忠县",
-            "川东",
-            "检修",
-          ],
+          data: names,
           axisLine: {
             lineStyle: {
               color: "#B4B4B4",
@@ -847,11 +1140,17 @@ export default {
           },
           axisTick: {
             show: false,
-          },
+          }
         },
         yAxis: [
           {
-            splitLine: { show: false },
+            splitLine: {
+              show: false,
+              lineStyle: {
+                color: 'rgba(180, 180, 180, 0.3)',
+                type: 'dashed'
+              }
+            },
             axisLine: {
               lineStyle: {
                 color: "#B4B4B4",
@@ -859,15 +1158,30 @@ export default {
             },
 
             axisLabel: {
-              formatter: "{value} ",
+              formatter: (value) => {
+                return this.formatNumber(value);
+              },
+              textStyle: {
+                color: "#B4B4B4"
+              }
             },
           },
         ],
         series: [
           {
-            name: "已贯通",
+            name: this.getDeveloperDimensionLabel(),
+            type: "line",
+            smooth: true,
+            showAllSymbol: true,
+            symbol: "emptyCircle",
+            symbolSize: 15,
+            data: values,
+          },
+          {
+            name: this.getDeveloperDimensionLabel(),
             type: "bar",
-            barWidth: 10,
+            barGap: "-100%",
+            barWidth: "50%",
             itemStyle: {
               normal: {
                 barBorderRadius: 5,
@@ -877,48 +1191,40 @@ export default {
                 ]),
               },
             },
-            data: [
-              46, 50, 55, 650, 75, 85, 99, 125, 140, 215, 232, 244, 252, 333,
-              46, 50, 55, 65, 75, 85, 99, 225, 140, 215, 85, 99, 125, 140, 215,
-              232, 244, 252, 75,
-            ],
-          },
-          {
-            name: "计划贯通",
-            type: "bar",
-            barGap: "-100%",
-            barWidth: 10,
-            itemStyle: {
-              normal: {
-                barBorderRadius: 5,
-                color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: "rgba(156,107,211,0.8)" },
-                  { offset: 0.2, color: "rgba(156,107,211,0.5)" },
-                  { offset: 1, color: "rgba(156,107,211,0.2)" },
-                ]),
-              },
-            },
-            z: -12,
-            data: [
-              180, 207, 240, 283, 328, 360, 398, 447, 484, 504, 560, 626, 595,
-              675, 180, 207, 240, 283, 328, 360, 398, 447, 484, 504, 360, 398,
-              447, 484, 504, 500, 326, 495, 328,
-            ],
-          },
+            data: values,
+          }
         ],
       };
-      mapChart.setOption(option); //生成图表
+      mapChart.setOption(option, true); //生成图表
     },
     //折线图
     line_center_diagram() {
       let mapChart = this.$echarts.init(
         document.getElementById("line_center_diagram")
-      ); //图表初始化，china-map是绑定的元素
+      ); //图表初始化
       window.onresize = mapChart.resize; //如果容器变大小，自适应从新构图
+      // 处理月度数据
+      const monthlyData = this.monthlySummaryData;
+      // 处理月度数据
+      const months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+      const revenueData = new Array(12).fill(0);
+      const refundData = new Array(12).fill(0);
+      const grossProfitData = new Array(12).fill(0);
+      // 填充月度数据
+      monthlyData.forEach(item => {
+        const monthStr = item.month;
+        const monthIndex = parseInt(monthStr.split('-')[1]) - 1; // 从月份字符串中提取月份数字
+
+        if (monthIndex >= 0 && monthIndex < 12) {
+          revenueData[monthIndex] = Number(item.revenue_sum) || 0;
+          refundData[monthIndex] = Number(item.refund_sum) || 0;
+          grossProfitData[monthIndex] = Number(item.gross_profit_sum) || 0;
+        }
+      });
       let option = {
         xAxis: {
           type: "category",
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          data: months,
           position: "bottom",
           axisLine: true,
           axisLabel: {
@@ -928,11 +1234,11 @@ export default {
         },
         yAxis: {
           type: "value",
-          name: "年度生产量",
+          name: "年度数据图",
           nameLocation: "end",
           nameGap: 24,
           nameTextStyle: {
-            color: "rgba(255,255,255,.5)",
+            color: "#fff",
             fontSize: 14,
           },
           splitNumber: 4,
@@ -951,17 +1257,43 @@ export default {
           axisLabel: {
             color: "rgba(255,255,255,.8)",
             fontSize: 12,
+            formatter: (value) => {
+              return this.formatNumber(value);
+            }
           },
         },
+        tooltip: {
+          trigger: "axis",
+          formatter: (params) => {
+            const month = params[0].name;
+            const revenue = this.formatNumber(params[0].value);
+            const refund = this.formatNumber(refundData[params[0].dataIndex]);
+            const grossProfit = this.formatNumber(grossProfitData[params[0].dataIndex]);
+
+            return `
+              <div style="font-weight: bold; margin-bottom: 8px;">${month}月度数据</div>
+              <div style="font-size: 12px;">收入: ${revenue}</div>
+              <div style="font-size: 12px;">退款: ${refund}</div>
+              <div style="font-size: 12px;">毛利: ${grossProfit}</div>
+            `;
+          },
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          textStyle: {
+            color: '#fff',
+            fontSize: 12
+          },
+          extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);'
+        },
         grid: {
-          left: 50,
+          left: 70,
           right: 10,
           bottom: 25,
           top: "18%",
         },
         series: [
           {
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            name: "月度收入",
+            data: revenueData,
             type: "line",
             smooth: true,
             symbol: "emptyCircle",
@@ -990,46 +1322,140 @@ export default {
       mapChart.setOption(option); //生成图表
     },
     //右侧虚线柱状图图
-    dotter_bar() {
-      let mapChart = this.$echarts.init(document.getElementById("dotter_bar")); //图表初始化，china-map是绑定的元素
+    dotter_bar(chartData) {
+      let mapChart = this.$echarts.init(document.getElementById("dotter_bar")); //图表初始化
       window.onresize = mapChart.resize; //如果容器变大小，自适应从新构图
-      // Generate data
-      let category = [];
-      let dottedBase = +new Date();
-      let lineData = [];
-      let barData = [];
-      for (let i = 0; i < 20; i++) {
-        let date = new Date((dottedBase += 3600 * 24 * 1000));
-        category.push(
-          [date.getFullYear(), date.getMonth() + 1, date.getDate()].join("-")
-        );
-        let b = Math.random() * 200;
-        let d = Math.random() * 200;
-        barData.push(b);
-        lineData.push(d + b);
-      }
+      // 如果没有传入数据，使用品牌数据
+      const data = chartData || this.brandSummaryData.map(item => {
+        let value = 0;
+        // 根据当前选择的维度获取对应的数值
+        switch (this.brandCategoryDimension) {
+          case 'revenueSum':
+            value = item.revenueSum || 0;
+            break;
+          case 'refundSum':
+            value = item.refundSum || 0;
+            break;
+          case 'purchaseCostSum':
+            value = item.purchaseCostSum || 0;
+            break;
+          case 'firstMileCostSum':
+            value = item.firstMileCostSum || 0;
+            break;
+          case 'logisticsFeeSum':
+            value = item.logisticsFeeSum || 0;
+            break;
+          case 'packagingCostSum':
+            value = item.packagingCostSum || 0;
+            break;
+          case 'otherCostsSum':
+            value = item.otherCostsSum || 0;
+            break;
+          case 'reshipmentCostSum':
+            value = item.reshipmentCostSum || 0;
+            break;
+          case 'grossProfitSum':
+            value = item.grossProfitSum || 0;
+            break;
+          default:
+            value = item.revenueSum || 0;
+        }
+        return {
+          name: item.groupValue || '未知品牌',
+          value: Number(value)
+        };
+      }).filter(item => item.value > 0);
+      // 提取名称和数值
+      const names = data.map(item => item.name);
+      const values = data.map(item => item.value);
+      // 获取当前品牌的类目数据
+      const getCategoryDataForBrand = (brandName) => {
+        return this.brandCategorySummaryData
+          .filter(item => item.brand === brandName)
+          .map(item => {
+            let value = 0;
+            // 根据当前选择的维度获取对应的数值
+            switch (this.brandCategoryDimension) {
+              case 'revenueSum':
+                value = item.revenue_sum || 0;
+                break;
+              case 'refundSum':
+                value = item.refund_sum || 0;
+                break;
+              case 'purchaseCostSum':
+                value = item.purchase_cost_sum || 0;
+                break;
+              case 'firstMileCostSum':
+                value = item.first_mile_cost_sum || 0;
+                break;
+              case 'logisticsFeeSum':
+                value = item.logistics_fee_sum || 0;
+                break;
+              case 'packagingCostSum':
+                value = item.packaging_cost_sum || 0;
+                break;
+              case 'otherCostsSum':
+                value = item.other_costs_sum || 0;
+                break;
+              case 'reshipmentCostSum':
+                value = item.reshipment_cost_sum || 0;
+                break;
+              case 'grossProfitSum':
+                value = item.gross_profit_sum || 0;
+                break;
+              default:
+                value = item.revenue_sum || 0;
+            }
+            return {
+              category: item.category || '未知类目',
+              value: Number(value)
+            };
+          })
+          .filter(item => item.value > 0)
+          .sort((a, b) => b.value - a.value);
+      };
       // option
       let option = {
         tooltip: {
           trigger: "axis",
-          axisPointer: {
-            type: "shadow",
+          formatter: (params) => {
+            const brandName = params[0].name;
+            const brandValue = this.formatNumber(params[0].value);
+            const categoryData = getCategoryDataForBrand(brandName);
+
+            let tooltipHtml = `<div style="font-weight: bold; margin-bottom: 8px;">${brandName} - ${this.getBrandCategoryDimensionLabel()}: ${brandValue}</div>`;
+
+            if (categoryData.length > 0) {
+              tooltipHtml += `<div style="font-size: 12px; margin-bottom: 4px;">类目分布:</div>`;
+              categoryData.forEach(item => {
+                tooltipHtml += `<div style="font-size: 11px; margin-left: 10px;">${item.category}: ${this.formatNumber(item.value)}</div>`;
+              });
+            } else {
+              tooltipHtml += `<div style="font-size: 12px;">暂无类目数据</div>`;
+            }
+
+            return tooltipHtml;
           },
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          textStyle: {
+            color: '#fff',
+            fontSize: 12
+          },
+          extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);'
         },
         grid: {
-          left: 50,
-          right: 10,
-          bottom: 25,
-          top: "18%",
+          x: "13%",
+          width: "85%",
+          y: "4%",
         },
         legend: {
-          data: ["line", "bar"],
+          data: [this.getBrandCategoryDimensionLabel()],
           textStyle: {
             color: "#ccc",
           },
         },
         xAxis: {
-          data: category,
+          data: names,
           axisLine: {
             lineStyle: {
               color: "#ccc",
@@ -1043,64 +1469,358 @@ export default {
               color: "#ccc",
             },
           },
+          axisLabel: {
+            formatter: (value) => {
+              return this.formatNumber(value);
+            },
+            textStyle: {
+              color: "#ccc"
+            }
+          },
         },
         series: [
           {
-            name: "line",
+            name: this.getBrandCategoryDimensionLabel(),
             type: "line",
             smooth: true,
             showAllSymbol: true,
             symbol: "emptyCircle",
             symbolSize: 15,
-            data: lineData,
+            data: values,
           },
           {
-            name: "bar",
-            type: "bar",
-            barWidth: 10,
-            itemStyle: {
-              borderRadius: 5,
-              // color: "#14c8d4",
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: "#14c8d4" },
-                { offset: 1, color: "#43eec6" },
-              ]),
-            },
-            data: barData,
-          },
-          {
-            name: "line",
+            name: this.getBrandCategoryDimensionLabel(),
             type: "bar",
             barGap: "-100%",
             barWidth: 10,
             itemStyle: {
               // color: "rgba(20,200,212,0.5)",
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: "rgba(20,200,212,0.5)" },
-                { offset: 0.2, color: "rgba(20,200,212,0.2)" },
-                { offset: 1, color: "rgba(20,200,212,0)" },
+                { offset: 0, color: "#14c8d4" },
+                { offset: 1, color: "#43eec6" },
               ]),
             },
             z: -12,
-            data: lineData,
-          },
-          {
-            name: "dotted",
-            type: "pictorialBar",
-            symbol: "rect",
-            itemStyle: {
-              color: "#0f375f",
-            },
-            symbolRepeat: true,
-            symbolSize: [12, 4],
-            symbolMargin: 1,
-            z: -10,
-            data: lineData,
+            data: values,
           },
         ],
       };
       mapChart.setOption(option); //生成图表
     },
+    //饼状图
+    pie_chart(pieData) {
+      let pieChart = this.$echarts.init(document.getElementById("pie_chart")); //图表初始化
+      window.onresize = pieChart.resize; //如果容器变大小，自适应从新构图
+
+      // 如果没有传入数据，使用仓库数据
+      const chartData = pieData || this.warehouseSummaryData.map(item => {
+        let value = 0;
+        // 根据当前选择的维度获取对应的数值
+        switch (this.warehouseDimension) {
+          case 'revenueSum':
+            value = item.revenueSum || 0;
+            break;
+          case 'refundSum':
+            value = item.refundSum || 0;
+            break;
+          case 'purchaseCostSum':
+            value = item.purchaseCostSum || 0;
+            break;
+          case 'firstMileCostSum':
+            value = item.firstMileCostSum || 0;
+            break;
+          case 'logisticsFeeSum':
+            value = item.logisticsFeeSum || 0;
+            break;
+          case 'packagingCostSum':
+            value = item.packagingCostSum || 0;
+            break;
+          case 'otherCostsSum':
+            value = item.otherCostsSum || 0;
+            break;
+          case 'reshipmentCostSum':
+            value = item.reshipmentCostSum || 0;
+            break;
+          case 'grossProfitSum':
+            value = item.grossProfitSum || 0;
+            break;
+          default:
+            value = item.revenueSum || 0;
+        }
+        return {
+          name: item.groupValue || '未知仓库',
+          value: Number(value)
+        };
+      }).filter(item => item.value > 0);
+
+      let option = {
+        color: [
+          "#37a2da",
+          "#32c5e9",
+          "#9fe6b8",
+          "#ffdb5c",
+          "#ff9f7f",
+          "#fb7293",
+          "#e7bcf3",
+          "#8378ea",
+        ],
+        tooltip: {
+          trigger: "item",
+          formatter: (params) => {
+            const value = this.formatNumber(params.value);
+            const percentage = params.percent.toFixed(1);
+            return `${this.getWarehouseDimensionLabel()}汇总<br/>${params.name} : ${value} (${percentage}%)`;
+          },
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          textStyle: {
+            color: '#fff',
+            fontSize: 12
+          },
+          extraCssText: 'box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);'
+        },
+        legend: {
+          orient: "vertical",
+          right: 10,
+          top: "20%",
+          textStyle: {
+            color: "#fff",
+          },
+        },
+        series: [
+          {
+            name: `仓库${this.getWarehouseDimensionLabel()}统计`,
+            type: "pie",
+            radius: ["40%", "70%"],
+            center: ["30%", "45%"],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderColor: "#fff",
+              borderWidth: 1
+            },
+            label: {
+              show: false,
+              position: "center"
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: "16",
+                fontWeight: "bold",
+                formatter: (params) => {
+                  return `${params.name}\n${this.formatNumber(params.value)}\n${params.percent}%`;
+                }
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: chartData
+          }
+        ]
+      };
+      pieChart.setOption(option); //生成图表
+    },
+    //中间左侧图表 - 圆饼图
+    center_left_chart() {
+      let mapChart = this.$echarts.init(document.getElementById("center_left_chart"));
+      window.onresize = mapChart.resize;
+
+      // 使用从后端获取的核心费用项数据
+      const pieData = [
+        { name: '收入', value: Number(this.coreExpensesData.revenue) || 0 },
+        { name: '退款', value: Number(this.coreExpensesData.refund) || 0 },
+        { name: '采购成本', value: Number(this.coreExpensesData.purchase_cost) || 0 },
+        { name: '物流费用', value: Number(this.coreExpensesData.logistics_fee) || 0 },
+        { name: '包装费用', value: Number(this.coreExpensesData.packaging_cost) || 0 },
+        { name: '其他费用', value: Number(this.coreExpensesData.other_costs) || 0 }
+      ].filter(item => item.value > 0); // 只显示有数据的费用项
+      let option = {
+        title: {
+          text: '费用项分布',
+          left: 'center',
+          textStyle: {
+            color: '#fff',
+            fontSize: 16
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: (params) => {
+            const value = this.formatNumber(params.value);
+            const percentage = params.percent.toFixed(1);
+            return `${params.name}<br/>金额: ${value} (${percentage}%)`;
+          },
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        legend: {
+          orient: 'vertical',
+          right: 10,
+          top: 'center',
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        series: [
+          {
+            name: '费用项',
+            type: 'pie',
+            radius: ['40%', '65%'],
+            center: ['40%', '50%'],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderColor: '#fff',
+              borderWidth: 2
+            },
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: '18',
+                fontWeight: 'bold',
+                formatter: (params) => {
+                  return `${params.name}\n${this.formatNumber(params.value)}`;
+                }
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: pieData
+          }
+        ]
+      };
+      mapChart.setOption(option);
+      this.loading = false;
+    },
+    //中间右侧图表 - 雷达图
+    center_right_chart() {
+      let mapChart = this.$echarts.init(document.getElementById("center_right_chart"));
+      window.onresize = mapChart.resize;
+
+      // 使用从后端获取的核心费用项数据
+      const maxValues = {
+        revenue: Math.max(Number(this.coreExpensesData.revenue) || 0, 1000000),
+        refund: Math.max(Number(this.coreExpensesData.refund) || 0, 200000),
+        purchase_cost: Math.max(Number(this.coreExpensesData.purchase_cost) || 0, 600000),
+        first_mile_cost: Math.max(Number(this.coreExpensesData.first_mile_cost) || 0, 300000),
+        logistics_fee: Math.max(Number(this.coreExpensesData.logistics_fee) || 0, 150000),
+        gross_profit: Math.max(Number(this.coreExpensesData.gross_profit) || 0, 500000)
+      };
+      // 雷达图数据 - 六个重要指标
+      const indicator = [
+        { name: '收入', max: maxValues.revenue },
+        { name: '退款', max: maxValues.refund },
+        { name: '采购成本', max: maxValues.purchase_cost },
+        { name: '头程成本', max: maxValues.first_mile_cost },
+        { name: '物流费', max: maxValues.logistics_fee },
+        { name: '毛利', max: maxValues.gross_profit }
+      ];
+      const radarData = [{
+        value: [
+          Number(this.coreExpensesData.revenue) || 0,
+          Number(this.coreExpensesData.refund) || 0,
+          Number(this.coreExpensesData.purchase_cost) || 0,
+          Number(this.coreExpensesData.first_mile_cost) || 0,
+          Number(this.coreExpensesData.logistics_fee) || 0,
+          Number(this.coreExpensesData.gross_profit) || 0
+        ],
+        name: ['收入', '退款', '采购成本', '头程成本', '物流费', '毛利'],
+        areaStyle: {
+          color: 'rgba(255, 255, 255, 0.2)'
+        }
+      }];
+      let option = {
+        title: {
+          text: '核心数据雷达图',
+          left: 'center',
+          textStyle: {
+            color: '#fff',
+            fontSize: 16
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: (params) => {
+            const name = params.data.name;
+            const value = params.value;
+            let tooltipHtml = `<div style="font-size: 14px;">金额分布: </div>`;
+            if (name.length > 0) {
+              name.forEach(item => {
+                tooltipHtml += `<div style="font-size: 12px;">${item}: ${this.formatNumber(value[name.indexOf(item)])}</div>`;
+              });
+            } else {
+              tooltipHtml += `<div style="font-size: 12px;">暂无数据</div>`;
+            }
+            return `${tooltipHtml}`;
+          },
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          textStyle: {
+            color: '#fff'
+          }
+        },
+        radar: {
+          indicator: indicator,
+          shape: 'circle',
+          splitNumber: 5,
+          radius: '70%',
+          axisName: {
+            color: '#fff',
+            borderRadius: 3,
+            padding: [3, 5]
+          },
+          splitLine: {
+            lineStyle: {
+              color: [
+                'rgba(34, 116, 213, 0.1)',
+                'rgba(34, 116, 213, 0.2)',
+                'rgba(34, 116, 213, 0.4)',
+                'rgba(34, 116, 213, 0.6)',
+                'rgba(34, 116, 213, 0.8)',
+                'rgba(34, 116, 213, 1)'
+              ].reverse()
+            }
+          },
+          splitArea: {
+            show: true,
+            areaStyle: {
+              color: ['rgba(255, 255, 255, 0.02)', 'rgba(255, 255, 255, 0.05)']
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#00c7ff'
+            }
+          }
+        },
+        series: [
+          {
+            name: '核心指标',
+            type: 'radar',
+            emphasis: {
+              lineStyle: {
+                width: 4
+              }
+            },
+            data: radarData,
+            symbolSize: 0,
+            lineStyle: {
+              width: 2,
+              color: '#00c7ff'
+            },
+            itemStyle: {
+              color: '#00c7ff'
+            }
+          }
+        ]
+      };
+      mapChart.setOption(option);
+    }
   },
 };
 </script>
@@ -1179,10 +1899,58 @@ a {
   .title_time {
     text-align: center;
   }
-  //中国地图
-  #china-map {
-    height: 660px;
+  //指标模块
+  .kpi_box {
+    height: 200px;
     width: 100%;
+    .kpi_content {
+      height: 100%;
+      padding: 20px;
+      .kpi_item {
+        text-align: center;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        .kpi_label {
+          margin-top: 10px;
+          color: #fff;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  //中间模块
+  .center_box {
+    height: 460px;
+    width: 100%;
+    // 中间模块左右分割样式
+    .center_box_left {
+      height: 460px;
+      width: 100%;
+      .center_left_content {
+        height: 100%;
+        width: 100%;
+        padding: 10px;
+        #center_left_chart {
+          height: 90%;
+          width: 100%;
+        }
+      }
+    }
+    .center_box_right {
+      height: 460px;
+      width: 100%;
+      .center_right_content {
+        height: 100%;
+        width: 100%;
+        padding: 10px;
+        #center_right_chart {
+          height: 90%;
+          width: 100%;
+        }
+      }
+    }
   }
   //中间折线图
   .line_center {
@@ -1280,11 +2048,123 @@ a {
     width: 100%;
     height: 100%;
   }
-  //锥形图
-  .cone_box {
+  //饼状图
+  .pie_chart {
     width: 95%;
-    height: 97%;
+    height: 95%;
     margin-left: 3%;
+    margin-bottom: 5%;
+  }
+  // 柱状图标题样式
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+    margin-bottom: 5px;
+  }
+  .chart-title {
+    margin: 0;
+    font-size: 14px;
+    color: #d3d6dd;
+  }
+  // 选择器样式
+  .chart-dimension-selector {
+    width: 180px;
+    // 确保选择器本身有足够的 z-index
+    z-index: 1000;
+  }
+  // el-select 蓝色样式美化
+  .el-select {
+    .el-input {
+      .el-input__inner {
+        background-color: rgba(0, 140, 255, 0.1) !important;
+        border: 1px solid #008CFF !important;
+        color: #008CFF !important;
+        border-radius: 4px;
+
+        &:hover {
+          border-color: #00ADDD !important;
+        }
+
+        &:focus {
+          border-color: #008CFF !important;
+          box-shadow: 0 0 5px rgba(0, 140, 255, 0.5) !important;
+        }
+      }
+
+      .el-input__suffix {
+        .el-select__caret {
+          color: #008CFF !important;
+        }
+      }
+    }
+  }
+
+  .el-select-dropdown {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    border: 1px solid #008CFF !important;
+    border-radius: 4px;
+
+    .el-select-dropdown__item {
+      color: #008CFF !important;
+      background-color: transparent !important;
+
+      &:hover {
+        background-color: rgba(0, 140, 255, 0.2) !important;
+        color: #00ADDD !important;
+      }
+
+      &.selected {
+        background-color: rgba(0, 140, 255, 0.3) !important;
+        color: #00ADDD !important;
+      }
+
+      &.hover {
+        background-color: rgba(0, 140, 255, 0.2) !important;
+      }
+    }
+
+    .el-select-dropdown__empty {
+      color: #008CFF !important;
+    }
+
+    .el-select-dropdown__wrap {
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(0, 140, 255, 0.1);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #008CFF;
+        border-radius: 3px;
+      }
+    }
+  }
+
+  .el-popper {
+    &[x-placement^=bottom] {
+      .popper__arrow {
+        border-bottom-color: #008CFF !important;
+
+        &::after {
+          border-bottom-color: rgba(0, 0, 0, 0.9) !important;
+        }
+      }
+    }
+
+    &[x-placement^=top] {
+      .popper__arrow {
+        border-top-color: #008CFF !important;
+
+        &::after {
+          border-top-color: rgba(0, 0, 0, 0.9) !important;
+        }
+      }
+    }
   }
 }
 </style>

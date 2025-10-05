@@ -55,3 +55,35 @@ export function getSummaryByFeeItem() {
     method: 'get'
   })
 }
+
+// 查询品牌和类目分组汇总数据
+export function getSummaryByBrandAndCategory() {
+  return request({
+    url: '/overseas/visual/summary/brand-category',
+    method: 'get'
+  })
+}
+
+// 查询月度汇总数据
+export function getSummaryByMonthly() {
+  return request({
+    url: '/overseas/visual/summary/monthly',
+    method: 'get'
+  })
+}
+
+// 查询总体统计数据
+export function getSummaryByTotal() {
+  return request({
+    url: '/overseas/visual/summary/total',
+    method: 'get'
+  })
+}
+
+// 查询核心费用项汇总数据
+export function getSummaryByCoreExpenses() {
+  return request({
+    url: '/overseas/visual/summary/core-expenses',
+    method: 'get'
+  })
+}

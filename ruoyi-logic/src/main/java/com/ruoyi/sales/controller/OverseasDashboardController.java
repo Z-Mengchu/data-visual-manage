@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.ruoyi.common.core.domain.AjaxResult.success;
 
@@ -95,5 +96,49 @@ public class OverseasDashboardController {
     {
         List<FeeItemSummary> summaryList = overseasHostingDataService.getSummaryByFeeItem();
         return success(summaryList);
+    }
+
+    /**
+     * 按品牌和类目分组汇总数据
+     */
+    @PreAuthorize("@ss.hasPermi('overseas:data:list')")
+    @GetMapping("/summary/brand-category")
+    public AjaxResult getSummaryByBrandAndCategory()
+    {
+        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByBrandAndCategory();
+        return success(summaryList);
+    }
+
+    /**
+     * 按月份分组汇总当前年份数据
+     */
+    @PreAuthorize("@ss.hasPermi('overseas:data:list')")
+    @GetMapping("/summary/monthly")
+    public AjaxResult getSummaryByMonthly()
+    {
+        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByMonthly();
+        return success(summaryList);
+    }
+
+    /**
+     * 获取总体统计数据
+     */
+    @PreAuthorize("@ss.hasPermi('overseas:data:list')")
+    @GetMapping("/summary/total")
+    public AjaxResult getSummaryByTotal()
+    {
+        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByTotal();
+        return success(summaryData);
+    }
+
+    /**
+     * 获取核心费用项汇总数据
+     */
+    @PreAuthorize("@ss.hasPermi('overseas:data:list')")
+    @GetMapping("/summary/core-expenses")
+    public AjaxResult getSummaryByCoreExpenses()
+    {
+        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByCoreExpenses();
+        return success(summaryData);
     }
 }

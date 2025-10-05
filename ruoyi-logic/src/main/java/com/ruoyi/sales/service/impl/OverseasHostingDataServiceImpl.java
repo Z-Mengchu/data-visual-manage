@@ -1,6 +1,7 @@
 package com.ruoyi.sales.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
@@ -216,5 +217,41 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
     @Override
     public List<FeeItemSummary> getSummaryByFeeItem() {
         return overseasHostingDataMapper.selectSummaryByFeeItem();
+    }
+    /**
+     * 按品牌和类目分组汇总数据
+     *
+     * @return 品牌类目维度汇总列表
+     */
+    @Override
+    public List<Map<String, Object>> getSummaryByBrandAndCategory() {
+        return overseasHostingDataMapper.selectSummaryByBrandAndCategory();
+    }
+    /**
+     * 按月份分组汇总当前年份数据
+     *
+     * @return 月度汇总列表
+     */
+    @Override
+    public List<Map<String, Object>> getSummaryByMonthly() {
+        return overseasHostingDataMapper.selectSummaryByMonthly();
+    }
+    /**
+     * 获取总体统计数据
+     *
+     * @return 总体统计数据
+     */
+    @Override
+    public Map<String, Object> getSummaryByTotal() {
+        return overseasHostingDataMapper.selectSummaryByTotal();
+    }
+    /**
+     * 获取核心费用项汇总数据
+     *
+     * @return 核心费用项汇总数据
+     */
+    @Override
+    public Map<String, Object> getSummaryByCoreExpenses() {
+        return overseasHostingDataMapper.selectSummaryByCoreExpenses();
     }
 }

@@ -303,4 +303,74 @@
         WHERE fee_item IS NOT NULL AND fee_item != ''
         GROUP BY fee_item
     </select>
+    <!-- 按品牌和类目分组汇总数据 -->
+    <select id="selectSummaryByBrandAndCategory" resultType="java.util.Map">
+        SELECT
+            brand,
+            category,
+            COALESCE(SUM(revenue), 0) as revenue_sum,
+            COALESCE(SUM(refund), 0) as refund_sum,
+            COALESCE(SUM(purchase_cost), 0) as purchase_cost_sum,
+            COALESCE(SUM(first_mile_cost), 0) as first_mile_cost_sum,
+            COALESCE(SUM(logistics_fee), 0) as logistics_fee_sum,
+            COALESCE(SUM(packaging_cost), 0) as packaging_cost_sum,
+            COALESCE(SUM(other_costs), 0) as other_costs_sum,
+            COALESCE(SUM(reshipment_cost), 0) as reshipment_cost_sum,
+            COALESCE(SUM(gross_profit), 0) as gross_profit_sum
+        FROM overseas_hosting_data
+        WHERE
+            brand IS NOT NULL AND brand != ''
+          AND
+            category IS NOT NULL AND category != ''
+        GROUP BY brand, category
+    </select>
+    <!-- 按月份分组汇总当前年份数据 -->
+    <select id="selectSummaryByMonthly" resultType="java.util.Map">
+        SELECT
+            DATE_FORMAT(settlement_time, '%Y-%m') as month,
+            COALESCE(SUM(revenue), 0) as revenue_sum,
+            COALESCE(SUM(refund), 0) as refund_sum,
+            COALESCE(SUM(gross_profit), 0) as gross_profit_sum
+        FROM overseas_hosting_data
+        WHERE
+            settlement_time IS NOT NULL
+          AND
+            YEAR(settlement_time) = YEAR(CURDATE())
+        GROUP BY DATE_FORMAT(settlement_time, '%Y-%m')
+        ORDER BY month
+    </select>
+    <!-- 获取总体统计数据 -->
+    <select id="selectSummaryByTotal" resultType="java.util.Map">
+        SELECT
+            COALESCE(SUM(revenue), 0) as total_revenue,
+            COALESCE(SUM(refund), 0) as total_refund,
+            COALESCE(SUM(purchase_cost), 0) as total_purchase_cost,
+            COALESCE(SUM(first_mile_cost), 0) as total_first_mile_cost,
+            COALESCE(SUM(logistics_fee), 0) as total_logistics_fee,
+            COALESCE(SUM(packaging_cost), 0) as total_packaging_cost,
+            COALESCE(SUM(other_costs), 0) as total_other_costs,
+            COALESCE(SUM(reshipment_cost), 0) as total_reshipment_cost,
+            COALESCE(SUM(gross_profit), 0) as total_gross_profit,
+            COUNT(DISTINCT order_number) as total_orders,
+            CASE
+                WHEN COALESCE(SUM(revenue), 0) &gt; 0
+                    THEN ROUND((COALESCE(SUM(gross_profit), 0) / COALESCE(SUM(revenue), 0)) * 100, 2)
+                ELSE 0
+                END as gross_profit_margin
+        FROM overseas_hosting_data
+        WHERE revenue IS NOT NULL
+    </select>
+    <!-- 获取核心费用项汇总数据 -->
+    <select id="selectSummaryByCoreExpenses" resultType="java.util.Map">
+        SELECT
+            COALESCE(SUM(revenue), 0) as revenue,
+            COALESCE(SUM(refund), 0) as refund,
+            COALESCE(SUM(purchase_cost), 0) as purchase_cost,
+            COALESCE(SUM(first_mile_cost), 0) as first_mile_cost,
+            COALESCE(SUM(logistics_fee), 0) as logistics_fee,
+            COALESCE(SUM(packaging_cost), 0) as packaging_cost,
+            COALESCE(SUM(other_costs), 0) as other_costs,
+            COALESCE(SUM(gross_profit), 0) as gross_profit
+        FROM overseas_hosting_data
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.ruoyi.sales.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.sales.domain.FeeItemSummary;
 import com.ruoyi.sales.domain.OverseasHostingData;
@@ -120,4 +121,33 @@ public interface IOverseasHostingDataService
      * @return 费用项汇总列表
      */
     public List<FeeItemSummary> getSummaryByFeeItem();
+
+    /**
+     * 按品牌和类目分组汇总数据
+     *
+     * @return 品牌类目维度汇总列表
+     */
+    public List<Map<String, Object>> getSummaryByBrandAndCategory();
+
+    /**
+     * 按月份分组汇总当前年份数据
+     *
+     * @return 月度汇总列表
+     */
+    public List<Map<String, Object>> getSummaryByMonthly();
+
+    /**
+     * 获取总体统计数据
+     *
+     * @return 总体统计数据
+     */
+    Map<String, Object> getSummaryByTotal();
+
+    /**
+     * 获取核心费用项汇总数据
+     *
+     * @return 核心费用项汇总数据
+     */
+    Map<String, Object> getSummaryByCoreExpenses();
+
 }

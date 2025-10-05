@@ -1,6 +1,8 @@
 package com.ruoyi.sales.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.sales.domain.OverseasHostingData;
 import com.ruoyi.sales.domain.OverseasHostingDimensionSummary;
 import com.ruoyi.sales.domain.FeeItemSummary;
@@ -109,4 +111,32 @@ public interface OverseasHostingDataMapper
      * @return 费用项汇总列表
      */
     public List<FeeItemSummary> selectSummaryByFeeItem();
+
+    /**
+     * 按品牌和类目分组汇总数据
+     *
+     * @return 品牌类目维度汇总列表
+     */
+    public List<Map<String, Object>> selectSummaryByBrandAndCategory();
+
+    /**
+     * 按月份分组汇总当前年份数据
+     *
+     * @return 月度汇总列表
+     */
+    public List<Map<String, Object>> selectSummaryByMonthly();
+
+    /**
+     * 获取总体统计数据
+     *
+     * @return 总体统计数据
+     */
+    Map<String, Object> selectSummaryByTotal();
+
+    /**
+     * 获取核心费用项汇总数据
+     *
+     * @return 核心费用项汇总数据
+     */
+    Map<String, Object> selectSummaryByCoreExpenses();
 }
