@@ -1841,7 +1841,7 @@ html {
 body {
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.2em;
-  background-color: #f1f1f1;
+  background-color: #fff;
   margin: 0;
   padding: 0;
 }
@@ -1853,7 +1853,7 @@ a {
 
 //页面样式部分！！！！
 #index {
-  color: #d3d6dd;
+  color: #fff;
   width: 1920px;
   height: 1080px;
   position: absolute;

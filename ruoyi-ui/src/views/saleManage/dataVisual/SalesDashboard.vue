@@ -1,62 +1,3 @@
-<!-- 顶部筛选区-->
-<!--<div class="filter-area">
-<el-row :gutter="20">
-  <el-col :span="4">
-    <el-select v-model="filterParams.paymentSettlementDate" placeholder="选择时间" clearable @change="handleFilterChange">
-      <el-option
-        v-for="item in filterOptions.dates"
-        :key="item"
-        :label="item"
-        :value="item"
-      />
-    </el-select>
-  </el-col>
-  <el-col :span="4">
-    <el-select v-model="filterParams.firstLevelCategory" placeholder="选择一级品类" clearable @change="handleFilterChange">
-      <el-option
-        v-for="item in filterOptions.firstLevelCategories"
-        :key="item"
-        :label="item"
-        :value="item"
-      />
-    </el-select>
-  </el-col>
-  <el-col :span="4">
-    <el-select v-model="filterParams.category" placeholder="选择品类" clearable @change="handleFilterChange">
-      <el-option
-        v-for="item in filterOptions.categories"
-        :key="item"
-        :label="item"
-        :value="item"
-      />
-    </el-select>
-  </el-col>
-  <el-col :span="4">
-    <el-select v-model="filterParams.channel" placeholder="选择渠道" clearable @change="handleFilterChange">
-      <el-option
-        v-for="item in filterOptions.channels"
-        :key="item"
-        :label="item"
-        :value="item"
-      />
-    </el-select>
-  </el-col>
-  <el-col :span="4">
-    <el-select v-model="filterParams.country" placeholder="选择国家" clearable @change="handleFilterChange">
-      <el-option
-        v-for="item in filterOptions.countries"
-        :key="item"
-        :label="item"
-        :value="item"
-      />
-    </el-select>
-  </el-col>
-  <el-col :span="4">
-    <el-button type="primary" @click="resetFilters">重置</el-button>
-  </el-col>
-</el-row>
-</div>-->
-
 <template>
   <div class="sales-dashboard">
     <dv-full-screen-container class="dashboard-container">
@@ -102,7 +43,64 @@
           </div>
         </div>
       </div>
-
+      <!-- 顶部筛选区-->
+      <div class="filter-area">
+<!--        <el-row :gutter="20">
+          <el-col :span="4">
+            <el-select v-model="filterParams.paymentSettlementDate" placeholder="选择时间" clearable @change="handleFilterChange">
+              <el-option
+                v-for="item in filterOptions.dates"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="4">
+            <el-select v-model="filterParams.firstLevelCategory" placeholder="选择一级品类" clearable @change="handleFilterChange">
+              <el-option
+                v-for="item in filterOptions.firstLevelCategories"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="4">
+            <el-select v-model="filterParams.category" placeholder="选择品类" clearable @change="handleFilterChange">
+              <el-option
+                v-for="item in filterOptions.categories"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="4">
+            <el-select v-model="filterParams.channel" placeholder="选择渠道" clearable @change="handleFilterChange">
+              <el-option
+                v-for="item in filterOptions.channels"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="4">
+            <el-select v-model="filterParams.country" placeholder="选择国家" clearable @change="handleFilterChange">
+              <el-option
+                v-for="item in filterOptions.countries"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </el-col>
+          <el-col :span="4">
+            <el-button type="primary" @click="resetFilters">重置</el-button>
+          </el-col>
+        </el-row>-->
+      </div>
       <!-- 核心KPI区 -->
       <div class="kpi-area">
         <el-row :gutter="20">
@@ -1783,7 +1781,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #0a1d39;
-  background-image: url("../../../assets/images/pageBg.png");
+  background-image: url("../../../assets/images/datavisual.png");
   color: #fff;
   padding: 20px;
   box-sizing: border-box;

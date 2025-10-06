@@ -89,22 +89,19 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/sales-dashboard',
-    component: () => import('@/views/saleManage/dataVisual/SalesDashboard'),
-    name: 'SalesDashboard',
-    meta: { title: '销售数据大屏', icon: 'dashboard' }
-  },
-  {
-    path: '/temu-dashboard',
+    path: '/temu/dashboard',
     component: () => import('@/views/saleManage/temu/TEMUVisualDashboard'),
-    name: 'TEMUDashboard',
-    meta: { title: 'TEMU数据大屏', icon: 'dashboard' }
+    hidden: true
   },
   {
-    path: '/overseas-dashboard',
+    path: '/sales/dashboard',
+    component: () => import('@/views/saleManage/dataVisual/SalesDashboard'),
+    hidden: true
+  },
+  {
+    path: '/overseas/dashboard',
     component: () => import('@/views/saleManage/overseas/dashboard'),
-    name: 'OverseasDashboard',
-    meta: { title: '海外托管数据大屏', icon: 'dashboard' }
+    hidden: true
   }
 ]
 

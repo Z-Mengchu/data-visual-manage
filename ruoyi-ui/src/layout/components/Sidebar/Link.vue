@@ -8,7 +8,7 @@
 import { isExternal } from '@/utils/validate'
 
 //需要在新标签页打开的路由
-const blankList = ['/sales-dashboard']
+const blankList = ['/sales/dashboard' ,'/temu/dashboard', '/overseas/dashboard']
 
 export default {
   props: {
@@ -28,10 +28,9 @@ export default {
       return 'router-link'
     },
     isNewPage() {
-      /*return blankList.some(item => {
+      return blankList.some(item => {
         return item === this.to
-      })*/
-      return this.to === '/sales-dashboard';
+      })
     }
   },
   methods: {
@@ -43,13 +42,13 @@ export default {
           rel: 'noopener'
         }
       }
-      /*if (this.isNewPage) {
+      if (this.isNewPage) {
         return {
-          to: to.replace('/sales-dashboard', '/sales-dashboard'),
+          to: to,
           target: '_blank',
           rel: 'noopener'
         }
-      }*/
+      }
       return {
         to: to
       }
