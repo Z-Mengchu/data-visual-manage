@@ -68,75 +68,82 @@ public interface OverseasHostingDataMapper
      *
      * @return 运营维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> selectSummaryByOperator();
+    public List<OverseasHostingDimensionSummary> selectSummaryByOperator(List<String> warehouseList);
 
     /**
      * 按开发员分组汇总数据
      *
      * @return 开发员维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> selectSummaryByDeveloper();
+    public List<OverseasHostingDimensionSummary> selectSummaryByDeveloper(List<String> warehouseList);
 
     /**
      * 按品牌分组汇总数据
      *
      * @return 品牌维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> selectSummaryByBrand();
+    public List<OverseasHostingDimensionSummary> selectSummaryByBrand(List<String> warehouseList);
 
     /**
      * 按仓库分组汇总数据
      *
      * @return 仓库维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> selectSummaryByWarehouse();
+    public List<OverseasHostingDimensionSummary> selectSummaryByWarehouse(List<String> warehouseList);
 
     /**
      * 按类目分组汇总数据
      *
      * @return 类目维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> selectSummaryByCategory();
+    public List<OverseasHostingDimensionSummary> selectSummaryByCategory(List<String> warehouseList);
 
     /**
      * 按SKU分组汇总数据
      *
      * @return SKU维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> selectSummaryBySku();
+    public List<OverseasHostingDimensionSummary> selectSummaryBySku(List<String> warehouseList);
 
     /**
      * 按费用项分组汇总金额
      *
      * @return 费用项汇总列表
      */
-    public List<FeeItemSummary> selectSummaryByFeeItem();
+    public List<FeeItemSummary> selectSummaryByFeeItem(List<String> warehouseList);
 
     /**
      * 按品牌和类目分组汇总数据
      *
      * @return 品牌类目维度汇总列表
      */
-    public List<Map<String, Object>> selectSummaryByBrandAndCategory();
+    public List<Map<String, Object>> selectSummaryByBrandAndCategory(List<String> warehouseList);
 
     /**
      * 按月份分组汇总当前年份数据
      *
      * @return 月度汇总列表
      */
-    public List<Map<String, Object>> selectSummaryByMonthly();
+    public List<Map<String, Object>> selectSummaryByMonthly(List<String> warehouseList);
 
     /**
      * 获取总体统计数据
      *
      * @return 总体统计数据
      */
-    Map<String, Object> selectSummaryByTotal();
+    Map<String, Object> selectSummaryByTotal(List<String> warehouseList);
 
     /**
      * 获取核心费用项汇总数据
      *
      * @return 核心费用项汇总数据
      */
-    Map<String, Object> selectSummaryByCoreExpenses();
+    Map<String, Object> selectSummaryByCoreExpenses(List<String> warehouseList);
+
+    /**
+     * 获取仓库信息
+     *
+     * @return 仓库信息
+     */
+    List<String> selectWarehouse();
 }

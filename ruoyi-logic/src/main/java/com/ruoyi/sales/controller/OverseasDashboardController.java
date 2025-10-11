@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,119 +27,118 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/operator")
-    public AjaxResult getSummaryByOperator()
+    public AjaxResult getSummaryByOperator(@RequestParam(value = "country", required = false) String country)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByOperator();
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByOperator(country);
         return success(summaryList);
     }
-
     /**
      * 按开发员分组汇总数据
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/developer")
-    public AjaxResult getSummaryByDeveloper()
+    public AjaxResult getSummaryByDeveloper(@RequestParam(value = "country", required = false) String country)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByDeveloper();
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByDeveloper(country);
         return success(summaryList);
     }
-
     /**
      * 按品牌分组汇总数据
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/brand")
-    public AjaxResult getSummaryByBrand()
+    public AjaxResult getSummaryByBrand(@RequestParam(value = "country", required = false) String country)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByBrand();
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByBrand(country);
         return success(summaryList);
     }
-
     /**
      * 按仓库分组汇总数据
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/warehouse")
-    public AjaxResult getSummaryByWarehouse()
+    public AjaxResult getSummaryByWarehouse(@RequestParam(value = "country", required = false) String country)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByWarehouse();
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByWarehouse(country);
         return success(summaryList);
     }
-
     /**
      * 按类目分组汇总数据
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/category")
-    public AjaxResult getSummaryByCategory()
+    public AjaxResult getSummaryByCategory(@RequestParam(value = "country", required = false) String country)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByCategory();
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByCategory(country);
         return success(summaryList);
     }
-
     /**
      * 按SKU分组汇总数据
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/sku")
-    public AjaxResult getSummaryBySku()
+    public AjaxResult getSummaryBySku(@RequestParam(value = "country", required = false) String country)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryBySku();
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryBySku(country);
         return success(summaryList);
     }
-
     /**
      * 按费用项分组汇总金额
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/fee-item")
-    public AjaxResult getSummaryByFeeItem()
+    public AjaxResult getSummaryByFeeItem(@RequestParam(value = "country", required = false) String country)
     {
-        List<FeeItemSummary> summaryList = overseasHostingDataService.getSummaryByFeeItem();
+        List<FeeItemSummary> summaryList = overseasHostingDataService.getSummaryByFeeItem(country);
         return success(summaryList);
     }
-
     /**
      * 按品牌和类目分组汇总数据
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/brand-category")
-    public AjaxResult getSummaryByBrandAndCategory()
+    public AjaxResult getSummaryByBrandAndCategory(@RequestParam(value = "country", required = false) String country)
     {
-        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByBrandAndCategory();
+        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByBrandAndCategory(country);
         return success(summaryList);
     }
-
     /**
      * 按月份分组汇总当前年份数据
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/monthly")
-    public AjaxResult getSummaryByMonthly()
+    public AjaxResult getSummaryByMonthly(@RequestParam(value = "country", required = false) String country)
     {
-        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByMonthly();
+        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByMonthly(country);
         return success(summaryList);
     }
-
     /**
      * 获取总体统计数据
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/total")
-    public AjaxResult getSummaryByTotal()
+    public AjaxResult getSummaryByTotal(@RequestParam(value = "country", required = false) String country)
     {
-        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByTotal();
+        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByTotal(country);
         return success(summaryData);
     }
-
     /**
      * 获取核心费用项汇总数据
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/core-expenses")
-    public AjaxResult getSummaryByCoreExpenses()
+    public AjaxResult getSummaryByCoreExpenses(@RequestParam(value = "country", required = false) String country)
     {
-        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByCoreExpenses();
+        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByCoreExpenses(country);
         return success(summaryData);
+    }
+
+    /**
+     * 获取国家信息
+     */
+    @PreAuthorize("@ss.hasPermi('overseas:data:list')")
+    @GetMapping("/allCountry")
+    public AjaxResult getAllCountry(){
+        return success(overseasHostingDataService.getAllCountry());
     }
 }

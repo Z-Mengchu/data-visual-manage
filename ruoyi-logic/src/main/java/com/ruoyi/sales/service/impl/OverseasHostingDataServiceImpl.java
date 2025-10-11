@@ -1,22 +1,20 @@
 package com.ruoyi.sales.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
 import com.ruoyi.sales.domain.FeeItemSummary;
+import com.ruoyi.sales.domain.OverseasHostingData;
 import com.ruoyi.sales.domain.OverseasHostingDimensionSummary;
-import com.ruoyi.sales.domain.TEMUOrderDetails;
+import com.ruoyi.sales.mapper.OverseasHostingDataMapper;
+import com.ruoyi.sales.service.IOverseasHostingDataService;
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.sales.mapper.OverseasHostingDataMapper;
-import com.ruoyi.sales.domain.OverseasHostingData;
-import com.ruoyi.sales.service.IOverseasHostingDataService;
+
+import java.util.*;
 
 /**
  * 海外托管业务数据管理Service业务层处理
@@ -28,6 +26,18 @@ import com.ruoyi.sales.service.IOverseasHostingDataService;
 public class OverseasHostingDataServiceImpl implements IOverseasHostingDataService
 {
     private static final Logger log = LoggerFactory.getLogger(OverseasHostingDataServiceImpl.class);
+
+    private static final Map<String, List<String>> countryWarehouseMap = new HashMap<>();
+
+    static {
+        countryWarehouseMap.put("波兰", List.of("递四方波兰1仓（实际用）"));
+        countryWarehouseMap.put("德国", List.of("递四方德国仓"));
+        countryWarehouseMap.put("法国", List.of("递四方法国巴黎1仓"));
+        countryWarehouseMap.put("美国", List.of("递四方美国仓"));
+        countryWarehouseMap.put("西班牙", List.of("递四方西班牙马德里仓"));
+        countryWarehouseMap.put("英国", List.of("递四方英国路腾仓(新)"));
+        countryWarehouseMap.put("未分类国家", List.of(""));
+    }
 
     @Autowired
     private OverseasHostingDataMapper overseasHostingDataMapper;
@@ -161,8 +171,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 运营维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByOperator() {
-        return overseasHostingDataMapper.selectSummaryByOperator();
+    public List<OverseasHostingDimensionSummary> getSummaryByOperator(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByOperator(warehouseList);
     }
     /**
      * 按开发员分组汇总数据
@@ -170,8 +181,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 开发员维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByDeveloper() {
-        return overseasHostingDataMapper.selectSummaryByDeveloper();
+    public List<OverseasHostingDimensionSummary> getSummaryByDeveloper(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByDeveloper(warehouseList);
     }
     /**
      * 按品牌分组汇总数据
@@ -179,8 +191,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 品牌维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByBrand() {
-        return overseasHostingDataMapper.selectSummaryByBrand();
+    public List<OverseasHostingDimensionSummary> getSummaryByBrand(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByBrand(warehouseList);
     }
     /**
      * 按仓库分组汇总数据
@@ -188,8 +201,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 仓库维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByWarehouse() {
-        return overseasHostingDataMapper.selectSummaryByWarehouse();
+    public List<OverseasHostingDimensionSummary> getSummaryByWarehouse(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByWarehouse(warehouseList);
     }
     /**
      * 按类目分组汇总数据
@@ -197,8 +211,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 类目维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByCategory() {
-        return overseasHostingDataMapper.selectSummaryByCategory();
+    public List<OverseasHostingDimensionSummary> getSummaryByCategory(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByCategory(warehouseList);
     }
     /**
      * 按SKU分组汇总数据
@@ -206,8 +221,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return SKU维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryBySku() {
-        return overseasHostingDataMapper.selectSummaryBySku();
+    public List<OverseasHostingDimensionSummary> getSummaryBySku(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryBySku(warehouseList);
     }
     /**
      * 按费用项分组汇总金额
@@ -215,8 +231,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 费用项汇总列表
      */
     @Override
-    public List<FeeItemSummary> getSummaryByFeeItem() {
-        return overseasHostingDataMapper.selectSummaryByFeeItem();
+    public List<FeeItemSummary> getSummaryByFeeItem(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByFeeItem(warehouseList);
     }
     /**
      * 按品牌和类目分组汇总数据
@@ -224,8 +241,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 品牌类目维度汇总列表
      */
     @Override
-    public List<Map<String, Object>> getSummaryByBrandAndCategory() {
-        return overseasHostingDataMapper.selectSummaryByBrandAndCategory();
+    public List<Map<String, Object>> getSummaryByBrandAndCategory(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByBrandAndCategory(warehouseList);
     }
     /**
      * 按月份分组汇总当前年份数据
@@ -233,8 +251,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 月度汇总列表
      */
     @Override
-    public List<Map<String, Object>> getSummaryByMonthly() {
-        return overseasHostingDataMapper.selectSummaryByMonthly();
+    public List<Map<String, Object>> getSummaryByMonthly(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByMonthly(warehouseList);
     }
     /**
      * 获取总体统计数据
@@ -242,8 +261,9 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 总体统计数据
      */
     @Override
-    public Map<String, Object> getSummaryByTotal() {
-        return overseasHostingDataMapper.selectSummaryByTotal();
+    public Map<String, Object> getSummaryByTotal(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByTotal(warehouseList);
     }
     /**
      * 获取核心费用项汇总数据
@@ -251,7 +271,32 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 核心费用项汇总数据
      */
     @Override
-    public Map<String, Object> getSummaryByCoreExpenses() {
-        return overseasHostingDataMapper.selectSummaryByCoreExpenses();
+    public Map<String, Object> getSummaryByCoreExpenses(String country) {
+        List<String> warehouseList = countryWarehouseMap.get(country);
+        return overseasHostingDataMapper.selectSummaryByCoreExpenses(warehouseList);
+    }
+
+    @Override
+    public List<String> getAllCountry() {
+        List<String> warehouses = overseasHostingDataMapper.selectWarehouse();
+        List<String> countries = new ArrayList<>();
+        Set<String> countrySet = countryWarehouseMap.keySet();
+        for (String warehouse : warehouses) {
+            for (String country : countrySet) {
+                if (countryWarehouseMap.get(country).contains(warehouse)) {
+                    countries.add(country);
+                    break;
+                }
+            }
+        }
+        return countries;
+    }
+
+    @Override
+    public List<String> getWarehouseList(String country) {
+        if (countryWarehouseMap.containsKey(country)) {
+            return countryWarehouseMap.get(country);
+        }
+        return countryWarehouseMap.get("未分类国家");
     }
 }

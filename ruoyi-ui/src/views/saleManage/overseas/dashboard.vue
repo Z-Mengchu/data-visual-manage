@@ -6,24 +6,44 @@
         <div>
           <!-- 顶部title部分 -->
           <el-row>
-            <el-col :span="6"
-            ><dv-decoration-8
+            <el-col :span="6">
+              <div class="country-filter">
+                <span class="filter-label">选择国家:</span>
+                <el-select
+                  v-model="selectedCountry"
+                  placeholder="全部国家"
+                  size="mini"
+                  @change="handleCountryChange"
+                >
+                  <el-option label="全部国家" value="" />
+                  <el-option
+                    v-for="country in countryList"
+                    :key="country"
+                    :label="country"
+                    :value="country"
+                  />
+                </el-select>
+              </div>
+              <dv-decoration-8
               class="title_right"
               :color="['#008CFF', '#00ADDD']"
-            /></el-col>
-            <el-col :span="12"
-            ><div class="title_text">海 外 托 管 数 据 大 屏</div>
+              />
+            </el-col>
+            <el-col :span="12">
+              <div class="title_text">海 外 托 管 数 据 大 屏</div>
               <dv-decoration-5
                 class="title_center"
                 :color="['#008CFF', '#00ADDD']"
-              /></el-col>
-            <el-col :span="6"
-            ><div class="title_time">{{ dateYear + dateWeek + dateDay }}</div>
+              />
+            </el-col>
+            <el-col :span="6">
+              <div class="title_time">{{ dateYear + dateWeek + dateDay }}</div>
               <dv-decoration-8
                 :reverse="true"
                 class="title_left"
                 :color="['#008CFF', '#00ADDD']"
-              /></el-col>
+              />
+            </el-col>
           </el-row>
           <!-- 主体部分 -->
           <el-row>
@@ -243,7 +263,8 @@ import { formatTime2 } from "@/utils/index.js"; //日期格式转换
 import * as echarts from "echarts";
 import { getSummaryByOperator, getSummaryByDeveloper, getSummaryByFeeItem,
   getSummaryBySku, getSummaryByWarehouse, getSummaryByBrand,
-  getSummaryByBrandAndCategory, getSummaryByMonthly, getSummaryByTotal, getSummaryByCoreExpenses } from "@/api/saleManage/overseas/dashboard"
+  getSummaryByBrandAndCategory, getSummaryByMonthly,
+  getSummaryByTotal, getSummaryByCoreExpenses, getAllCountry } from "@/api/saleManage/overseas/dashboard"
 
 export default {
   mixins: [drawMixin],
@@ -261,6 +282,10 @@ export default {
       dateWeek: null,
       //周几
       weekday: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+      // 选中国家
+      selectedCountry: '',
+      // 国家列表
+      countryList: [],
       // 运营员当前数据维度
       operatorDimension: 'revenueSum',
       // 开发员当前数据维度
@@ -462,8 +487,8 @@ export default {
   mounted() {
     //获取实时时间
     this.timeFn();
-    //中国地图
-    // this.china_map();
+    //获取国家列表
+    this.getCountryList();
     //获取运营员汇总数据
     this.getOperatorSummaryData();
     //获取开发员汇总数据
@@ -520,10 +545,60 @@ export default {
         this.dateWeek = this.weekday[new Date().getDay()];
       }, 1000);
     },
+    // 获取国家列表
+    async getCountryList() {
+      try {
+        const response = await getAllCountry();
+        this.countryList = response.data || [];
+      } catch (error) {
+        console.error('获取国家列表失败:', error);
+        this.countryList = [];
+      }
+    },
+    // 处理国家变化
+    handleCountryChange() {
+      this.loading = true;
+      // 重新加载所有数据
+      this.reloadAllData();
+    },
+    // 重新加载所有数据
+    async reloadAllData() {
+      try {
+        await Promise.all([
+          this.getOperatorSummaryData(),
+          this.getDeveloperSummaryData(),
+          this.getFeeItemSummaryData(),
+          this.getSkuSummaryData(),
+          this.getWarehouseSummaryData(),
+          this.getBrandSummaryData(),
+          this.getBrandCategorySummaryData(),
+          this.getMonthlySummaryData(),
+          this.getTotalSummaryData(),
+          this.getCoreExpensesData()
+        ]);
+
+        // 重新渲染所有图表
+        this.Rose_diagram();
+        this.updateRingChartData();
+        this.columnar();
+        this.line_center_diagram();
+        this.dotter_bar();
+        this.pie_chart();
+        this.center_left_chart();
+        this.center_right_chart();
+        this.updateRankingData();
+        this.updateBoardData();
+
+      } catch (error) {
+        console.error('重新加载数据失败:', error);
+      } finally {
+        this.loading = false;
+      }
+    },
     // 获取运营员汇总数据
     async getOperatorSummaryData() {
       try {
-        const response = await getSummaryByOperator();
+        const response = await getSummaryByOperator(this.selectedCountry);
         this.operatorSummaryData = response.data;
         // 初始化饼图和圆环图
         this.Rose_diagram();
@@ -535,7 +610,7 @@ export default {
     // 获取开发员汇总数据
     async getDeveloperSummaryData() {
       try {
-        const response = await getSummaryByDeveloper();
+        const response = await getSummaryByDeveloper(this.selectedCountry);
         this.developerSummaryData = response.data;
         // 初始化柱状图
         this.columnar();
@@ -546,7 +621,7 @@ export default {
     // 获取仓库汇总数据
     async getWarehouseSummaryData() {
       try {
-        const response = await getSummaryByWarehouse();
+        const response = await getSummaryByWarehouse(this.selectedCountry);
         this.warehouseSummaryData = response.data;
         // 更新饼状图数据
         this.updatePieChartData();
@@ -557,7 +632,7 @@ export default {
     // 获取品牌汇总数据
     async getBrandSummaryData() {
       try {
-        const response = await getSummaryByBrand();
+        const response = await getSummaryByBrand(this.selectedCountry);
         this.brandSummaryData = response.data;
       } catch (error) {
         console.error('获取品牌汇总数据失败:', error);
@@ -566,7 +641,7 @@ export default {
     // 获取品牌类目汇总数据
     async getBrandCategorySummaryData() {
       try {
-        const response = await getSummaryByBrandAndCategory();
+        const response = await getSummaryByBrandAndCategory(this.selectedCountry);
         this.brandCategorySummaryData = response.data;
         // 更新虚线柱状图数据
         this.updateDotterBarData();
@@ -577,7 +652,7 @@ export default {
     // 获取月度汇总数据
     async getMonthlySummaryData() {
       try {
-        const response = await getSummaryByMonthly();
+        const response = await getSummaryByMonthly(this.selectedCountry);
         this.monthlySummaryData = response.data;
         // 更新折线图数据
         this.updateLineChartData();
@@ -588,7 +663,7 @@ export default {
     // 获取总体统计数据
     async getTotalSummaryData() {
       try {
-        const response = await getSummaryByTotal();
+        const response = await getSummaryByTotal(this.selectedCountry);
         this.totalSummaryData = response.data;
         // 更新KPI指标数据
         this.updateKpiData();
@@ -599,7 +674,7 @@ export default {
     // 获取核心费用项数据
     async getCoreExpensesData() {
       try {
-        const response = await getSummaryByCoreExpenses();
+        const response = await getSummaryByCoreExpenses(this.selectedCountry);
         this.coreExpensesData = response.data;
         // 更新中间模块图表数据
         this.updateCenterCharts();
@@ -631,7 +706,7 @@ export default {
     // 获取SKU汇总数据
     async getSkuSummaryData() {
       try {
-        const response = await getSummaryBySku();
+        const response = await getSummaryBySku(this.selectedCountry);
         this.skuSummaryData = response.data;
         // 更新排行榜数据
         this.updateRankingData();
@@ -871,7 +946,7 @@ export default {
     // 获取费用项汇总数据
     async getFeeItemSummaryData() {
       try {
-        const response = await getSummaryByFeeItem();
+        const response = await getSummaryByFeeItem(this.selectedCountry);
         this.feeItemSummaryData = response.data;
         // 更新轮播表格数据
         this.updateBoardData();
@@ -1880,12 +1955,15 @@ a {
   .title_right {
     width: 100%;
     height: 50px;
-    margin-top: 18px;
+    margin-top: 0;
   }
   //顶部中间装饰效果
   .title_center {
     width: 100%;
     height: 50px;
+  }
+  .country-filter {
+    text-align: center;
   }
   //顶部中间文字数据可视化系统
   .title_text {

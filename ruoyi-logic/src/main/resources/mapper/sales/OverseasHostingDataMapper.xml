@@ -206,7 +206,15 @@
             COALESCE(SUM(reshipment_cost), 0) as reshipment_cost_sum,
             COALESCE(SUM(gross_profit), 0) as gross_profit_sum
         FROM overseas_hosting_data
-        WHERE operator IS NOT NULL AND operator != ''
+        <where>
+            operator IS NOT NULL AND operator != ''
+            <if test="warehouseList != null and warehouseList.size() != 0">
+                AND shipping_warehouse IN
+                <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                    #{warehouse}
+                </foreach>
+            </if>
+        </where>
         GROUP BY operator
     </select>
     <!-- 按开发员分组汇总 -->
@@ -224,6 +232,12 @@
             COALESCE(SUM(gross_profit), 0) as gross_profit_sum
         FROM overseas_hosting_data
         WHERE developer IS NOT NULL AND developer != ''
+        <if test="warehouseList != null and warehouseList.size() != 0">
+            AND shipping_warehouse IN
+            <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                #{warehouse}
+            </foreach>
+        </if>
         GROUP BY developer
     </select>
     <!-- 按品牌分组汇总 -->
@@ -241,6 +255,12 @@
             COALESCE(SUM(gross_profit), 0) as gross_profit_sum
         FROM overseas_hosting_data
         WHERE brand IS NOT NULL AND brand != ''
+        <if test="warehouseList != null and warehouseList.size() != 0">
+            AND shipping_warehouse IN
+            <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                #{warehouse}
+            </foreach>
+        </if>
         GROUP BY brand
     </select>
     <!-- 按仓库分组汇总 -->
@@ -258,6 +278,12 @@
             COALESCE(SUM(gross_profit), 0) as gross_profit_sum
         FROM overseas_hosting_data
         WHERE shipping_warehouse IS NOT NULL AND shipping_warehouse != ''
+        <if test="warehouseList != null and warehouseList.size() != 0">
+            AND shipping_warehouse IN
+            <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                #{warehouse}
+            </foreach>
+        </if>
         GROUP BY shipping_warehouse
     </select>
     <!-- 按类目分组汇总 -->
@@ -275,6 +301,12 @@
             COALESCE(SUM(gross_profit), 0) as gross_profit_sum
         FROM overseas_hosting_data
         WHERE category IS NOT NULL AND category != ''
+        <if test="warehouseList != null and warehouseList.size() != 0">
+            AND shipping_warehouse IN
+            <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                #{warehouse}
+            </foreach>
+        </if>
         GROUP BY category
     </select>
     <!-- 按SKU分组汇总 -->
@@ -292,6 +324,12 @@
             COALESCE(SUM(gross_profit), 0) as gross_profit_sum
         FROM overseas_hosting_data
         WHERE sku IS NOT NULL AND sku != ''
+        <if test="warehouseList != null and warehouseList.size() != 0">
+            AND shipping_warehouse IN
+            <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                #{warehouse}
+            </foreach>
+        </if>
         GROUP BY sku
     </select>
     <!-- 按费用项分组汇总金额 -->
@@ -301,6 +339,12 @@
             COALESCE(SUM(amount_cny), 0) as amount_cny_sum
         FROM overseas_hosting_data
         WHERE fee_item IS NOT NULL AND fee_item != ''
+        <if test="warehouseList != null and warehouseList.size() != 0">
+            AND shipping_warehouse IN
+            <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                #{warehouse}
+            </foreach>
+        </if>
         GROUP BY fee_item
     </select>
     <!-- 按品牌和类目分组汇总数据 -->
@@ -322,6 +366,12 @@
             brand IS NOT NULL AND brand != ''
           AND
             category IS NOT NULL AND category != ''
+        <if test="warehouseList != null and warehouseList.size() != 0">
+            AND shipping_warehouse IN
+            <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                #{warehouse}
+            </foreach>
+        </if>
         GROUP BY brand, category
     </select>
     <!-- 按月份分组汇总当前年份数据 -->
@@ -336,6 +386,12 @@
             settlement_time IS NOT NULL
           AND
             YEAR(settlement_time) = YEAR(CURDATE())
+        <if test="warehouseList != null and warehouseList.size() != 0">
+            AND shipping_warehouse IN
+            <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                #{warehouse}
+            </foreach>
+        </if>
         GROUP BY DATE_FORMAT(settlement_time, '%Y-%m')
         ORDER BY month
     </select>
@@ -351,7 +407,7 @@
             COALESCE(SUM(other_costs), 0) as total_other_costs,
             COALESCE(SUM(reshipment_cost), 0) as total_reshipment_cost,
             COALESCE(SUM(gross_profit), 0) as total_gross_profit,
-            COUNT(DISTINCT order_number) as total_orders,
+            COUNT(1) as total_orders,
             CASE
                 WHEN COALESCE(SUM(revenue), 0) &gt; 0
                     THEN ROUND((COALESCE(SUM(gross_profit), 0) / COALESCE(SUM(revenue), 0)) * 100, 2)
@@ -359,6 +415,12 @@
                 END as gross_profit_margin
         FROM overseas_hosting_data
         WHERE revenue IS NOT NULL
+        <if test="warehouseList != null and warehouseList.size() != 0">
+            AND shipping_warehouse IN
+            <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                #{warehouse}
+            </foreach>
+        </if>
     </select>
     <!-- 获取核心费用项汇总数据 -->
     <select id="selectSummaryByCoreExpenses" resultType="java.util.Map">
@@ -372,5 +434,16 @@
             COALESCE(SUM(other_costs), 0) as other_costs,
             COALESCE(SUM(gross_profit), 0) as gross_profit
         FROM overseas_hosting_data
+        <where>
+            <if test="warehouseList != null and warehouseList.size() != 0">
+                shipping_warehouse IN
+                <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
+                    #{warehouse}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="selectWarehouse" resultType="java.lang.String">
+        SELECT DISTINCT shipping_warehouse FROM overseas_hosting_data
     </select>
 </mapper>

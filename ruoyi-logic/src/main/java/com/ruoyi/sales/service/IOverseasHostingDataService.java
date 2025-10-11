@@ -75,79 +75,60 @@ public interface IOverseasHostingDataService
 
     /**
      * 按运营分组汇总数据
-     *
-     * @return 运营维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByOperator();
-
+    public List<OverseasHostingDimensionSummary> getSummaryByOperator(String country);
     /**
      * 按开发员分组汇总数据
-     *
-     * @return 开发员维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByDeveloper();
-
+    public List<OverseasHostingDimensionSummary> getSummaryByDeveloper(String country);
     /**
      * 按品牌分组汇总数据
-     *
-     * @return 品牌维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByBrand();
-
+    public List<OverseasHostingDimensionSummary> getSummaryByBrand(String country);
     /**
      * 按仓库分组汇总数据
-     *
-     * @return 仓库维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByWarehouse();
-
+    public List<OverseasHostingDimensionSummary> getSummaryByWarehouse(String country);
     /**
      * 按类目分组汇总数据
-     *
-     * @return 类目维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByCategory();
-
+    public List<OverseasHostingDimensionSummary> getSummaryByCategory(String country);
     /**
      * 按SKU分组汇总数据
-     *
-     * @return SKU维度汇总列表
      */
-    public List<OverseasHostingDimensionSummary> getSummaryBySku();
-
+    public List<OverseasHostingDimensionSummary> getSummaryBySku(String country);
     /**
      * 按费用项分组汇总金额
-     *
-     * @return 费用项汇总列表
      */
-    public List<FeeItemSummary> getSummaryByFeeItem();
-
+    public List<FeeItemSummary> getSummaryByFeeItem(String country);
     /**
      * 按品牌和类目分组汇总数据
-     *
-     * @return 品牌类目维度汇总列表
      */
-    public List<Map<String, Object>> getSummaryByBrandAndCategory();
-
+    public List<Map<String, Object>> getSummaryByBrandAndCategory(String country);
     /**
      * 按月份分组汇总当前年份数据
-     *
-     * @return 月度汇总列表
      */
-    public List<Map<String, Object>> getSummaryByMonthly();
-
+    public List<Map<String, Object>> getSummaryByMonthly(String country);
     /**
      * 获取总体统计数据
-     *
-     * @return 总体统计数据
      */
-    Map<String, Object> getSummaryByTotal();
-
+    Map<String, Object> getSummaryByTotal(String country);
     /**
      * 获取核心费用项汇总数据
-     *
-     * @return 核心费用项汇总数据
      */
-    Map<String, Object> getSummaryByCoreExpenses();
+    Map<String, Object> getSummaryByCoreExpenses(String country);
 
+    /**
+     * 获取所有仓库名称
+     *
+     * @return 所有仓库名称列表
+     */
+    public List<String> getAllCountry();
+
+    /**
+     * 获取指定国家的仓库列表
+     * @param country 国家名称
+     * @return 仓库列表
+     */
+    public List<String> getWarehouseList(String country);
 }
