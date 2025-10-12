@@ -126,7 +126,7 @@ server:
 
 #### 项目部署
 
-在nginx配置文件`nginx.conf`中配置项
+在nginx配置文件`nginx.conf`中配置项目访问地址，并配置代理
 
 ```js
 http {
