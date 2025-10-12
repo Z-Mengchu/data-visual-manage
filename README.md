@@ -1,81 +1,258 @@
-<p align="center">
-	<img alt="logo" src="https://oscimg.oschina.net/oscnet/up-d3d0a9303e11d522a06cd263f3079027715.png">
-</p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi v3.9.0</h1>
-<h4 align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</h4>
-<p align="center">
-	<a href="https://gitee.com/y_project/RuoYi-Vue/stargazers"><img src="https://gitee.com/y_project/RuoYi-Vue/badge/star.svg?theme=dark"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue"><img src="https://img.shields.io/badge/RuoYi-v3.9.0-brightgreen.svg"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-</p>
+# README
 
-## 平台简介
+##  环境准备
 
-若依是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
+```
+JDK >= 17 (推荐21版本)
+MySQL >= 8 (推荐8.x)
+Redis >= 3.0 (推荐5.x或6.x稳定版本)
+Maven >= 3.0 (项目打包需要，服务器不需要)
+Node >= 12 (推荐16版本)(项目打包需要，服务器不需要)
+nginx (无版本要求)
+```
 
-* 前端采用Vue、Element UI。
-* 后端采用Spring Boot、Spring Security、Redis & Jwt。
-* 权限认证使用Jwt，支持多终端认证系统。
-* 支持加载动态权限菜单，多方式轻松权限控制。
-* 高效率开发，使用代码生成器可以一键生成前后端代码。
-* 提供了技术栈（[Vue3](https://v3.cn.vuejs.org) [Element Plus](https://element-plus.org/zh-CN) [Vite](https://cn.vitejs.dev)）版本[RuoYi-Vue3](https://gitcode.com/yangzongzhuan/RuoYi-Vue3)，保持同步更新。
-* 提供了单应用版本[RuoYi-Vue-fast](https://gitcode.com/yangzongzhuan/RuoYi-Vue-fast)，Oracle版本[RuoYi-Vue-Oracle](https://gitcode.com/yangzongzhuan/RuoYi-Vue-Oracle)，保持同步更新。
-* 不分离版本，请移步[RuoYi](https://gitee.com/y_project/RuoYi)，微服务版本，请移步[RuoYi-Cloud](https://gitee.com/y_project/RuoYi-Cloud)
-* 阿里云折扣场：[点我进入](http://aly.ruoyi.vip)，腾讯云秒杀场：[点我进入](http://txy.ruoyi.vip)&nbsp;&nbsp;
+## 后端部署
 
-## 内置功能
+### 数据库搭建
 
-1.  用户管理：用户是系统操作者，该功能主要完成系统用户配置。
-2.  部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
-3.  岗位管理：配置系统用户所属担任职务。
-4.  菜单管理：配置系统菜单，操作权限，按钮权限标识等。
-5.  角色管理：角色菜单权限分配、设置角色按机构进行数据范围权限划分。
-6.  字典管理：对系统中经常使用的一些较为固定的数据进行维护。
-7.  参数管理：对系统动态配置常用参数。
-8.  通知公告：系统通知公告信息发布维护。
-9.  操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
-10. 登录日志：系统登录日志记录查询包含登录异常。
-11. 在线用户：当前系统中活跃用户状态监控。
-12. 定时任务：在线（添加、修改、删除)任务调度包含执行结果日志。
-13. 代码生成：前后端代码的生成（java、html、xml、sql）支持CRUD下载 。
-14. 系统接口：根据业务代码自动生成相关的api接口文档。
-15. 服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
-16. 缓存监控：对系统的缓存信息查询，命令统计等。
-17. 在线构建器：拖动表单元素生成相应的HTML代码。
-18. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
+在`ruoyi-admin\src\main\resources\application-druid.yml`中修改以下配置为自己的数据库
 
-## 演示图
+```yml
+druid:
+    # 主库数据源
+    master:
+    	# 修改localhost:3306 ——> 服务器的ip地址:端口
+        url: jdbc:mysql://localhost:3306/data_visual_manage?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        # 数据库用户名
+        username: root
+        # 数据库密码
+        password: root
+```
 
-<table>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/cd1f90be5f2684f4560c9519c0f2a232ee8.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/1cbcf0e6f257c7d3a063c0e3f2ff989e4b3.jpg"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8074972883b5ba0622e13246738ebba237a.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-9f88719cdfca9af2e58b352a20e23d43b12.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-39bf2584ec3a529b0d5a3b70d15c9b37646.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-936ec82d1f4872e1bc980927654b6007307.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-b2d62ceb95d2dd9b3fbe157bb70d26001e9.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d67451d308b7a79ad6819723396f7c3d77a.png"/></td>
-    </tr>	 
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/5e8c387724954459291aafd5eb52b456f53.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/644e78da53c2e92a95dfda4f76e6d117c4b.jpg"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8370a0d02977eebf6dbf854c8450293c937.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-49003ed83f60f633e7153609a53a2b644f7.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d4fe726319ece268d4746602c39cffc0621.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-c195234bbcd30be6927f037a6755e6ab69c.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/b6115bc8c31de52951982e509930b20684a.jpg"/></td>
-    </tr>
-</table>
+创建数据库`data_visual_manage` 并导入数据脚本`logic.sql`、`quartz.sql`、`ry_20250522.sql`
+
+### Redis配置
+
+在`ruoyi-admin\src\main\resources\application.yml`中修改Redis配置为服务器的配置
+
+```yml
+data:
+  # redis 配置
+  redis:
+    # ip地址
+    host: localhost
+    # 端口，默认为6379
+    port: 6379
+    # 数据库索引
+    database: 0
+    # 密码
+    password: root
+```
+
+### 文件路径
+
+在配置文件`ruoyi-admin\src\main\resources\application.yml`中修改服务器存放文件路径
+
+```yml
+# 项目相关配置
+ruoyi:
+  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+  profile: D:/ruoyi/uploadPath
+```
+
+### 日志存放目录
+
+修改`ruoyi-admin/src/main/resources/logback.xml`中的以下路径可修改日志存放位置
+
+```xml
+<configuration>
+    <!-- value为日志存放路径 -->
+    <property name="log.path" value="/home/ruoyi/logs" />
+```
+
+### 项目运行
+
+#### 项目打包
+
+依次运行bin文件夹中的`clean.bat`、`package.bat`后打包项目，在`ruoyi-admin\target`目录中会出现`ruoyi-admin.jar`即为打包成功
+
+#### 项目运行
+
+在`ruoyi-admin.jar`所在目录下运行以下命令即可启动程序
+
+java -jar -Xms256m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m ruoyi-admin.jar
+
+出现以下提示表示启动成功
+
+```
+(♥◠‿◠)ﾉﾞ  若依启动成功   ლ(´ڡ`ლ)ﾞ  
+ .-------.       ____     __        
+ |  _ _   \      \   \   /  /    
+ | ( ' )  |       \  _. /  '       
+ |(_ o _) /        _( )_ .'         
+ | (_,_).' __  ___(_ o _)'          
+ |  |\ \  |  ||   |(_,_)'         
+ |  | \ `'   /|   `-'  /           
+ |  |  \    /  \      /           
+ ''-'   `'-'    `-..-'    
+```
+
+默认使用端口8080，可以在配置文件`ruoyi-admin\src\main\resources\application.yml`中修改
+
+```yml
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8080
+```
+
+**windows中可直接运行/bin/run.bat即可启动程序**
+
+****
+
+> **提示：**
+>
+> 后端运行成功可以通过([http://localhost:8080)访问，但是不会出现静态页面，可以继续参考下面步骤部署`ruoyi-ui`前端，然后通过前端地址来访问。
+>
+> 项目中修改配置文件之后需要重新打包部署
+
+
+
+## 前端部署
+
+#### 项目打包
+
+打开`ruoyi-ui\bin`目录，执行打包命令`build.bat`或在`ruoyi-ui`目录下运行`npm run build:prod`，生成`dist`文件夹 ，前端打包成功
+
+#### 项目部署
+
+在nginx配置文件`nginx.conf`中配置项
+
+```js
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    # 项目配置
+    server {
+        # listen下的端口就是代理前的接口，要与前面前端项目的vue.config.js中的端口一致
+        listen       81; 
+        # server_name是部署项目的服务器ip,即使是使用的本地也建议不要用localhost，避免修改hosts文件导致的问题
+        server_name  localhost;
+
+        # location /下面配置的就是代理前前端静态资源的路径等
+        location / {
+            # root 对应的就是在服务器上前端资源的dist目录的全路径，即代表根路径
+            root   D:/code/java-basic/data-visual-manage/ruoyi-ui/dist;
+            # 保持默认不要更改，防止404和入口页面
+			try_files $uri $uri/ /index.html;
+            index  index.html index.htm;
+        }
+
+        # location /prod-api/ 是配置的代理后的地址
+		location /prod-api/{
+		   proxy_set_header Host $http_host;
+		   proxy_set_header X-Real-IP $remote_addr;
+		   proxy_set_header REMOTE-HOST $remote_addr;
+		   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           # proxy_pass就是设置的代理后的地址，即自己服务器后台接口的url
+		   proxy_pass http://localhost:8080/;
+		}
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+    }
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # HTTPS server
+    #
+    #server {
+    #    listen       443 ssl;
+    #    server_name  localhost;
+
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers  on;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+}
+```
+
+****
+
+> **提示：**
+>
+> 建议开启Gzip压缩
+>
+> 在`http`配置中加入如下代码对全局的资源进行压缩，可以减少文件体积和加快网页访问速度。
+>
+> ```js
+> # 开启gzip压缩
+> gzip on;
+> # 不压缩临界值，大于1K的才压缩，一般不用改
+> gzip_min_length 1k;
+> # 压缩缓冲区
+> gzip_buffers 16 64K;
+> # 压缩版本（默认1.1，前端如果是squid2.5请使用1.0）
+> gzip_http_version 1.1;
+> # 压缩级别，1-10，数字越大压缩的越好，时间也越长
+> gzip_comp_level 5;
+> # 进行压缩的文件类型
+> gzip_types text/plain application/x-javascript text/css application/xml application/javascript;
+> # 跟Squid等缓存服务有关，on的话会在Header里增加"Vary: Accept-Encoding"
+> gzip_vary on;
+> # IE6对Gzip不怎么友好，不给它Gzip了
+> gzip_disable "MSIE [1-6]\.";
+> ```
+
+
+
+## 部署完成
+
+部署完成，浏览器输入http://localhost/81，登录系统
+
+管理员账号admin，密码admin123
+
+系统默认初始密码123456
