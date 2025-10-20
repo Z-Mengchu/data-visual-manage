@@ -6,7 +6,7 @@
         <div class="d-flex jc-center">
           <dv-decoration-8 class="dv-dec-8" :color="decorationColor" />
           <div class="title">
-            <span class="title-text">TEMU数据可视化大屏</span>
+            <span class="title-text">销售数据可视化大屏</span>
             <dv-decoration-6
               class="dv-dec-6"
               :reverse="true"
@@ -270,6 +270,7 @@
 </template>
 
 <script>
+import drawMixin from "@/utils/drawMixin"; //自适应缩放
 import * as echarts from 'echarts'
 import '@/common/echart/world_fix'
 import { getKpiData, getCategoryRefundData, getSkuRoiData, getFirstLevelCategoryData,
@@ -280,6 +281,7 @@ import { formatTime2 } from "@/utils";
 
 export default {
   name: 'SalesDashboard',
+  mixins: [drawMixin],
   data() {
     return {
       decorationColor: ['#568aea', '#000000'],
@@ -1534,6 +1536,8 @@ export default {
         return
       }
       this.charts.channelDistribution = echarts.init(chartDom)
+      // 处理数据：只保留前十的数据，其他数据合并成"其他"
+      const processedData = this.processChannelDistributionData();
       const option = {
         backgroundColor: 'transparent',
         tooltip: {
@@ -1557,13 +1561,8 @@ export default {
         series: [{
           type: 'pie',
           radius: ['50%', '70%'],
-          center: ['25%', '50%'],
-          data: this.channelDistributionData.map(item => {
-            return {
-              value: item.percentage,
-              name: item.channel || '未知'
-            }
-          }),
+          center: ['40%', '40%'],
+          data: processedData,
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
@@ -1577,13 +1576,39 @@ export default {
             borderWidth: 2
           },
           label: {
-            formatter: '{b}: {d}%',
+            formatter: '{b}: {c}%',
             color: '#fff',
             fontWeight: 'bold'
           }
         }]
       }
       this.charts.channelDistribution.setOption(option)
+    },
+    processChannelDistributionData() {
+      // 按百分比从大到小排序
+      const sortedData = [...this.channelDistributionData].sort((a, b) => b.percentage - a.percentage);
+
+      // 取前10条数据
+      const topTen = sortedData.slice(0, 10);
+
+      // 计算其他数据的百分比总和
+      const otherPercentage = sortedData.slice(10).reduce((sum, item) => sum + (item.percentage || 0), 0);
+
+      // 构建最终数据
+      const result = topTen.map(item => ({
+        value: item.percentage,
+        name: item.channel || '未知'
+      }));
+
+      // 如果还有其他数据，添加"其他"项
+      if (otherPercentage > 0) {
+        result.push({
+          value: otherPercentage,
+          name: '其他'
+        });
+      }
+
+      return result;
     },
     initTrendChart() {
       const chartDom = document.getElementById('trendChart')

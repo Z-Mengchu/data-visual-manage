@@ -99,6 +99,15 @@ export default {
       ]
     }
   },
+  watch: {
+    filterParams: {
+      handler() {
+        this.loadData()
+        this.loadWarehouseData()
+      },
+      deep: true
+    }
+  },
   mounted() {
     this.initChart()
     this.loadData()
@@ -162,10 +171,10 @@ export default {
 
       if (minDimension < 300) {
         // 小屏幕
-        this.chartRadius = ['30%', '50%']
+        this.chartRadius = ['10%', '30%']
       } else if (minDimension < 500) {
         // 中等屏幕
-        this.chartRadius = ['30%', '50%']
+        this.chartRadius = ['20%', '40%']
       } else {
         // 大屏幕
         this.chartRadius = ['40%', '70%']
@@ -392,8 +401,10 @@ export default {
 
 <style scoped>
 .perspective-container {
-  height: 100%;
+  min-height: 0;;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .perspective-header {

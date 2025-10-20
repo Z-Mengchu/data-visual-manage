@@ -172,7 +172,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public List<OverseasHostingDimensionSummary> getSummaryByOperator(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByOperator(warehouseList);
     }
     /**
@@ -182,7 +182,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public List<OverseasHostingDimensionSummary> getSummaryByDeveloper(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByDeveloper(warehouseList);
     }
     /**
@@ -192,7 +192,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public List<OverseasHostingDimensionSummary> getSummaryByBrand(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByBrand(warehouseList);
     }
     /**
@@ -202,7 +202,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public List<OverseasHostingDimensionSummary> getSummaryByWarehouse(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByWarehouse(warehouseList);
     }
     /**
@@ -212,7 +212,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public List<OverseasHostingDimensionSummary> getSummaryByCategory(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByCategory(warehouseList);
     }
     /**
@@ -222,7 +222,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public List<OverseasHostingDimensionSummary> getSummaryBySku(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryBySku(warehouseList);
     }
     /**
@@ -232,7 +232,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public List<FeeItemSummary> getSummaryByFeeItem(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByFeeItem(warehouseList);
     }
     /**
@@ -242,7 +242,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public List<Map<String, Object>> getSummaryByBrandAndCategory(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByBrandAndCategory(warehouseList);
     }
     /**
@@ -252,7 +252,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public List<Map<String, Object>> getSummaryByMonthly(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByMonthly(warehouseList);
     }
     /**
@@ -262,7 +262,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public Map<String, Object> getSummaryByTotal(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByTotal(warehouseList);
     }
     /**
@@ -272,7 +272,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      */
     @Override
     public Map<String, Object> getSummaryByCoreExpenses(String country) {
-        List<String> warehouseList = countryWarehouseMap.get(country);
+        List<String> warehouseList = getWarehouseList(country);
         return overseasHostingDataMapper.selectSummaryByCoreExpenses(warehouseList);
     }
 
@@ -294,9 +294,15 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
 
     @Override
     public List<String> getWarehouseList(String country) {
+        if ("未分类国家".equals(country)) {
+            List<String> warehouses = overseasHostingDataMapper.selectWarehouse();
+            countryWarehouseMap.forEach((key, value) -> warehouses.removeAll(value));
+            if (warehouses.isEmpty()) warehouses.add(""); // 没有仓库时不让查询参数为空
+            return warehouses;
+        }
         if (countryWarehouseMap.containsKey(country)) {
             return countryWarehouseMap.get(country);
         }
-        return countryWarehouseMap.get("未分类国家");
+        return new ArrayList<>();
     }
 }

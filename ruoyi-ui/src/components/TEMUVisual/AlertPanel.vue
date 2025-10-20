@@ -39,6 +39,14 @@ export default {
       }
     }
   },
+  watch: {
+    deep: true,
+    filterParams: {
+      handler() {
+        this.loadAlertData();
+      },
+    }
+  },
   computed: {
     processedAlertData() {
       if (this.alertData && this.alertData.length > 0) {

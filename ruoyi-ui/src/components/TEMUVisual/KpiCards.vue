@@ -71,6 +71,15 @@ export default {
       avgMetrics: {},
     }
   },
+  watch: {
+    filterParams: {
+      deep: true,
+      handler() {
+        this.loadData()
+        this.loadAvgMetrics()
+      }
+    }
+  },
   mounted() {
     this.loadData()
     this.loadAvgMetrics()

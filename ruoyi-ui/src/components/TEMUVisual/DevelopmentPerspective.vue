@@ -84,6 +84,15 @@ export default {
       ]
     }
   },
+  watch: {
+    filterParams: {
+      handler() {
+        this.loadData()
+        this.loadWarehouseData()
+      },
+      deep: true
+    }
+  },
   mounted() {
     this.initChart()
     this.loadData()
@@ -204,7 +213,7 @@ export default {
         },
         grid: {
           left: '3%',
-          right: '4%',
+          right: '11%',
           bottom: '3%',
           top: '15%',
           containLabel: true

@@ -20,7 +20,9 @@
         COUNT(DISTINCT order_number) as totalOrders,
         COALESCE(SUM(shipment_quantity), 0) as totalShipmentQuantity
         FROM temu_order_details
-        <include refid="visualWhereCondition"/>
+        <where>
+            <include refid="visualWhereCondition"/>
+        </where>
     </select>
 
     <!-- 平均指标查询 -->
@@ -35,7 +37,9 @@
         COALESCE(SUM(income_cny), 0) as totalIncome,
         COALESCE(SUM(refund_amount), 0) as totalRefundAmount
         FROM temu_order_details
-        <include refid="visualWhereCondition"/>
+        <where>
+            <include refid="visualWhereCondition"/>
+        </where>
     </select>
 
     <!-- 趋势数据查询 -->

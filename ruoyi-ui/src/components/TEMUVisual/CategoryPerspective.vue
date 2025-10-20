@@ -76,6 +76,14 @@ export default {
       ]
     }
   },
+  watch: {
+    filterParams: {
+      handler() {
+        this.loadData()
+      },
+      deep: true
+    }
+  },
   mounted() {
     this.initChart()
     this.loadData()

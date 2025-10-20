@@ -1,6 +1,7 @@
 <template>
   <div class="temu-dashboard">
     <dv-full-screen-container class="temu-container">
+      <dv-loading v-show="loading">Loading...</dv-loading>
       <dv-border-box-11 title="TEMU数据大屏">
         <!-- 整合日期和时间到标题区域 -->
         <div class="header-info">
@@ -101,6 +102,8 @@ export default {
   },
   data() {
     return {
+      //loading图
+      loading: true,
       dateDay: null,
       dateYear: null,
       dateWeek: null,
@@ -160,13 +163,14 @@ export default {
       try {
         const response = await getAlertData(this.filterParams)
         this.alertData = response.data || []
+        this.loading = false;
       } catch (error) {
         console.error('加载预警数据失败:', error)
       }
     },
     handleFilterChange() {
+      this.loading = true;
       this.loadAlertData()
-      // this.$bus.emit('filterChange', this.filterParams)
     },
     resetFilters() {
       this.filterParams = {
@@ -181,9 +185,6 @@ export default {
     },
     handleSortChange(params) {
       console.log('排序变更:', params)
-    },
-    handleTableRowClick(params) {
-      console.log('表格行点击:', params)
     },
     handleResize() {
       this.$nextTick(() => {
@@ -210,7 +211,7 @@ export default {
 
 .content-wrapper {
   width: 100%;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 80px);
   padding: 10px;
   box-sizing: border-box;
   overflow: hidden;
@@ -224,7 +225,7 @@ export default {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: #fff;
   font-size: 18px;
-  height: 50px;
+  min-height: 50px;
   box-sizing: border-box;
 }
 
@@ -262,6 +263,7 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-height: 0;
 }
 
 .content-row {
