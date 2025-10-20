@@ -199,7 +199,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="salesDataList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="salesDataList" height="850" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="一级品类" align="center" prop="firstLevelCategory" />

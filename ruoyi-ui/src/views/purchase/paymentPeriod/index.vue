@@ -229,7 +229,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="paymentPeriodList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="paymentPeriodList" height="850" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" fixed="left"/>
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="采购单号" align="center" prop="purchaseOrderNumber" />
