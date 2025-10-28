@@ -1039,12 +1039,15 @@ export default {
       }
       this.currentChartInstance = echarts.init(chartDom)
 
+      // 处理数据，只保留前十项，其余合并为"其他"
+      const processedData = this.processTopTenData(this.channelData, 'revenue', 'channel');
+
       const option = {
         backgroundColor: 'transparent',
         tooltip: {
           trigger: 'item',
           formatter: (params) => {
-            return `渠道: ${params.name}<br/>收入: ￥${params.value}<br/>订单毛利: ￥${params.data.orderGrossProfit}<br/>毛利率: ${(params.data.grossProfitRate * 100).toFixed(2)}%<br/>订单净利: ￥${params.data.orderNetProfit}<br/>订单净毛利: ${(params.data.netProfitRate * 100).toFixed(2)}%<br/>ROI: ${(params.data.roi * 100).toFixed(2)}%<br/>回正天数: ${params.data.daysToPositiveCashFlow}`
+            return `渠道: ${params.name}<br/>收入: ￥${params.value}<br/>订单毛利: ￥${params.data.orderGrossProfit}<br/>毛利率: ${(params.data.grossProfitRate * 100).toFixed(2)}%<br/>订单净利: ￥${params.data.orderNetProfit}<br/>订单净毛利: ${(params.data.netProfitRate * 100).toFixed(2)}%<br/>ROI: ${(params.data.roi * 100).toFixed(2)}%<br/>回正天数: ${params.data.daysToPositiveCashFlow}`;
           },
           backgroundColor: 'rgba(0, 0, 0, 0.8)',
           textStyle: {
@@ -1066,7 +1069,7 @@ export default {
             name: '渠道收入',
             type: 'pie',
             radius: ['40%', '70%'],
-            center: ['25%', '50%'],
+            center: ['40%', '50%'],
             avoidLabelOverlap: false,
             itemStyle: {
               borderRadius: 10,
@@ -1088,22 +1091,63 @@ export default {
             labelLine: {
               show: true
             },
-            data: this.channelData.map(item => {
-              return {
-                value: item.revenue,
-                orderGrossProfit: item.orderGrossProfit,
-                grossProfitRate: item.grossProfitRate,
-                orderNetProfit: item.orderNetProfit,
-                netProfitRate: item.netProfitRate,
-                roi: item.roi,
-                daysToPositiveCashFlow: item.daysToPositiveCashFlow,
-                name: item.channel || '未知'
-              }
-            })
+            data: processedData
           }
         ]
       }
       this.currentChartInstance.setOption(option)
+    },
+    processTopTenData(data, valueField, nameField) {
+      // 按指定字段从大到小排序
+      const sortedData = [...data].sort((a, b) => (b[valueField] || 0) - (a[valueField] || 0));
+
+      // 取前10条数据
+      const topTen = sortedData.slice(0, 10);
+
+      // 计算其他数据的总和
+      const others = sortedData.slice(10);
+      const othersSum = others.reduce((sum, item) => sum + (item[valueField] || 0), 0);
+
+      // 计算"其他"类别的其他指标总和
+      const othersOrderGrossProfit = others.reduce((sum, item) => sum + (item.orderGrossProfit || 0), 0);
+      const othersOrderNetProfit = others.reduce((sum, item) => sum + (item.orderNetProfit || 0), 0);
+      const othersDaysToPositiveCashFlow = others.length > 0 ? others.reduce((sum, item) => sum + (item.daysToPositiveCashFlow || 0), 0) / others.length : 0; // 平均值
+
+      // 计算"其他"类别的比率指标（基于总和计算）
+      const othersGrossProfitRate = othersSum > 0 ? othersOrderGrossProfit / othersSum : 0;
+      const othersNetProfitRate = othersSum > 0 ? othersOrderNetProfit / othersSum : 0;
+      const othersRoi = othersSum > 0 ? others.reduce((sum, item) => sum + ((item.roi || 0) * (item[valueField] || 0)), 0) / othersSum : 0;
+
+      // 构建返回的数据
+      const result = topTen.map(item => {
+        // 对于前10项，保留原有结构
+        return {
+          value: item[valueField],
+          orderGrossProfit: item.orderGrossProfit,
+          grossProfitRate: item.grossProfitRate,
+          orderNetProfit: item.orderNetProfit,
+          netProfitRate: item.netProfitRate,
+          roi: item.roi,
+          daysToPositiveCashFlow: item.daysToPositiveCashFlow,
+          name: item[nameField] || '未知'
+        };
+      });
+
+      // 如果有其他数据，添加"其他"项
+      if (othersSum > 0) {
+        result.push({
+          value: othersSum,
+          orderGrossProfit: othersOrderGrossProfit,
+          grossProfitRate: othersGrossProfitRate,
+          orderNetProfit: othersOrderNetProfit,
+          netProfitRate: othersNetProfitRate,
+          roi: othersRoi,
+          daysToPositiveCashFlow: othersDaysToPositiveCashFlow,
+          name: '其他'
+        });
+      }
+
+      return result;
     },
     initBrandChart() {
       if (this.currentChartInstance) {
@@ -1116,12 +1160,16 @@ export default {
       }
       this.currentChartInstance = echarts.init(chartDom)
 
+      // 处理数据，只保留前十项，其余合并为"其他"
+      const processedData = this.processTopTenData(this.brandData, 'revenue', 'brand');
+
       const option = {
         backgroundColor: 'transparent',
         tooltip: {
           trigger: 'item',
+          // 在 initBrandChart 中更新 tooltip formatter
           formatter: (params) => {
-            return `品牌: ${params.name}<br/>收入: ￥${params.value}<br/>订单毛利: ￥${params.data.orderGrossProfit}<br/>毛利率: ${(params.data.grossProfitRate * 100).toFixed(2)}%<br/>订单净利: ￥${params.data.orderNetProfit}<br/>订单净毛利: ${(params.data.netProfitRate * 100).toFixed(2)}%<br/>ROI: ${(params.data.roi * 100).toFixed(2)}%<br/>回正天数: ${params.data.daysToPositiveCashFlow}`
+            return `品牌: ${params.name}<br/>收入: ￥${params.value}<br/>订单毛利: ￥${params.data.orderGrossProfit}<br/>毛利率: ${(params.data.grossProfitRate * 100).toFixed(2)}%<br/>订单净利: ￥${params.data.orderNetProfit}<br/>订单净毛利: ${(params.data.netProfitRate * 100).toFixed(2)}%<br/>ROI: ${(params.data.roi * 100).toFixed(2)}%<br/>回正天数: ${params.data.daysToPositiveCashFlow}`;
           },
           backgroundColor: 'rgba(0, 0, 0, 0.8)',
           textStyle: {
@@ -1143,6 +1191,7 @@ export default {
             name: '品牌收入',
             type: 'pie',
             radius: ['40%', '70%'],
+            center: ['40%', '50%'],
             avoidLabelOverlap: false,
             itemStyle: {
               borderRadius: 10,
@@ -1165,18 +1214,7 @@ export default {
             labelLine: {
               show: true
             },
-            data: this.brandData.map(item => {
-              return {
-                value: item.revenue,
-                orderGrossProfit: item.orderGrossProfit,
-                grossProfitRate: item.grossProfitRate,
-                orderNetProfit: item.orderNetProfit,
-                netProfitRate: item.netProfitRate,
-                roi: item.roi,
-                daysToPositiveCashFlow: item.daysToPositiveCashFlow,
-                name: item.brand || '未知'
-              }
-            })
+            data: processedData
           }
         ]
       }
@@ -1192,6 +1230,9 @@ export default {
         return
       }
       this.currentChartInstance = echarts.init(chartDom)
+
+      // 处理数据，只保留前十项，其余合并为"其他"
+      const processedData = this.processTopTenData(this.channelData, 'revenue', 'channel');
 
       const option = {
         backgroundColor: 'transparent',
@@ -1220,6 +1261,7 @@ export default {
             name: '国家收入',
             type: 'pie',
             radius: ['40%', '70%'],
+            center: ['40%', '50%'],
             avoidLabelOverlap: false,
             itemStyle: {
               borderRadius: 10,
@@ -1242,18 +1284,7 @@ export default {
             labelLine: {
               show: true
             },
-            data: this.countryData.map(item => {
-              return {
-                value: item.revenue,
-                orderGrossProfit: item.orderGrossProfit,
-                grossProfitRate: item.grossProfitRate,
-                orderNetProfit: item.orderNetProfit,
-                netProfitRate: item.netProfitRate,
-                roi: item.roi,
-                daysToPositiveCashFlow: item.daysToPositiveCashFlow,
-                name: item.country || '未知'
-              }
-            })
+            data: processedData
           }
         ]
       }
@@ -1603,7 +1634,7 @@ export default {
       // 如果还有其他数据，添加"其他"项
       if (otherPercentage > 0) {
         result.push({
-          value: otherPercentage,
+          value: otherPercentage.toFixed(2),
           name: '其他'
         });
       }
