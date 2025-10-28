@@ -115,48 +115,8 @@
             <if test="data.operator != null  and data.operator != ''"> and operator = #{data.operator}</if>
             <if test="data.shippingWarehouse != null  and data.shippingWarehouse != ''"> and shipping_warehouse = #{data.shippingWarehouse}</if>
 
-            <!-- 数据权限过滤条件 -->
-            <if test="user != null">
-                <choose>
-                    <!-- 超级管理员显示所有数据 -->
-                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
-                    </when>
-                    <!-- 如果是大组长，不限制数据 -->
-                    <when test="postCodes != null and postCodes.contains('general_leader')">
-                    </when>
-                    <!-- 如果有岗位但不是大组长 -->
-                    <when test="postCodes != null and postCodes.size() > 0">
-                        and (
-                        <choose>
-                            <!-- 组长级别：查看本组数据 -->
-                            <when test="postCodes.contains('operation_leader') or postCodes.contains('development_leader')">
-                                <!-- 由于TEMU数据中没有运营组和开发组字段，暂时使用操作员和开发员字段进行近似过滤 -->
-                                <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
-                                    operator in (select user_name from sys_user where operation_group_name = #{user.operationGroupName})
-                                </if>
-                                <if test="postCodes.contains('operation_leader') and postCodes.contains('development_leader') and user.operationGroupName != null and user.operationGroupName != '' and user.developmentGroupName != null and user.developmentGroupName != ''"> OR </if>
-                                <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
-                                    developer in (select user_name from sys_user where development_group_name = #{user.developmentGroupName})
-                                </if>
-                            </when>
-                            <!-- 普通员工：查看自己的数据 -->
-                            <otherwise>
-                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
-                                    operator = #{user.userName}
-                                </if>
-                                <if test="postCodes.contains('operator') and postCodes.contains('developer') and user.userName != null and user.userName != ''"> OR </if>
-                                <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
-                                    developer = #{user.userName}
-                                </if>
-                            </otherwise>
-                        </choose>
-                        )
-                    </when>
-                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
-                    <otherwise>
-                    </otherwise>
-                </choose>
-            </if>
+            <!-- 岗位权限数据过滤 -->
+            <include refid="postDataFilter"/>
         </where>
     </select>
 
@@ -288,6 +248,7 @@
                     #{warehouse}
                 </foreach>
             </if>
+            <include refid="postDataFilter"/>
         </where>
         GROUP BY operator
     </select>
@@ -312,6 +273,7 @@
                 #{warehouse}
             </foreach>
         </if>
+        <include refid="postDataFilter"/>
         GROUP BY developer
     </select>
     <!-- 按品牌分组汇总 -->
@@ -335,6 +297,7 @@
                 #{warehouse}
             </foreach>
         </if>
+        <include refid="postDataFilter"/>
         GROUP BY brand
     </select>
     <!-- 按仓库分组汇总 -->
@@ -358,6 +321,7 @@
                 #{warehouse}
             </foreach>
         </if>
+        <include refid="postDataFilter"/>
         GROUP BY shipping_warehouse
     </select>
     <!-- 按类目分组汇总 -->
@@ -381,6 +345,7 @@
                 #{warehouse}
             </foreach>
         </if>
+        <include refid="postDataFilter"/>
         GROUP BY category
     </select>
     <!-- 按SKU分组汇总 -->
@@ -404,6 +369,7 @@
                 #{warehouse}
             </foreach>
         </if>
+        <include refid="postDataFilter"/>
         GROUP BY sku
     </select>
     <!-- 按费用项分组汇总金额 -->
@@ -419,6 +385,7 @@
                 #{warehouse}
             </foreach>
         </if>
+        <include refid="postDataFilter"/>
         GROUP BY fee_item
     </select>
     <!-- 按品牌和类目分组汇总数据 -->
@@ -446,6 +413,7 @@
                 #{warehouse}
             </foreach>
         </if>
+        <include refid="postDataFilter"/>
         GROUP BY brand, category
     </select>
     <!-- 按月份分组汇总当前年份数据 -->
@@ -466,6 +434,7 @@
                 #{warehouse}
             </foreach>
         </if>
+        <include refid="postDataFilter"/>
         GROUP BY DATE_FORMAT(settlement_time, '%Y-%m')
         ORDER BY month
     </select>
@@ -495,6 +464,7 @@
                 #{warehouse}
             </foreach>
         </if>
+        <include refid="postDataFilter"/>
     </select>
     <!-- 获取核心费用项汇总数据 -->
     <select id="selectSummaryByCoreExpenses" resultType="java.util.Map">
@@ -515,9 +485,55 @@
                     #{warehouse}
                 </foreach>
             </if>
+            <include refid="postDataFilter"/>
         </where>
     </select>
     <select id="selectWarehouse" resultType="java.lang.String">
         SELECT DISTINCT shipping_warehouse FROM overseas_hosting_data
     </select>
+
+    <sql id="postDataFilter">
+        <!-- 数据权限过滤条件 -->
+        <if test="user != null">
+            <choose>
+                <!-- 超级管理员显示所有数据 -->
+                <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                </when>
+                <!-- 如果是大组长，不限制数据 -->
+                <when test="postCodes != null and postCodes.contains('general_leader')">
+                </when>
+                <!-- 如果有岗位但不是大组长 -->
+                <when test="postCodes != null and postCodes.size() > 0">
+                    and (
+                    <choose>
+                        <!-- 组长级别：查看本组数据 -->
+                        <when test="postCodes.contains('operation_leader') or postCodes.contains('development_leader')">
+                            <!-- 由于海外托管数据中没有运营组和开发组字段，暂时使用操作员和开发员字段进行近似过滤 -->
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                                operator in (select user_name from sys_user where operation_group_name = #{user.operationGroupName})
+                            </if>
+                            <if test="postCodes.contains('operation_leader') and postCodes.contains('development_leader') and user.operationGroupName != null and user.operationGroupName != '' and user.developmentGroupName != null and user.developmentGroupName != ''"> OR </if>
+                            <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                                developer in (select user_name from sys_user where development_group_name = #{user.developmentGroupName})
+                            </if>
+                        </when>
+                        <!-- 普通员工：查看自己的数据 -->
+                        <otherwise>
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('operator') and postCodes.contains('developer') and user.userName != null and user.userName != ''"> OR </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                developer = #{user.userName}
+                            </if>
+                        </otherwise>
+                    </choose>
+                    )
+                </when>
+                <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                <otherwise>
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
 </mapper>
