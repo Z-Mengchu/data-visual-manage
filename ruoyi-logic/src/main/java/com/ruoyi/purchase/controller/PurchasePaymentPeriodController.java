@@ -1,6 +1,7 @@
 package com.ruoyi.purchase.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.sales.domain.ChannelSalesData;
 import jakarta.servlet.http.HttpServletResponse;
@@ -131,5 +132,16 @@ public class PurchasePaymentPeriodController extends BaseController
     {
         ExcelUtil<PurchasePaymentPeriod> util = new ExcelUtil<>(PurchasePaymentPeriod.class);
         util.importTemplateExcel(response, "采购账期表模板");
+    }
+
+    /**
+     * 统计已付款和未付款数量
+     */
+    @PreAuthorize("@ss.hasPermi('purchase:paymentPeriod:list')")
+    @GetMapping("/countPaymentStatus")
+    public AjaxResult countPaymentStatus(PurchasePaymentPeriod purchasePaymentPeriod)
+    {
+        Map<String, Integer> result = purchasePaymentPeriodService.countPaymentStatus(purchasePaymentPeriod);
+        return success(result);
     }
 }

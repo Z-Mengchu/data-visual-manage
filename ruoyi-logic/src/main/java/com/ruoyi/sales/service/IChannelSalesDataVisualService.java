@@ -1,5 +1,6 @@
 package com.ruoyi.sales.service;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.sales.domain.ChannelSalesData;
 
 import java.util.List;

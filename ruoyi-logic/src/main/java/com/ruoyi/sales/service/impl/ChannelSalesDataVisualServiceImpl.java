@@ -1,13 +1,19 @@
 package com.ruoyi.sales.service.impl;
 
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.sales.domain.ChannelSalesData;
 import com.ruoyi.sales.mapper.ChannelSalesDataVisualMapper;
 import com.ruoyi.sales.service.IChannelSalesDataVisualService;
+import com.ruoyi.system.domain.SysPost;
+import com.ruoyi.system.service.ISysPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 全渠道销售数据可视化Service业务层处理
@@ -17,70 +23,113 @@ public class ChannelSalesDataVisualServiceImpl implements IChannelSalesDataVisua
 
     @Autowired
     private ChannelSalesDataVisualMapper channelSalesDataVisualMapper;
+    @Autowired
+    private ISysPostService postService;
 
     @Override
     public Map<String, Object> getKpiData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectKpiData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectKpiDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getCategoryRefundData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectCategoryRefundData(channelSalesData);
-    }
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
 
+        return channelSalesDataVisualMapper.selectCategoryRefundDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
+    }
     @Override
     public List<Map<String, Object>> getSkuRoiData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectSkuRoiData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectSkuRoiDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getFirstLevelCategoryData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectFirstLevelCategoryData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectFirstLevelCategoryDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getChannelData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectChannelData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectChannelDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getBrandData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectBrandData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectBrandDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getCountryData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectCountryData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectCountryDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getStoreData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectStoreData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectStoreDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getMapData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectMapData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectMapDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getChannelDistributionData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectChannelDistributionData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectChannelDistributionDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getAlertData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectAlertData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectAlertDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getTrendData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectTrendData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectTrendDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
-
     @Override
     public List<Map<String, Object>> getDetailData(ChannelSalesData channelSalesData) {
-        return channelSalesDataVisualMapper.selectDetailData(channelSalesData);
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectDetailDataWithPermission(channelSalesData, currentUser, postCodes, roleKeys);
     }
 
     @Override

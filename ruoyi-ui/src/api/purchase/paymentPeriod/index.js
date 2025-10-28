@@ -42,3 +42,12 @@ export function delPaymentPeriod(id) {
     method: 'delete'
   })
 }
+
+// 统计已付款和未付款数量
+export function countPaymentStatus(query) {
+  return request({
+    url: '/purchase/paymentPeriod/countPaymentStatus',
+    method: 'get',
+    params: query
+  })
+}

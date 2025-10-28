@@ -1,6 +1,8 @@
 package com.ruoyi.purchase.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.purchase.domain.PurchasePaymentPeriod;
 
 /**
@@ -67,4 +69,11 @@ public interface IPurchasePaymentPeriodService
      * @return
      */
     String importData(List<PurchasePaymentPeriod> purchasePaymentPeriodList, String operName);
+
+    /**
+     * 统计已付款和未付款数量
+     * @param purchasePaymentPeriod 查询条件
+     * @return 统计结果
+     */
+    Map<String, Integer> countPaymentStatus(PurchasePaymentPeriod purchasePaymentPeriod);
 }

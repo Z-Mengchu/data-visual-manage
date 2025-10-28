@@ -14,7 +14,7 @@ import com.ruoyi.common.xss.Xss;
 
 /**
  * 用户对象 sys_user
- * 
+ *
  * @author ruoyi
  */
 public class SysUser extends BaseEntity
@@ -72,6 +72,14 @@ public class SysUser extends BaseEntity
 
     /** 密码最后更新时间 */
     private Date pwdUpdateDate;
+
+    /** 运营组名 */
+    @Excel(name = "运营组名")
+    private String operationGroupName;
+
+    /** 开发组名 */
+    @Excel(name = "开发组名")
+    private String developmentGroupName;
 
     /** 部门对象 */
     @Excels({
@@ -260,6 +268,25 @@ public class SysUser extends BaseEntity
         this.pwdUpdateDate = pwdUpdateDate;
     }
 
+    public String getOperationGroupName()
+    {
+        return operationGroupName;
+    }
+
+    public void setOperationGroupName(String operationGroupName)
+    {
+        this.operationGroupName = operationGroupName;
+    }
+
+    public String getDevelopmentGroupName()
+    {
+        return developmentGroupName;
+    }
+
+    public void setDevelopmentGroupName(String developmentGroupName) {
+        this.developmentGroupName = developmentGroupName;
+    }
+
     public SysDept getDept()
     {
         return dept;
@@ -327,6 +354,8 @@ public class SysUser extends BaseEntity
             .append("loginIp", getLoginIp())
             .append("loginDate", getLoginDate())
             .append("pwdUpdateDate", getPwdUpdateDate())
+            .append("operationGroupName", getOperationGroupName())
+            .append("developmentGroupName", getDevelopmentGroupName())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

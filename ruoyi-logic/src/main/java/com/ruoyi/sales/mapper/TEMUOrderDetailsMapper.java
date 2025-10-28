@@ -1,7 +1,10 @@
 package com.ruoyi.sales.mapper;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.sales.domain.TEMUOrderDetails;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Temu订单明细Mapper接口
@@ -26,6 +29,19 @@ public interface TEMUOrderDetailsMapper
      * @return Temu订单明细集合
      */
     public List<TEMUOrderDetails> selectTEMUOrderDetailsList(TEMUOrderDetails tEMUOrderDetails);
+
+    /**
+     * 查询Temu订单明细列表（带数据权限）
+     *
+     * @param tEMUOrderDetails Temu订单明细
+     * @param user 当前用户
+     * @param postCodes 用户岗位编码列表
+     * @return Temu订单明细集合
+     */
+    List<TEMUOrderDetails> selectTEMUOrderDetailsListWithPermission(@Param("data") TEMUOrderDetails tEMUOrderDetails,
+                                                                    @Param("user") SysUser user,
+                                                                    @Param("postCodes") List<String> postCodes,
+                                                                    @Param("roleKeys") List<String> roleKeys);
 
     /**
      * 新增Temu订单明细

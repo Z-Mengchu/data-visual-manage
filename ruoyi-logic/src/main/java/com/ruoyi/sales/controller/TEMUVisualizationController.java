@@ -40,60 +40,6 @@ public class TEMUVisualizationController extends BaseController {
     }
 
     /**
-     * 获取趋势数据
-     */
-    @GetMapping("/trend")
-    public AjaxResult getTrendData(TEMUVisualQuery query) {
-        List<Map<String, Object>> data = visualizationService.getTrendData(query);
-        return AjaxResult.success(data);
-    }
-
-    /**
-     * 获取开发员桑基图数据
-     */
-    @GetMapping("/developerSankey")
-    public AjaxResult getDeveloperSankeyData(TEMUVisualQuery query) {
-        List<Map<String, Object>> data = visualizationService.getDeveloperSankeyData(query);
-        return AjaxResult.success(data);
-    }
-
-    /**
-     * 获取开发员排行榜数据
-     */
-    @GetMapping("/developerRanking")
-    public AjaxResult getDeveloperRankingData(TEMUVisualQuery query) {
-        List<Map<String, Object>> data = visualizationService.getDeveloperRankingData(query);
-        return AjaxResult.success(data);
-    }
-
-    /**
-     * 获取品类矩形树图数据
-     */
-    @GetMapping("/categoryTreemap")
-    public AjaxResult getCategoryTreemapData(TEMUVisualQuery query) {
-        List<Map<String, Object>> data = visualizationService.getCategoryTreemapData(query);
-        return AjaxResult.success(data);
-    }
-
-    /**
-     * 获取品类排行榜数据
-     */
-    @GetMapping("/categoryRanking")
-    public AjaxResult getCategoryRankingData(TEMUVisualQuery query) {
-        List<Map<String, Object>> data = visualizationService.getCategoryRankingData(query);
-        return AjaxResult.success(data);
-    }
-
-    /**
-     * 获取明细表格数据
-     */
-    @GetMapping("/detailTable")
-    public AjaxResult getDetailTableData(TEMUVisualQuery query) {
-        List<Map<String, Object>> data = visualizationService.getDetailTableData(query);
-        return AjaxResult.success(data);
-    }
-
-    /**
      * 获取预警数据
      */
     @GetMapping("/alert")

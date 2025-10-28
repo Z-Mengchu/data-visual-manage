@@ -31,6 +31,14 @@
                 <svg-icon icon-class="peoples" />所属角色
                 <div class="pull-right">{{ roleGroup }}</div>
               </li>
+              <li class="list-group-item" v-if="user.operationGroupName">
+                <svg-icon icon-class="people" />运营组
+                <div class="pull-right">{{ user.operationGroupName }}</div>
+              </li>
+              <li class="list-group-item" v-if="user.developmentGroupName">
+                <svg-icon icon-class="people" />开发组
+                <div class="pull-right">{{ user.developmentGroupName }}</div>
+              </li>
               <li class="list-group-item">
                 <svg-icon icon-class="date" />创建日期
                 <div class="pull-right">{{ user.createTime }}</div>

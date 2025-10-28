@@ -159,7 +159,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['saleManage:temu:add']"
+          v-hasPermi="['temu:details:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -170,7 +170,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['saleManage:temu:edit']"
+          v-hasPermi="['temu:details:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -181,7 +181,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['saleManage:temu:remove']"
+          v-hasPermi="['temu:details:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -191,7 +191,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['saleManage:temu:export']"
+          v-hasPermi="['temu:details:export']"
         >导出</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -201,13 +201,13 @@
           icon="el-icon-upload2"
           size="mini"
           @click="handleImport"
-          v-hasPermi="['saleManage:temu:import']"
+          v-hasPermi="['temu:details:import']"
         >导入</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="temuList" height="850" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="temuList" :row-key="row => row.id" height="850" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="发货日期" align="center" prop="shipmentDate" width="180">
@@ -282,14 +282,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['saleManage:temu:edit']"
+            v-hasPermi="['temu:details:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['saleManage:temu:remove']"
+            v-hasPermi="['temu:details:remove']"
           >删除</el-button>
         </template>
       </el-table-column>

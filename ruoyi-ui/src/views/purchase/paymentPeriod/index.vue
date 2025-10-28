@@ -223,10 +223,53 @@
           icon="el-icon-upload2"
           size="mini"
           @click="handleImport"
-          v-hasPermi="['sale:data:import']"
+          v-hasPermi="['purchase:paymentPeriod:import']"
         >导入</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+    <!-- 付款统计 -->
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="6">
+        <el-card class="box-card" shadow="hover">
+          <div class="card-content">
+            <div class="card-info">
+              <div class="card-title">已付款</div>
+              <div class="card-count">{{ paymentStats.paidCount || 0 }}</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card class="box-card" shadow="hover">
+          <div class="card-content">
+            <div class="card-info">
+              <div class="card-title">未付款</div>
+              <div class="card-count">{{ paymentStats.unpaidCount || 0 }}</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card class="box-card" shadow="hover">
+          <div class="card-content">
+            <div class="card-info">
+              <div class="card-title">未知</div>
+              <div class="card-count">{{ paymentStats.unknownCount || 0 }}</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card class="box-card" shadow="hover">
+          <div class="card-content">
+            <div class="card-info">
+              <div class="card-title">总计</div>
+              <div class="card-count">{{ totalCount }}</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :data="paymentPeriodList" height="850" @selection-change="handleSelectionChange">
@@ -455,7 +498,7 @@
 </template>
 
 <script>
-import { listPaymentPeriod, getPaymentPeriod, delPaymentPeriod, addPaymentPeriod, updatePaymentPeriod } from "@/api/purchase/paymentPeriod"
+import { listPaymentPeriod, getPaymentPeriod, delPaymentPeriod, addPaymentPeriod, updatePaymentPeriod, countPaymentStatus } from "@/api/purchase/paymentPeriod"
 import {getToken} from "@/utils/auth";
 
 export default {
@@ -539,11 +582,26 @@ export default {
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + "/purchase/paymentPeriod/importData"
-      }
+      },
+      // 付款统计
+      paymentStats: {
+        paidCount: 0,
+        unpaidCount: 0,
+        unknownCount: 0
+      },
     }
   },
   created() {
     this.getList()
+    this.getPaymentStats()
+  },
+  computed: {
+    // 计算总数量
+    totalCount() {
+      return (this.paymentStats.paidCount || 0) +
+        (this.paymentStats.unpaidCount || 0) +
+        (this.paymentStats.unknownCount || 0);
+    }
   },
   methods: {
     /** 查询采购账期列表 */
@@ -571,6 +629,17 @@ export default {
         this.paymentPeriodList = response.rows
         this.total = response.total
         this.loading = false
+      })
+      this.getPaymentStats();
+    },
+    /** 获取付款统计 */
+    getPaymentStats() {
+      const query = { ...this.queryParams }
+      delete query.pageNum
+      delete query.pageSize
+
+      countPaymentStatus(query).then(response => {
+        this.paymentStats = response.data
       })
     },
     // 取消按钮
@@ -715,3 +784,27 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.card-content {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+.card-info {
+  flex: 1;
+}
+.card-title {
+  font-size: 14px;
+  color: #909399;
+  margin-bottom: 5px;
+}
+.card-count {
+  font-size: 24px;
+  font-weight: bold;
+  color: #303133;
+}
+.box-card {
+  border-radius: 8px;
+}
+</style>

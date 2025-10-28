@@ -58,4 +58,18 @@ public interface PurchasePaymentPeriodMapper
      * @return 结果
      */
     public int deletePurchasePaymentPeriodByIds(Integer[] ids);
+
+    /**
+     * 查询采购账期数量
+     * @param purchasePaymentPeriod 采购账期
+     * @return 数量
+     */
+    public int selectPurchasePaymentPeriodCount(PurchasePaymentPeriod purchasePaymentPeriod);
+
+    /**
+     * 查询未知状态采购账期数量（isPaid为null或空）
+     * @param purchasePaymentPeriod 采购账期
+     * @return 数量
+     */
+    public int selectPurchasePaymentPeriodCountUnknown(PurchasePaymentPeriod purchasePaymentPeriod);
 }

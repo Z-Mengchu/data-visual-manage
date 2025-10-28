@@ -1,5 +1,14 @@
 <template>
   <div class="app-container">
+    <!-- 权限提示信息 -->
+    <el-alert
+      v-if="showPermissionTip"
+      :title="permissionTip"
+      type="info"
+      show-icon
+      :closable="false"
+      style="margin-bottom: 20px;"
+    />
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="一级品类" prop="firstLevelCategory">
         <el-input
@@ -565,13 +574,34 @@ export default {
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + "/sale/data/importData"
-      }
+      },
+      // 权限提示相关数据
+      showPermissionTip: false,
+      permissionTip: '',
     }
   },
   created() {
     this.getList()
   },
   methods: {
+    /** 检查用户权限并显示提示 */
+    checkUserPermission() {
+      const user = this.$store.getters
+      const roles = user.roles || []
+      const permissions = user.permissions || []
+
+      // 根据用户岗位显示不同的权限提示
+      if (permissions.includes('sale:data:all')) {
+        this.permissionTip = '您拥有所有数据的查看权限（大组长权限）'
+        this.showPermissionTip = true
+      } else if (permissions.includes('sale:data:group')) {
+        this.permissionTip = `您拥有组内数据的查看权限（组长权限）- 运营组：${user.operationGroupName || '未设置'}，开发组：${user.developmentGroupName || '未设置'}`
+        this.showPermissionTip = true
+      } else if (permissions.includes('sale:data:self')) {
+        this.permissionTip = '您只能查看自己负责的数据（员工权限）'
+        this.showPermissionTip = true
+      }
+    },
     /** 查询销售数据管理列表 */
     getList() {
       this.loading = true

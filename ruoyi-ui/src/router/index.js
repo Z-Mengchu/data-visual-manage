@@ -94,7 +94,7 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/sales/dashboard',
+    path: '/finance/sales/dashboard',
     component: () => import('@/views/saleManage/dataVisual/SalesDashboard'),
     hidden: true
   },

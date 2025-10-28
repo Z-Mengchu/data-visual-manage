@@ -2,6 +2,10 @@ package com.ruoyi.sales.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.domain.SysPost;
+import com.ruoyi.system.service.ISysPostService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,9 @@ public class ChannelSalesDataController extends BaseController
     @Autowired
     private IChannelSalesDataService channelSalesDataService;
 
+    @Autowired
+    private ISysPostService postService;
+
     /**
      * 查询全渠道销售数据分析列表
      */
@@ -43,8 +50,13 @@ public class ChannelSalesDataController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(ChannelSalesData channelSalesData)
     {
+        // 获取当前登录用户
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+
+        // 获取用户岗位列表
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
         startPage();
-        List<ChannelSalesData> list = channelSalesDataService.selectChannelSalesDataList(channelSalesData);
+        List<ChannelSalesData> list = channelSalesDataService.selectChannelSalesDataList(channelSalesData, currentUser, userPosts);
         return getDataTable(list);
     }
 
@@ -56,7 +68,11 @@ public class ChannelSalesDataController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, ChannelSalesData channelSalesData)
     {
-        List<ChannelSalesData> list = channelSalesDataService.selectChannelSalesDataList(channelSalesData);
+        // 获取当前登录用户
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        // 获取用户岗位列表
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<ChannelSalesData> list = channelSalesDataService.selectChannelSalesDataList(channelSalesData, currentUser, userPosts);
         ExcelUtil<ChannelSalesData> util = new ExcelUtil<ChannelSalesData>(ChannelSalesData.class);
         util.exportExcel(response, list, "全渠道销售数据分析数据");
     }

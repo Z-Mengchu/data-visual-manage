@@ -3,9 +3,12 @@ package com.ruoyi.sales.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.sales.domain.OverseasHostingData;
 import com.ruoyi.sales.domain.OverseasHostingDimensionSummary;
 import com.ruoyi.sales.domain.FeeItemSummary;
+import com.ruoyi.sales.domain.TEMUOrderDetails;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 海外托管业务数据管理Mapper接口
@@ -30,6 +33,19 @@ public interface OverseasHostingDataMapper
      * @return 海外托管业务数据管理集合
      */
     public List<OverseasHostingData> selectOverseasHostingDataList(OverseasHostingData overseasHostingData);
+
+    /**
+     * 查询海外托管业务数据管理列表权限数据过滤
+     *
+     * @param overseasHostingData 海外托管业务数据管理
+     * @param user 当前用户
+     * @param postCodes 用户岗位编码列表
+     * @return 海外托管业务数据管理集合
+     */
+    public List<OverseasHostingData> selectOverseasHostingDataListWithPermission(@Param("data") OverseasHostingData overseasHostingData,
+                                                                                 @Param("user") SysUser user,
+                                                                                 @Param("postCodes") List<String> postCodes,
+                                                                                 @Param("roleKeys") List<String> roleKeys);
 
     /**
      * 新增海外托管业务数据管理

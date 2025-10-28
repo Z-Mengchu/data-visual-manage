@@ -9,55 +9,10 @@ export function getKpiData(params) {
   })
 }
 
-// 获取核心KPI数据
+// 获取平均指标数据
 export function getAverageMetrics(params) {
   return request({
     url: '/temu/visual/averageMetrics',
-    method: 'get',
-    params
-  })
-}
-
-// 获取趋势数据
-export function getTrendData(params) {
-  return request({
-    url: '/temu/visual/trend',
-    method: 'get',
-    params
-  })
-}
-
-// 获取开发员桑基图数据
-export function getDeveloperSankeyData(params) {
-  return request({
-    url: '/temu/visual/developerSankey',
-    method: 'get',
-    params
-  })
-}
-
-// 获取品类矩形树图数据
-export function getCategoryTreemapData(params) {
-  return request({
-    url: '/temu/visual/categoryTreemap',
-    method: 'get',
-    params
-  })
-}
-
-// 获取品类排行榜数据
-export function getCategoryRankingData(params) {
-  return request({
-    url: '/temu/visual/categoryRanking',
-    method: 'get',
-    params
-  })
-}
-
-// 获取明细表格数据
-export function getDetailTableData(params) {
-  return request({
-    url: '/temu/visual/detailTable',
     method: 'get',
     params
   })

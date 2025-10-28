@@ -20,36 +20,6 @@ public interface ITEMUVisualizationService {
     Map<String, Object> getAverageMetrics(TEMUVisualQuery query);
 
     /**
-     * 获取趋势数据
-     */
-    List<Map<String, Object>> getTrendData(TEMUVisualQuery query);
-
-    /**
-     * 获取开发员桑基图数据
-     */
-    List<Map<String, Object>> getDeveloperSankeyData(TEMUVisualQuery query);
-
-    /**
-     * 获取开发员排行榜数据
-     */
-    List<Map<String, Object>> getDeveloperRankingData(TEMUVisualQuery query);
-
-    /**
-     * 获取品类矩形树图数据
-     */
-    List<Map<String, Object>> getCategoryTreemapData(TEMUVisualQuery query);
-
-    /**
-     * 获取品类排行榜数据
-     */
-    List<Map<String, Object>> getCategoryRankingData(TEMUVisualQuery query);
-
-    /**
-     * 获取明细表格数据
-     */
-    List<Map<String, Object>> getDetailTableData(TEMUVisualQuery query);
-
-    /**
      * 获取预警数据
      */
     List<Map<String, Object>> getAlertData(TEMUVisualQuery query);

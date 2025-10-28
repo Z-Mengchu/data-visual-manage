@@ -8,7 +8,7 @@
 import { isExternal } from '@/utils/validate'
 
 //需要在新标签页打开的路由
-const blankList = ['/sales/dashboard' ,'/temu/dashboard', '/overseas/dashboard']
+const blankList = ['/finance/sales/dashboard' ,'/temu/dashboard', '/overseas/dashboard']
 
 export default {
   props: {

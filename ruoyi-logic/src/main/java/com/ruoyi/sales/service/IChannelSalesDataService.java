@@ -1,6 +1,9 @@
 package com.ruoyi.sales.service;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.sales.domain.ChannelSalesData;
+import com.ruoyi.system.domain.SysPost;
+
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +30,7 @@ public interface IChannelSalesDataService
      * @param channelSalesData 全渠道销售数据分析
      * @return 全渠道销售数据分析集合
      */
-    public List<ChannelSalesData> selectChannelSalesDataList(ChannelSalesData channelSalesData);
+    public List<ChannelSalesData> selectChannelSalesDataList(ChannelSalesData channelSalesData, SysUser currentUser, List<SysPost> userPosts);
 
     /**
      * 新增全渠道销售数据分析

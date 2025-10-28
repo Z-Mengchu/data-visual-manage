@@ -115,6 +115,97 @@
         </where>
     </select>
 
+    <select id="selectChannelSalesDataListWithFilter" parameterType="ChannelSalesData" resultMap="ChannelSalesDataResult">
+        <include refid="selectChannelSalesDataVo"/>
+        <where>
+            <if test="data.firstLevelCategory != null  and data.firstLevelCategory != ''"> and first_level_category = #{data.firstLevelCategory}</if>
+            <if test="data.category != null  and data.category != ''"> and category = #{data.category}</if>
+            <if test="data.tongtuSku != null  and data.tongtuSku != ''"> and tongtu_sku = #{data.tongtuSku}</if>
+            <if test="data.productName != null  and data.productName != ''"> and product_name like concat('%', #{data.productName}, '%')</if>
+            <if test="data.operationGroupName != null  and data.operationGroupName != ''"> and operation_group_name like concat('%', #{data.operationGroupName}, '%')</if>
+            <if test="data.operator != null  and data.operator != ''"> and operator = #{data.operator}</if>
+            <if test="data.developmentGroupName != null  and data.developmentGroupName != ''"> and development_group_name like concat('%', #{data.developmentGroupName}, '%')</if>
+            <if test="data.productDeveloper != null  and data.productDeveloper != ''"> and product_developer = #{data.productDeveloper}</if>
+            <if test="data.channel != null  and data.channel != ''"> and channel = #{data.channel}</if>
+            <if test="data.channelAccount != null  and data.channelAccount != ''"> and channel_account = #{data.channelAccount}</if>
+            <if test="data.operationDepartment != null  and data.operationDepartment != ''"> and operation_department = #{data.operationDepartment}</if>
+            <if test="data.storeCode != null  and data.storeCode != ''"> and store_code = #{data.storeCode}</if>
+            <if test="data.region != null  and data.region != ''"> and region = #{data.region}</if>
+            <if test="data.country != null  and data.country != ''"> and country = #{data.country}</if>
+            <if test="data.countryRegion != null  and data.countryRegion != ''"> and country_region = #{data.countryRegion}</if>
+            <if test="data.brand != null  and data.brand != ''"> and brand = #{data.brand}</if>
+            <if test="data.salesMode != null  and data.salesMode != ''"> and sales_mode = #{data.salesMode}</if>
+            <if test="data.orderNumber != null  and data.orderNumber != ''"> and order_number = #{data.orderNumber}</if>
+            <if test="data.paymentSettlementDate != null  and data.paymentSettlementDate != ''"> and payment_settlement_date = #{data.paymentSettlementDate}</if>
+            <if test="data.shippingWarehouse != null  and data.shippingWarehouse != ''"> and shipping_warehouse = #{data.shippingWarehouse}</if>
+            <if test="data.shippingQuantity != null "> and shipping_quantity = #{data.shippingQuantity}</if>
+            <if test="data.revenueRmb != null "> and revenue_rmb = #{data.revenueRmb}</if>
+            <if test="data.productCost != null "> and product_cost = #{data.productCost}</if>
+            <if test="data.firstMileShipping != null "> and first_mile_shipping = #{data.firstMileShipping}</if>
+            <if test="data.packagingCost != null "> and packaging_cost = #{data.packagingCost}</if>
+            <if test="data.logisticsShipping != null "> and logistics_shipping = #{data.logisticsShipping}</if>
+            <if test="data.channelTransactionFeeRmb != null "> and channel_transaction_fee_rmb = #{data.channelTransactionFeeRmb}</if>
+            <if test="data.taxes != null "> and taxes = #{data.taxes}</if>
+            <if test="data.refund != null "> and refund = #{data.refund}</if>
+            <if test="data.reshipmentAmount != null "> and reshipment_amount = #{data.reshipmentAmount}</if>
+            <if test="data.sampleCost != null "> and sample_cost = #{data.sampleCost}</if>
+            <if test="data.unsoldSubsidy != null "> and unsold_subsidy = #{data.unsoldSubsidy}</if>
+            <if test="data.orderGrossProfit != null "> and order_gross_profit = #{data.orderGrossProfit}</if>
+            <if test="data.orderGrossProfitRate != null "> and order_gross_profit_rate = #{data.orderGrossProfitRate}</if>
+            <if test="data.advertisingPromotion != null "> and advertising_promotion = #{data.advertisingPromotion}</if>
+            <if test="data.storageFee != null "> and storage_fee = #{data.storageFee}</if>
+            <if test="data.removalFee != null "> and removal_fee = #{data.removalFee}</if>
+            <if test="data.returnProcessingFee != null "> and return_processing_fee = #{data.returnProcessingFee}</if>
+            <if test="data.otherFees != null "> and other_fees = #{data.otherFees}</if>
+            <if test="data.unsoldBudget != null "> and unsold_budget = #{data.unsoldBudget}</if>
+            <if test="data.handlingFee != null "> and handling_fee = #{data.handlingFee}</if>
+            <if test="data.orderNetProfit != null "> and order_net_profit = #{data.orderNetProfit}</if>
+            <if test="data.roi != null "> and roi = #{data.roi}</if>
+            <if test="data.daysToPositiveCashFlow != null "> and days_to_positive_cash_flow = #{data.daysToPositiveCashFlow}</if>
+            <if test="data.verificationFormula != null "> and verification_formula = #{data.verificationFormula}</if>
+            <if test="data.isGrossProfitPositive != null "> and is_gross_profit_positive = #{data.isGrossProfitPositive}</if>
+            <if test="data.createdAt != null "> and created_at = #{data.createdAt}</if>
+            <if test="data.updatedAt != null "> and updated_at = #{data.updatedAt}</if>
+
+            <choose>
+                <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                    <!-- 超级管理员显示所有数据 -->
+                </when>
+                <when test="postCodes != null and postCodes.contains('general_leader')">
+                    <!-- 大组长无数据限制 -->
+                </when>
+                <!-- 用户为组长级别 -->
+                <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                    and
+                    <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                        operation_group_name = #{user.operationGroupName}
+                    </if>
+                    <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                        development_group_name = #{user.developmentGroupName}
+                    </if>
+                </when>
+                <!-- 用户为普通员工 -->
+                <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                    and (
+                    <trim prefixOverrides="OR">
+                        <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                            operator = #{user.userName}
+                        </if>
+                        <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                            product_developer = #{user.userName}
+                        </if>
+                    </trim>
+                    )
+                </when>
+                <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                <otherwise>
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
     <select id="selectChannelSalesDataById" parameterType="Integer" resultMap="ChannelSalesDataResult">
         <include refid="selectChannelSalesDataVo"/>
         where id = #{id}

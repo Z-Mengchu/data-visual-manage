@@ -527,4 +527,1124 @@
             (SELECT GROUP_CONCAT(DISTINCT channel) FROM channel_sales_data WHERE channel IS NOT NULL) as channels,
             (SELECT GROUP_CONCAT(DISTINCT country) FROM channel_sales_data WHERE country IS NOT NULL) as countries
     </select>
+
+    <!-- 带权限的核心KPI数据查询 -->
+    <select id="selectKpiDataWithPermission" resultType="java.util.Map">
+        SELECT
+        SUM(revenue_rmb) as totalRevenue,
+        SUM(order_gross_profit) as totalGrossProfit,
+        SUM(order_net_profit) as totalNetProfit,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_gross_profit) / SUM(revenue_rmb)
+        END as grossProfitRate,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(revenue_rmb)
+        END as netProfitRate,
+        CASE
+        WHEN SUM(product_cost + first_mile_shipping) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(product_cost + first_mile_shipping)
+        END as avgRoi
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
+    <!-- 带权限的品类退款率数据查询 -->
+    <select id="selectCategoryRefundDataWithPermission" resultType="java.util.Map">
+        SELECT
+        category,
+        SUM(revenue_rmb) as revenue,
+        SUM(refund) as refundAmount,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(refund) / SUM(revenue_rmb)
+        END as refundRate
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY category
+        ORDER BY revenue DESC
+    </select>
+
+    <!-- 带权限的SKU ROI数据查询 -->
+    <select id="selectSkuRoiDataWithPermission" resultType="java.util.Map">
+        SELECT
+        tongtu_sku as tongtuSku,
+        product_name as productName,
+        SUM(shipping_quantity) as shippingQuantity,
+        SUM(product_cost) as productCost,
+        SUM(first_mile_shipping) as firstMileShipping,
+        SUM(order_net_profit) as orderNetProfit,
+        CASE
+        WHEN SUM(product_cost + first_mile_shipping) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(product_cost + first_mile_shipping)
+        END as roi,
+        AVG(days_to_positive_cash_flow) as daysToPositiveCashFlow
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY tongtu_sku, product_name
+        HAVING SUM(shipping_quantity) > 0
+        ORDER BY orderNetProfit DESC
+    </select>
+
+    <!-- 一级品类数据查询 -->
+    <select id="selectFirstLevelCategoryDataWithPermission" resultType="java.util.Map">
+        SELECT
+        first_level_category as firstLevelCategory,
+        SUM(revenue_rmb) as revenue,
+        SUM(order_gross_profit) as orderGrossProfit,
+        SUM(order_net_profit) as orderNetProfit,
+        CASE
+        WHEN SUM(product_cost + first_mile_shipping) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(product_cost + first_mile_shipping)
+        END as roi,
+        AVG(days_to_positive_cash_flow) as daysToPositiveCashFlow
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY first_level_category
+        ORDER BY revenue DESC
+    </select>
+    <!-- 渠道数据查询 -->
+    <select id="selectChannelDataWithPermission" resultType="java.util.Map">
+        SELECT
+        channel,
+        SUM(revenue_rmb) as revenue,
+        SUM(order_gross_profit) as orderGrossProfit,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_gross_profit) / SUM(revenue_rmb)
+        END as grossProfitRate,
+        SUM(order_net_profit) as orderNetProfit,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(revenue_rmb)
+        END as netProfitRate,
+        CASE
+        WHEN SUM(product_cost + first_mile_shipping) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(product_cost + first_mile_shipping)
+        END as roi,
+        AVG(days_to_positive_cash_flow) as daysToPositiveCashFlow
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY channel
+        ORDER BY revenue DESC
+    </select>
+    <!-- 品牌数据查询 -->
+    <select id="selectBrandDataWithPermission" resultType="java.util.Map">
+        SELECT
+        brand,
+        SUM(revenue_rmb) as revenue,
+        SUM(order_gross_profit) as orderGrossProfit,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_gross_profit) / SUM(revenue_rmb)
+        END as grossProfitRate,
+        SUM(order_net_profit) as orderNetProfit,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(revenue_rmb)
+        END as netProfitRate,
+        CASE
+        WHEN SUM(product_cost + first_mile_shipping) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(product_cost + first_mile_shipping)
+        END as roi,
+        AVG(days_to_positive_cash_flow) as daysToPositiveCashFlow
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY brand
+        HAVING brand IS NOT NULL AND brand != ''
+        ORDER BY revenue DESC
+    </select>
+    <!-- 国家数据查询 -->
+    <select id="selectCountryDataWithPermission" resultType="java.util.Map">
+        SELECT
+        country,
+        SUM(revenue_rmb) as revenue,
+        SUM(order_gross_profit) as orderGrossProfit,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_gross_profit) / SUM(revenue_rmb)
+        END as grossProfitRate,
+        SUM(order_net_profit) as orderNetProfit,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(revenue_rmb)
+        END as netProfitRate,
+        CASE
+        WHEN SUM(product_cost + first_mile_shipping) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(product_cost + first_mile_shipping)
+        END as roi,
+        AVG(days_to_positive_cash_flow) as daysToPositiveCashFlow
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY country
+        HAVING country IS NOT NULL AND country != ''
+        ORDER BY revenue DESC
+    </select>
+    <!-- 店铺数据查询 -->
+    <select id="selectStoreDataWithPermission" resultType="java.util.Map">
+        SELECT
+        store_code as storeCode,
+        channel_account as channelAccount,
+        SUM(revenue_rmb) as revenue,
+        SUM(order_gross_profit) as orderGrossProfit,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_gross_profit) / SUM(revenue_rmb)
+        END as grossProfitRate,
+        SUM(order_net_profit) as orderNetProfit,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(revenue_rmb)
+        END as netProfitRate,
+        CASE
+        WHEN SUM(product_cost + first_mile_shipping) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(product_cost + first_mile_shipping)
+        END as roi,
+        AVG(days_to_positive_cash_flow) as daysToPositiveCashFlow
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY store_code, channel_account
+        HAVING store_code IS NOT NULL AND store_code != ''
+        ORDER BY revenue DESC
+    </select>
+    <!-- 地图数据查询 -->
+    <select id="selectMapDataWithPermission" resultType="java.util.Map">
+        SELECT
+        country,
+        SUM(revenue_rmb) as revenue,
+        SUM(order_net_profit) as orderNetProfit,
+        CASE
+        WHEN SUM(product_cost + first_mile_shipping) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(product_cost + first_mile_shipping)
+        END as roi,
+        AVG(days_to_positive_cash_flow) as daysToPositiveCashFlow
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY country
+        HAVING country IS NOT NULL AND country != ''
+        ORDER BY revenue DESC
+    </select>
+    <!-- 渠道销售额占比数据查询 -->
+    <select id="selectChannelDistributionDataWithPermission" resultType="java.util.Map">
+        SELECT
+        channel,
+        SUM(revenue_rmb) as revenue,
+        ROUND(SUM(revenue_rmb) / (SELECT SUM(revenue_rmb) FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        ) * 100, 2) as percentage
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY channel
+        ORDER BY revenue DESC
+    </select>
+    <!-- 预警数据查询 -->
+    <select id="selectAlertDataWithPermission" resultType="java.util.Map">
+        (SELECT
+        '低ROI' as alertType,
+        tongtu_sku as item,
+        roi as value
+        FROM (
+        SELECT
+        tongtu_sku,
+        CASE
+        WHEN SUM(product_cost + first_mile_shipping) = 0 THEN 0
+        ELSE SUM(order_net_profit) / SUM(product_cost + first_mile_shipping)
+        END as roi
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY tongtu_sku
+        HAVING SUM(shipping_quantity) > 10
+        ) t
+        WHERE roi &lt; 0
+        ORDER BY roi ASC
+        LIMIT 5)
+
+        UNION ALL
+
+        (SELECT
+        '高退款率' as alertType,
+        category as item,
+        CASE
+        WHEN SUM(revenue_rmb) = 0 THEN 0
+        ELSE SUM(refund) / SUM(revenue_rmb)
+        END as value
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY category
+        HAVING SUM(revenue_rmb) > 1000 AND SUM(refund) / SUM(revenue_rmb) > 0.1
+        ORDER BY value DESC
+        LIMIT 5)
+    </select>
+    <!-- 趋势数据查询 -->
+    <select id="selectTrendDataWithPermission" resultType="java.util.Map">
+        SELECT
+        DATE(payment_settlement_date) as date,
+        SUM(revenue_rmb) as revenue,
+        SUM(order_net_profit) as profit
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY DATE(payment_settlement_date)
+        ORDER BY date
+    </select>
+    <!-- 详情数据查询 -->
+    <select id="selectDetailDataWithPermission" resultType="java.util.Map">
+        SELECT
+        tongtu_sku,
+        product_name,
+        channel,
+        revenue_rmb as revenue,
+        product_cost,
+        first_mile_shipping,
+        order_net_profit,
+        roi,
+        days_to_positive_cash_flow,
+        CASE
+        WHEN revenue_rmb = 0 THEN 0
+        ELSE refund / revenue_rmb
+        END as refundRate
+        FROM channel_sales_data
+        <where>
+            <if test="data.paymentSettlementDate != null and data.paymentSettlementDate != ''">
+                AND payment_settlement_date LIKE CONCAT(#{data.paymentSettlementDate}, '%')
+            </if>
+            <if test="data.category != null and data.category != ''">
+                AND category = #{data.category}
+            </if>
+            <if test="data.firstLevelCategory != null and data.firstLevelCategory != ''">
+                AND first_level_category = #{data.firstLevelCategory}
+            </if>
+            <if test="data.channel != null and data.channel != ''">
+                AND channel = #{data.channel}
+            </if>
+            <if test="data.country != null and data.country != ''">
+                AND country = #{data.country}
+            </if>
+
+            <!-- 数据权限过滤条件 -->
+            <if test="user != null">
+                <choose>
+                    <when test="roleKeys.size() > 0 and roleKeys.contains('admin')">
+                        <!-- 超级管理员显示所有数据 -->
+                    </when>
+                    <when test="postCodes != null and postCodes.contains('general_leader')">
+                        <!-- 大组长无数据限制 -->
+                    </when>
+                    <!-- 用户为组长级别 -->
+                    <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
+                        and
+                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
+                            operation_group_name = #{user.operationGroupName}
+                        </if>
+                        <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
+                            <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                            development_group_name = #{user.developmentGroupName}
+                        </if>
+                    </when>
+                    <!-- 用户为普通员工 -->
+                    <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">
+                        and (
+                        <trim prefixOverrides="OR">
+                            <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
+                                operator = #{user.userName}
+                            </if>
+                            <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
+                                <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''"> OR </if>
+                                product_developer = #{user.userName}
+                            </if>
+                        </trim>
+                        )
+                    </when>
+                    <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                    <otherwise>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        ORDER BY revenue_rmb DESC
+        LIMIT 100
+    </select>
 </mapper>

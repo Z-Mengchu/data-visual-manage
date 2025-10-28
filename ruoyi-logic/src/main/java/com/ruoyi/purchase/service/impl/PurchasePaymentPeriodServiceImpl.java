@@ -1,9 +1,12 @@
 package com.ruoyi.purchase.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
@@ -155,5 +158,37 @@ public class PurchasePaymentPeriodServiceImpl implements IPurchasePaymentPeriodS
         }
         message.append(successMsg).append(failureMsg);
         return message.toString();
+    }
+
+    /**
+     * 统计已付款和未付款数量
+     */
+    @Override
+    public Map<String, Integer> countPaymentStatus(PurchasePaymentPeriod purchasePaymentPeriod) {
+        Map<String, Integer> result = new HashMap<>();
+
+        // 统计已付款数量
+        PurchasePaymentPeriod paidQuery = new PurchasePaymentPeriod();
+        BeanUtils.copyProperties(purchasePaymentPeriod, paidQuery);
+        paidQuery.setIsPaid("1"); // 已付款
+        int paidCount = purchasePaymentPeriodMapper.selectPurchasePaymentPeriodCount(paidQuery);
+
+        // 统计未付款数量
+        PurchasePaymentPeriod unpaidQuery = new PurchasePaymentPeriod();
+        BeanUtils.copyProperties(purchasePaymentPeriod, unpaidQuery);
+        unpaidQuery.setIsPaid("0"); // 未付款
+        int unpaidCount = purchasePaymentPeriodMapper.selectPurchasePaymentPeriodCount(unpaidQuery);
+
+        // 统计未知状态数量（isPaid为null或空）
+        PurchasePaymentPeriod unknownQuery = new PurchasePaymentPeriod();
+        BeanUtils.copyProperties(purchasePaymentPeriod, unknownQuery);
+        unknownQuery.setIsPaid(""); // 设置为空字符串来查询未知状态
+        int unknownCount = purchasePaymentPeriodMapper.selectPurchasePaymentPeriodCountUnknown(unknownQuery);
+
+        result.put("paidCount", paidCount);
+        result.put("unpaidCount", unpaidCount);
+        result.put("unknownCount", unknownCount);
+
+        return result;
     }
 }

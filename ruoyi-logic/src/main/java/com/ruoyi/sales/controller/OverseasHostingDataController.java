@@ -2,9 +2,13 @@ package com.ruoyi.sales.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.sales.domain.FeeItemSummary;
 import com.ruoyi.sales.domain.OverseasHostingDimensionSummary;
 import com.ruoyi.sales.domain.TEMUOrderDetails;
+import com.ruoyi.system.domain.SysPost;
+import com.ruoyi.system.service.ISysPostService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +43,9 @@ public class OverseasHostingDataController extends BaseController
     @Autowired
     private IOverseasHostingDataService overseasHostingDataService;
 
+    @Autowired
+    private ISysPostService postService;
+
     /**
      * 查询海外托管业务数据管理列表
      */
@@ -46,8 +53,13 @@ public class OverseasHostingDataController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(OverseasHostingData overseasHostingData)
     {
+        // 获取当前登录用户
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+
+        // 获取用户岗位列表
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
         startPage();
-        List<OverseasHostingData> list = overseasHostingDataService.selectOverseasHostingDataList(overseasHostingData);
+        List<OverseasHostingData> list = overseasHostingDataService.selectOverseasHostingDataList(overseasHostingData, currentUser, userPosts);
         return getDataTable(list);
     }
 
@@ -59,7 +71,12 @@ public class OverseasHostingDataController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, OverseasHostingData overseasHostingData)
     {
-        List<OverseasHostingData> list = overseasHostingDataService.selectOverseasHostingDataList(overseasHostingData);
+        // 获取当前登录用户
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+
+        // 获取用户岗位列表
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<OverseasHostingData> list = overseasHostingDataService.selectOverseasHostingDataList(overseasHostingData, currentUser, userPosts);
         ExcelUtil<OverseasHostingData> util = new ExcelUtil<OverseasHostingData>(OverseasHostingData.class);
         util.exportExcel(response, list, "海外托管业务数据管理数据");
     }

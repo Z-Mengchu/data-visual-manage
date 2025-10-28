@@ -1,21 +1,25 @@
 package com.ruoyi.sales.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.ruoyi.common.constant.RoleConstants;
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
+import com.ruoyi.sales.domain.ChannelSalesData;
+import com.ruoyi.sales.mapper.ChannelSalesDataMapper;
+import com.ruoyi.sales.service.IChannelSalesDataService;
+import com.ruoyi.system.domain.SysPost;
+import com.ruoyi.system.service.ISysPostService;
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.sales.mapper.ChannelSalesDataMapper;
-import com.ruoyi.sales.domain.ChannelSalesData;
-import com.ruoyi.sales.service.IChannelSalesDataService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 全渠道销售数据分析Service业务层处理
@@ -53,9 +57,15 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
      * @return 全渠道销售数据分析
      */
     @Override
-    public List<ChannelSalesData> selectChannelSalesDataList(ChannelSalesData channelSalesData)
+    public List<ChannelSalesData> selectChannelSalesDataList(ChannelSalesData channelSalesData, SysUser currentUser, List<SysPost> userPosts)
     {
-        return channelSalesDataMapper.selectChannelSalesDataList(channelSalesData);
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).toList();
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataMapper.selectChannelSalesDataListWithFilter(channelSalesData, currentUser, postCodes, roleKeys);
+       /* if (roleKeys.contains(RoleConstants.ROLE_FINANCE)){
+            return channelSalesDataMapper.selectChannelSalesDataListWithFilter(channelSalesData, currentUser, postCodes);
+        }
+        return channelSalesDataMapper.selectChannelSalesDataList(channelSalesData);*/
     }
 
     /**

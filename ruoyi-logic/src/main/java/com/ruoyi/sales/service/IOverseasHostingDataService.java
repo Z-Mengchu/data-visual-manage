@@ -3,10 +3,12 @@ package com.ruoyi.sales.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.sales.domain.FeeItemSummary;
 import com.ruoyi.sales.domain.OverseasHostingData;
 import com.ruoyi.sales.domain.OverseasHostingDimensionSummary;
 import com.ruoyi.sales.domain.TEMUOrderDetails;
+import com.ruoyi.system.domain.SysPost;
 
 /**
  * 海外托管业务数据管理Service接口
@@ -30,7 +32,7 @@ public interface IOverseasHostingDataService
      * @param overseasHostingData 海外托管业务数据管理
      * @return 海外托管业务数据管理集合
      */
-    public List<OverseasHostingData> selectOverseasHostingDataList(OverseasHostingData overseasHostingData);
+    public List<OverseasHostingData> selectOverseasHostingDataList(OverseasHostingData overseasHostingData, SysUser currentUser, List<SysPost> userPosts);
 
     /**
      * 新增海外托管业务数据管理

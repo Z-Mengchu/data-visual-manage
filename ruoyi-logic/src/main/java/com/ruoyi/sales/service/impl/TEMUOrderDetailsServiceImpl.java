@@ -1,11 +1,17 @@
 package com.ruoyi.sales.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
 import com.ruoyi.sales.domain.ChannelSalesData;
+import com.ruoyi.system.domain.SysPost;
+import com.ruoyi.system.service.ISysPostService;
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,9 +57,25 @@ public class TEMUOrderDetailsServiceImpl implements ITEMUOrderDetailsService
      * @return Temu订单明细
      */
     @Override
-    public List<TEMUOrderDetails> selectTEMUOrderDetailsList(TEMUOrderDetails tEMUOrderDetails)
+    public List<TEMUOrderDetails> selectTEMUOrderDetailsList(TEMUOrderDetails tEMUOrderDetails, SysUser currentUser, List<SysPost> userPosts)
     {
-        return TEMUOrderDetailsMapper.selectTEMUOrderDetailsList(tEMUOrderDetails);
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).toList();
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+
+        return TEMUOrderDetailsMapper.selectTEMUOrderDetailsListWithPermission(tEMUOrderDetails, currentUser, postCodes, roleKeys);
+    }
+
+    /**
+     * 查询Temu订单明细列表（带数据权限）
+     *
+     * @param tEMUOrderDetails Temu订单明细
+     * @param user 当前用户
+     * @param postCodes 用户岗位编码列表
+     * @return Temu订单明细集合
+     */
+    @Override
+    public List<TEMUOrderDetails> selectTEMUOrderDetailsListWithPermission(TEMUOrderDetails tEMUOrderDetails, SysUser user, List<String> postCodes, List<String> roleKeys) {
+        return TEMUOrderDetailsMapper.selectTEMUOrderDetailsListWithPermission(tEMUOrderDetails, user, postCodes, roleKeys);
     }
 
     /**

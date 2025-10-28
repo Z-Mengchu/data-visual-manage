@@ -275,7 +275,7 @@ import * as echarts from 'echarts'
 import '@/common/echart/world_fix'
 import { getKpiData, getCategoryRefundData, getSkuRoiData, getFirstLevelCategoryData,
   getChannelData, getBrandData, getCountryData, getStoreData, getMapData,
-  getChannelDistributionData, getAlertData, getTrendData, getDetailData,
+  getChannelDistributionData, getTrendData, getDetailData,
   getFilterOptions } from '@/api/saleManage/salesData/visual'
 import { formatTime2 } from "@/utils";
 

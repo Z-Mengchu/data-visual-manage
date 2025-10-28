@@ -26,35 +26,6 @@ public class TEMUVisualizationServiceImpl implements ITEMUVisualizationService {
     public Map<String, Object> getAverageMetrics(TEMUVisualQuery query) {
         return visualizationMapper.selectAverageMetrics(query);
     }
-    @Override
-    public List<Map<String, Object>> getTrendData(TEMUVisualQuery query) {
-        return visualizationMapper.selectTrendData(query);
-    }
-
-    @Override
-    public List<Map<String, Object>> getDeveloperSankeyData(TEMUVisualQuery query) {
-        return visualizationMapper.selectDeveloperSankeyData(query);
-    }
-
-    @Override
-    public List<Map<String, Object>> getDeveloperRankingData(TEMUVisualQuery query) {
-        return visualizationMapper.selectDeveloperRankingData(query);
-    }
-
-    @Override
-    public List<Map<String, Object>> getCategoryTreemapData(TEMUVisualQuery query) {
-        return visualizationMapper.selectCategoryTreemapData(query);
-    }
-
-    @Override
-    public List<Map<String, Object>> getCategoryRankingData(TEMUVisualQuery query) {
-        return visualizationMapper.selectCategoryRankingData(query);
-    }
-
-    @Override
-    public List<Map<String, Object>> getDetailTableData(TEMUVisualQuery query) {
-        return visualizationMapper.selectDetailTableData(query);
-    }
 
     @Override
     public List<Map<String, Object>> getAlertData(TEMUVisualQuery query) {

@@ -28,7 +28,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 个人信息 业务处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -68,6 +68,8 @@ public class SysProfileController extends BaseController
         currentUser.setEmail(user.getEmail());
         currentUser.setPhonenumber(user.getPhonenumber());
         currentUser.setSex(user.getSex());
+        currentUser.setOperationGroupName(user.getOperationGroupName());
+        currentUser.setDevelopmentGroupName(user.getDevelopmentGroupName());
         if (StringUtils.isNotEmpty(user.getPhonenumber()) && !userService.checkPhoneUnique(currentUser))
         {
             return error("修改用户'" + loginUser.getUsername() + "'失败，手机号码已存在");

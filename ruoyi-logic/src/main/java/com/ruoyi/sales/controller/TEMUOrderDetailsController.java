@@ -2,7 +2,11 @@ package com.ruoyi.sales.controller;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.sales.domain.ChannelSalesData;
+import com.ruoyi.system.domain.SysPost;
+import com.ruoyi.system.service.ISysPostService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +41,9 @@ public class TEMUOrderDetailsController extends BaseController
     @Autowired
     private ITEMUOrderDetailsService tEMUOrderDetailsService;
 
+    @Autowired
+    private ISysPostService postService;
+
     /**
      * 查询Temu订单明细列表
      */
@@ -44,8 +51,12 @@ public class TEMUOrderDetailsController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(TEMUOrderDetails tEMUOrderDetails)
     {
+        // 获取当前登录用户
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        // 获取用户岗位列表
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
         startPage();
-        List<TEMUOrderDetails> list = tEMUOrderDetailsService.selectTEMUOrderDetailsList(tEMUOrderDetails);
+        List<TEMUOrderDetails> list = tEMUOrderDetailsService.selectTEMUOrderDetailsList(tEMUOrderDetails, currentUser, userPosts);
         return getDataTable(list);
     }
 
@@ -57,7 +68,11 @@ public class TEMUOrderDetailsController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, TEMUOrderDetails tEMUOrderDetails)
     {
-        List<TEMUOrderDetails> list = tEMUOrderDetailsService.selectTEMUOrderDetailsList(tEMUOrderDetails);
+        // 获取当前登录用户
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        // 获取用户岗位列表
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<TEMUOrderDetails> list = tEMUOrderDetailsService.selectTEMUOrderDetailsList(tEMUOrderDetails, currentUser, userPosts);
         ExcelUtil<TEMUOrderDetails> util = new ExcelUtil<>(TEMUOrderDetails.class);
         util.exportExcel(response, list, "Temu订单明细数据");
     }
@@ -110,7 +125,7 @@ public class TEMUOrderDetailsController extends BaseController
      * 导入数据
      */
     @Log(title = "TEMU数据管理", businessType = BusinessType.IMPORT)
-    @PreAuthorize("@ss.hasPermi('sale:data:import')")
+    @PreAuthorize("@ss.hasPermi('temu:data:import')")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file) throws Exception
     {

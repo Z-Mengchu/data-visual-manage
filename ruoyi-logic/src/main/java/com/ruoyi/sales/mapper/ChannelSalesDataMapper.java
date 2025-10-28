@@ -1,10 +1,11 @@
 package com.ruoyi.sales.mapper;
 
-import java.util.List;
-import java.util.Map;
-
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.sales.domain.ChannelSalesData;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * 全渠道销售数据分析Mapper接口
@@ -23,12 +24,23 @@ public interface ChannelSalesDataMapper
     public ChannelSalesData selectChannelSalesDataById(Integer id);
 
     /**
-     * 查询全渠道销售数据分析列表
+     * 查询全渠道销售数据分析列表过滤
      *
      * @param channelSalesData 全渠道销售数据分析
      * @return 全渠道销售数据分析集合
      */
     public List<ChannelSalesData> selectChannelSalesDataList(ChannelSalesData channelSalesData);
+
+    /**
+     * 查询全渠道销售数据分析列表过滤
+     *
+     * @param channelSalesData 全渠道销售数据分析
+     * @return 全渠道销售数据分析集合
+     */
+    public List<ChannelSalesData> selectChannelSalesDataListWithFilter(@Param("data") ChannelSalesData channelSalesData,
+                                                             @Param("user") SysUser user,
+                                                             @Param("postCodes") List<String> postCodes,
+                                                             @Param("roleKeys") List<String> roleKeys);
 
     /**
      * 新增全渠道销售数据分析

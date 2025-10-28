@@ -1,5 +1,7 @@
 package com.ruoyi.sales.service.impl;
 
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
@@ -8,6 +10,7 @@ import com.ruoyi.sales.domain.OverseasHostingData;
 import com.ruoyi.sales.domain.OverseasHostingDimensionSummary;
 import com.ruoyi.sales.mapper.OverseasHostingDataMapper;
 import com.ruoyi.sales.service.IOverseasHostingDataService;
+import com.ruoyi.system.domain.SysPost;
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,9 +67,12 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 海外托管业务数据管理
      */
     @Override
-    public List<OverseasHostingData> selectOverseasHostingDataList(OverseasHostingData overseasHostingData)
+    public List<OverseasHostingData> selectOverseasHostingDataList(OverseasHostingData overseasHostingData, SysUser currentUser, List<SysPost> userPosts)
     {
-        return overseasHostingDataMapper.selectOverseasHostingDataList(overseasHostingData);
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).toList();
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+
+        return overseasHostingDataMapper.selectOverseasHostingDataListWithPermission(overseasHostingData, currentUser, postCodes, roleKeys);
     }
 
     /**

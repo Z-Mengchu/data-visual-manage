@@ -165,4 +165,62 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectPurchasePaymentPeriodCount" parameterType="PurchasePaymentPeriod" resultType="int">
+        select count(*) from purchase_payment_period
+        <where>
+            <if test="purchaseOrderNumber != null  and purchaseOrderNumber != ''"> and purchase_order_number = #{purchaseOrderNumber}</if>
+            <if test="purchasePlanNumber != null  and purchasePlanNumber != ''"> and purchase_plan_number = #{purchasePlanNumber}</if>
+            <if test="account1688 != null  and account1688 != ''"> and account_1688 = #{account1688}</if>
+            <if test="purchaseWarehouse != null  and purchaseWarehouse != ''"> and purchase_warehouse = #{purchaseWarehouse}</if>
+            <if test="purchaser != null  and purchaser != ''"> and purchaser = #{purchaser}</if>
+            <if test="params.beginPurchaseDate != null and params.beginPurchaseDate != '' and params.endPurchaseDate != null and params.endPurchaseDate != ''"> and purchase_date between #{params.beginPurchaseDate} and #{params.endPurchaseDate}</if>
+            <if test="imageUrl != null  and imageUrl != ''"> and image_url = #{imageUrl}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="sku != null  and sku != ''"> and sku = #{sku}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="specifications != null  and specifications != ''"> and specifications = #{specifications}</if>
+            <if test="purchaseUnitPrice != null "> and purchase_unit_price = #{purchaseUnitPrice}</if>
+            <if test="purchaseQuantity != null "> and purchase_quantity = #{purchaseQuantity}</if>
+            <if test="goodsPayment != null "> and goods_payment = #{goodsPayment}</if>
+            <if test="supplierName != null  and supplierName != ''"> and supplier_name like concat('%', #{supplierName}, '%')</if>
+            <if test="arrivalDate != null "> and arrival_date = #{arrivalDate}</if>
+            <if test="purchaseNotes != null  and purchaseNotes != ''"> and purchase_notes = #{purchaseNotes}</if>
+            <if test="paymentPeriodDays != null "> and payment_period_days = #{paymentPeriodDays}</if>
+            <if test="params.beginDuePaymentDate != null and params.beginDuePaymentDate != '' and params.endDuePaymentDate != null and params.endDuePaymentDate != ''"> and due_payment_date between #{params.beginDuePaymentDate} and #{params.endDuePaymentDate}</if>
+            <if test="purchaseDepartment != null  and purchaseDepartment != ''"> and purchase_department = #{purchaseDepartment}</if>
+            <if test="isPaid != null "> and is_paid = #{isPaid}</if>
+            <if test="params.beginCreatedAt != null and params.beginCreatedAt != '' and params.endCreatedAt != null and params.endCreatedAt != ''"> and created_at between #{params.beginCreatedAt} and #{params.endCreatedAt}</if>
+            <if test="params.beginUpdatedAt != null and params.beginUpdatedAt != '' and params.endUpdatedAt != null and params.endUpdatedAt != ''"> and updated_at between #{params.beginUpdatedAt} and #{params.endUpdatedAt}</if>
+        </where>
+    </select>
+
+    <select id="selectPurchasePaymentPeriodCountUnknown" parameterType="PurchasePaymentPeriod" resultType="int">
+        select count(*) from purchase_payment_period
+        <where>
+            (is_paid is null or is_paid = '')
+            <if test="purchaseOrderNumber != null  and purchaseOrderNumber != ''"> and purchase_order_number = #{purchaseOrderNumber}</if>
+            <if test="purchasePlanNumber != null  and purchasePlanNumber != ''"> and purchase_plan_number = #{purchasePlanNumber}</if>
+            <if test="account1688 != null  and account1688 != ''"> and account_1688 = #{account1688}</if>
+            <if test="purchaseWarehouse != null  and purchaseWarehouse != ''"> and purchase_warehouse = #{purchaseWarehouse}</if>
+            <if test="purchaser != null  and purchaser != ''"> and purchaser = #{purchaser}</if>
+            <if test="params.beginPurchaseDate != null and params.beginPurchaseDate != '' and params.endPurchaseDate != null and params.endPurchaseDate != ''"> and purchase_date between #{params.beginPurchaseDate} and #{params.endPurchaseDate}</if>
+            <if test="imageUrl != null  and imageUrl != ''"> and image_url = #{imageUrl}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="sku != null  and sku != ''"> and sku = #{sku}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="specifications != null  and specifications != ''"> and specifications = #{specifications}</if>
+            <if test="purchaseUnitPrice != null "> and purchase_unit_price = #{purchaseUnitPrice}</if>
+            <if test="purchaseQuantity != null "> and purchase_quantity = #{purchaseQuantity}</if>
+            <if test="goodsPayment != null "> and goods_payment = #{goodsPayment}</if>
+            <if test="supplierName != null  and supplierName != ''"> and supplier_name like concat('%', #{supplierName}, '%')</if>
+            <if test="arrivalDate != null "> and arrival_date = #{arrivalDate}</if>
+            <if test="purchaseNotes != null  and purchaseNotes != ''"> and purchase_notes = #{purchaseNotes}</if>
+            <if test="paymentPeriodDays != null "> and payment_period_days = #{paymentPeriodDays}</if>
+            <if test="params.beginDuePaymentDate != null and params.beginDuePaymentDate != '' and params.endDuePaymentDate != null and params.endDuePaymentDate != ''"> and due_payment_date between #{params.beginDuePaymentDate} and #{params.endDuePaymentDate}</if>
+            <if test="purchaseDepartment != null  and purchaseDepartment != ''"> and purchase_department = #{purchaseDepartment}</if>
+            <if test="params.beginCreatedAt != null and params.beginCreatedAt != '' and params.endCreatedAt != null and params.endCreatedAt != ''"> and created_at between #{params.beginCreatedAt} and #{params.endCreatedAt}</if>
+            <if test="params.beginUpdatedAt != null and params.beginUpdatedAt != '' and params.endUpdatedAt != null and params.endUpdatedAt != ''"> and updated_at between #{params.beginUpdatedAt} and #{params.endUpdatedAt}</if>
+        </where>
+    </select>
 </mapper>

@@ -133,6 +133,9 @@ public class PurchasePaymentPeriod extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedAt;
 
+    /**
+     * 计算是否逾期
+     */
     public void calculateOverdueStatus() {
         if (duePaymentDate == null || "1".equals(isPaid)) {
             this.isOverdue = "0";

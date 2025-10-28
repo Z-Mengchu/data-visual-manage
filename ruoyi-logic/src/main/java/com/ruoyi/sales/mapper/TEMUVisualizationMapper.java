@@ -20,36 +20,6 @@ public interface TEMUVisualizationMapper {
     Map<String, Object> selectAverageMetrics(TEMUVisualQuery query);
 
     /**
-     * 获取趋势数据
-     */
-    List<Map<String, Object>> selectTrendData(TEMUVisualQuery query);
-
-    /**
-     * 获取开发员桑基图数据
-     */
-    List<Map<String, Object>> selectDeveloperSankeyData(TEMUVisualQuery query);
-
-    /**
-     * 获取开发员排行榜数据
-     */
-    List<Map<String, Object>> selectDeveloperRankingData(TEMUVisualQuery query);
-
-    /**
-     * 获取品类矩形树图数据
-     */
-    List<Map<String, Object>> selectCategoryTreemapData(TEMUVisualQuery query);
-
-    /**
-     * 获取品类排行榜数据
-     */
-    List<Map<String, Object>> selectCategoryRankingData(TEMUVisualQuery query);
-
-    /**
-     * 获取明细表格数据
-     */
-    List<Map<String, Object>> selectDetailTableData(TEMUVisualQuery query);
-
-    /**
      * 获取预警数据
      */
     List<Map<String, Object>> selectAlertData(TEMUVisualQuery query);

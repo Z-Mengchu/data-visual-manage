@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="40" class="panel-group">
 
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col" v-if="checkRole(['admin', 'sysAdmin'])">
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col" v-if="checkRole(['admin']) || checkPermi(['system:user:list'])">
       <div class="card-panel" @click="handleViewData('userManage')">
         <div class="card-panel-icon-wrapper icon-common">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
@@ -14,7 +14,7 @@
       </div>
     </el-col>
 
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col" v-if="checkRole(['admin', 'sysAdmin'])">
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col" v-if="checkRole(['admin']) || checkPermi(['system:dept:list'])">
       <div class="card-panel" @click="handleViewData('deptManage')">
         <div class="card-panel-icon-wrapper icon-common">
           <svg-icon icon-class="user" class-name="card-panel-icon" />
@@ -27,7 +27,7 @@
       </div>
     </el-col>
 
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col" v-if="checkRole(['admin', 'sysAdmin'])">
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col" v-if="checkRole(['admin']) || checkPermi(['purchase:paymentPeriod:list'])">
       <div class="card-panel" @click="handleViewData('purchase')">
         <div class="card-panel-icon-wrapper icon-common">
           <svg-icon icon-class="shopping" class-name="card-panel-icon" />
@@ -40,7 +40,7 @@
       </div>
     </el-col>
 
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col" v-if="checkRole(['admin', 'sysAdmin'])">
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col" v-if="checkRole(['admin']) || checkPermi(['sale:data:list'])">
       <div class="card-panel" @click="handleViewData('sales')">
         <div class="card-panel-icon-wrapper icon-common">
           <svg-icon icon-class="post" class-name="card-panel-icon" />
@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     checkRole,
-
+    checkPermi,
 
     handleViewData(type) {
       if (type === 'userManage')
@@ -82,9 +82,9 @@ export default {
       if (type === 'deptManage')
         this.$router.push('system/dept');
       if (type === 'purchase')
-        this.$router.push('purchase/payment-period');
+        this.$router.push('finance/purchase/payment-period');
       if (type === 'sales')
-        this.$router.push('sales/data');
+        this.$router.push('finance/sales/data');
     },
   }
 }
