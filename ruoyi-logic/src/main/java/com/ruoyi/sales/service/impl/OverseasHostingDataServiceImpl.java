@@ -32,6 +32,8 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
 
     private static final Map<String, List<String>> countryWarehouseMap = new HashMap<>();
 
+    // 仓库映射
+    // TODO 暂时使用静态代码块，后续需要提供一个功能进行国家和仓库的映射
     static {
         countryWarehouseMap.put("波兰", List.of("递四方波兰1仓（实际用）"));
         countryWarehouseMap.put("德国", List.of("递四方德国仓"));
