@@ -319,7 +319,14 @@
       <el-table-column label="采购部门" align="center" prop="purchaseDepartment" />
       <el-table-column label="是否已付款" align="center" prop="isPaid">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.logic_yes_no" :value="scope.row.isPaid"/>
+<!--          <dict-tag :options="dict.type.logic_yes_no" :value="scope.row.isPaid"/>-->
+          <el-button
+            :type="scope.row.isPaid === '1' ? 'primary' : 'danger'"
+            plain
+            size="mini"
+            @click="handleMarkAsPaid(scope.row)"
+            v-hasPermi="['purchase:paymentPeriod:edit']"
+          >{{ scope.row.isPaid === '1' ? '是' : '否' }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="是否已逾期" align="center" prop="isOverdue">
@@ -780,6 +787,21 @@ export default {
         return
       }
       this.$refs.upload.submit()
+    },
+    // 修改已付款状态
+    handleMarkAsPaid(row) {
+      const content = `是否确认将编号为"${row.id}"的记录标记为${row.isPaid === '1' ? '未付款' : '已付款'}？`;
+      this.$modal.confirm(content).then(() => {
+        // 创建更新数据对象
+        const updateData = {
+          id: row.id,
+          isPaid: row.isPaid === '1' ? '0' : '1'
+        };
+        return updatePaymentPeriod(updateData);
+      }).then(() => {
+        this.$modal.msgSuccess("标记成功");
+        this.getList();  // 刷新列表
+      }).catch(() => {});
     }
   }
 }
