@@ -27,9 +27,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/operator")
-    public AjaxResult getSummaryByOperator(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByOperator(@RequestParam(value = "country", required = false) String country,
+                                           @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                           @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByOperator(country);
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByOperator(country, beginSettlementDate, endSettlementDate);
         return success(summaryList);
     }
     /**
@@ -37,9 +39,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/developer")
-    public AjaxResult getSummaryByDeveloper(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByDeveloper(@RequestParam(value = "country", required = false) String country,
+                                            @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                            @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByDeveloper(country);
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByDeveloper(country, beginSettlementDate, endSettlementDate);
         return success(summaryList);
     }
     /**
@@ -47,9 +51,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/brand")
-    public AjaxResult getSummaryByBrand(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByBrand(@RequestParam(value = "country", required = false) String country,
+                                        @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                        @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByBrand(country);
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByBrand(country, beginSettlementDate, endSettlementDate);
         return success(summaryList);
     }
     /**
@@ -57,9 +63,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/warehouse")
-    public AjaxResult getSummaryByWarehouse(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByWarehouse(@RequestParam(value = "country", required = false) String country,
+                                            @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                            @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByWarehouse(country);
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByWarehouse(country, beginSettlementDate, endSettlementDate);
         return success(summaryList);
     }
     /**
@@ -67,9 +75,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/category")
-    public AjaxResult getSummaryByCategory(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByCategory(@RequestParam(value = "country", required = false) String country,
+                                           @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                           @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByCategory(country);
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryByCategory(country, beginSettlementDate, endSettlementDate);
         return success(summaryList);
     }
     /**
@@ -77,9 +87,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/sku")
-    public AjaxResult getSummaryBySku(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryBySku(@RequestParam(value = "country", required = false) String country,
+                                      @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                      @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryBySku(country);
+        List<OverseasHostingDimensionSummary> summaryList = overseasHostingDataService.getSummaryBySku(country, beginSettlementDate, endSettlementDate);
         return success(summaryList);
     }
     /**
@@ -87,9 +99,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/fee-item")
-    public AjaxResult getSummaryByFeeItem(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByFeeItem(@RequestParam(value = "country", required = false) String country,
+                                          @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                          @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        List<FeeItemSummary> summaryList = overseasHostingDataService.getSummaryByFeeItem(country);
+        List<FeeItemSummary> summaryList = overseasHostingDataService.getSummaryByFeeItem(country, beginSettlementDate, endSettlementDate);
         return success(summaryList);
     }
     /**
@@ -97,9 +111,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/brand-category")
-    public AjaxResult getSummaryByBrandAndCategory(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByBrandAndCategory(@RequestParam(value = "country", required = false) String country,
+                                                   @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                                   @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByBrandAndCategory(country);
+        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByBrandAndCategory(country, beginSettlementDate, endSettlementDate);
         return success(summaryList);
     }
     /**
@@ -107,9 +123,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/monthly")
-    public AjaxResult getSummaryByMonthly(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByMonthly(@RequestParam(value = "country", required = false) String country,
+                                          @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                          @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByMonthly(country);
+        List<Map<String, Object>> summaryList = overseasHostingDataService.getSummaryByMonthly(country, beginSettlementDate, endSettlementDate);
         return success(summaryList);
     }
     /**
@@ -117,9 +135,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/total")
-    public AjaxResult getSummaryByTotal(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByTotal(@RequestParam(value = "country", required = false) String country,
+                                        @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                        @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByTotal(country);
+        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByTotal(country, beginSettlementDate, endSettlementDate);
         return success(summaryData);
     }
     /**
@@ -127,9 +147,11 @@ public class OverseasDashboardController {
      */
     @PreAuthorize("@ss.hasPermi('overseas:data:list')")
     @GetMapping("/summary/core-expenses")
-    public AjaxResult getSummaryByCoreExpenses(@RequestParam(value = "country", required = false) String country)
+    public AjaxResult getSummaryByCoreExpenses(@RequestParam(value = "country", required = false) String country,
+                                               @RequestParam(value = "beginSettlementDate", required = false) String beginSettlementDate,
+                                               @RequestParam(value = "endSettlementDate", required = false) String endSettlementDate)
     {
-        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByCoreExpenses(country);
+        Map<String, Object> summaryData = overseasHostingDataService.getSummaryByCoreExpenses(country, beginSettlementDate, endSettlementDate);
         return success(summaryData);
     }
 

@@ -248,6 +248,12 @@
                     #{warehouse}
                 </foreach>
             </if>
+            <if test="beginSettlementDate != null and beginSettlementDate != ''">
+                AND settlement_time &gt;= #{beginSettlementDate}
+            </if>
+            <if test="endSettlementDate != null and endSettlementDate != ''">
+                AND settlement_time &lt;= #{endSettlementDate}
+            </if>
             <include refid="postDataFilter"/>
         </where>
         GROUP BY operator
@@ -273,6 +279,12 @@
                 #{warehouse}
             </foreach>
         </if>
+        <if test="beginSettlementDate != null and beginSettlementDate != ''">
+            AND settlement_time &gt;= #{beginSettlementDate}
+        </if>
+        <if test="endSettlementDate != null and endSettlementDate != ''">
+            AND settlement_time &lt;= #{endSettlementDate}
+        </if>
         <include refid="postDataFilter"/>
         GROUP BY developer
     </select>
@@ -296,6 +308,12 @@
             <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
                 #{warehouse}
             </foreach>
+        </if>
+        <if test="beginSettlementDate != null and beginSettlementDate != ''">
+            AND settlement_time &gt;= #{beginSettlementDate}
+        </if>
+        <if test="endSettlementDate != null and endSettlementDate != ''">
+            AND settlement_time &lt;= #{endSettlementDate}
         </if>
         <include refid="postDataFilter"/>
         GROUP BY brand
@@ -321,6 +339,12 @@
                 #{warehouse}
             </foreach>
         </if>
+        <if test="beginSettlementDate != null and beginSettlementDate != ''">
+            AND settlement_time &gt;= #{beginSettlementDate}
+        </if>
+        <if test="endSettlementDate != null and endSettlementDate != ''">
+            AND settlement_time &lt;= #{endSettlementDate}
+        </if>
         <include refid="postDataFilter"/>
         GROUP BY shipping_warehouse
     </select>
@@ -344,6 +368,12 @@
             <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
                 #{warehouse}
             </foreach>
+        </if>
+        <if test="beginSettlementDate != null and beginSettlementDate != ''">
+            AND settlement_time &gt;= #{beginSettlementDate}
+        </if>
+        <if test="endSettlementDate != null and endSettlementDate != ''">
+            AND settlement_time &lt;= #{endSettlementDate}
         </if>
         <include refid="postDataFilter"/>
         GROUP BY category
@@ -369,6 +399,12 @@
                 #{warehouse}
             </foreach>
         </if>
+        <if test="beginSettlementDate != null and beginSettlementDate != ''">
+            AND settlement_time &gt;= #{beginSettlementDate}
+        </if>
+        <if test="endSettlementDate != null and endSettlementDate != ''">
+            AND settlement_time &lt;= #{endSettlementDate}
+        </if>
         <include refid="postDataFilter"/>
         GROUP BY sku
     </select>
@@ -384,6 +420,12 @@
             <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
                 #{warehouse}
             </foreach>
+        </if>
+        <if test="beginSettlementDate != null and beginSettlementDate != ''">
+            AND settlement_time &gt;= #{beginSettlementDate}
+        </if>
+        <if test="endSettlementDate != null and endSettlementDate != ''">
+            AND settlement_time &lt;= #{endSettlementDate}
         </if>
         <include refid="postDataFilter"/>
         GROUP BY fee_item
@@ -413,6 +455,12 @@
                 #{warehouse}
             </foreach>
         </if>
+        <if test="beginSettlementDate != null and beginSettlementDate != ''">
+            AND settlement_time &gt;= #{beginSettlementDate}
+        </if>
+        <if test="endSettlementDate != null and endSettlementDate != ''">
+            AND settlement_time &lt;= #{endSettlementDate}
+        </if>
         <include refid="postDataFilter"/>
         GROUP BY brand, category
     </select>
@@ -433,6 +481,12 @@
             <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
                 #{warehouse}
             </foreach>
+        </if>
+        <if test="beginSettlementDate != null and beginSettlementDate != ''">
+            AND settlement_time &gt;= #{beginSettlementDate}
+        </if>
+        <if test="endSettlementDate != null and endSettlementDate != ''">
+            AND settlement_time &lt;= #{endSettlementDate}
         </if>
         <include refid="postDataFilter"/>
         GROUP BY DATE_FORMAT(settlement_time, '%Y-%m')
@@ -464,6 +518,12 @@
                 #{warehouse}
             </foreach>
         </if>
+        <if test="beginSettlementDate != null and beginSettlementDate != ''">
+            AND settlement_time &gt;= #{beginSettlementDate}
+        </if>
+        <if test="endSettlementDate != null and endSettlementDate != ''">
+            AND settlement_time &lt;= #{endSettlementDate}
+        </if>
         <include refid="postDataFilter"/>
     </select>
     <!-- 获取核心费用项汇总数据 -->
@@ -484,6 +544,12 @@
                 <foreach item="warehouse" collection="warehouseList" open="(" separator="," close=")">
                     #{warehouse}
                 </foreach>
+            </if>
+            <if test="beginSettlementDate != null and beginSettlementDate != ''">
+                AND settlement_time &gt;= #{beginSettlementDate}
+            </if>
+            <if test="endSettlementDate != null and endSettlementDate != ''">
+                AND settlement_time &lt;= #{endSettlementDate}
             </if>
             <include refid="postDataFilter"/>
         </where>

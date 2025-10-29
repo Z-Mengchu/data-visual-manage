@@ -103,8 +103,9 @@ public class ChannelSalesData extends BaseEntity
     private String orderNumber;
 
     /** 付款日期/结算时间 */
-    @Excel(name = "付款日期/结算时间")
-    private String paymentSettlementDate;
+    @Excel(name = "付款日期/结算时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date paymentSettlementDate;
 
     /** 发货仓库 */
     @Excel(name = "发货仓库")
@@ -221,5 +222,11 @@ public class ChannelSalesData extends BaseEntity
     /** 更新时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date startTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date endTime;
 
 }

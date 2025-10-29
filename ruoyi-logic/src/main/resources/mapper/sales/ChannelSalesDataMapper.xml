@@ -176,14 +176,13 @@
                 </when>
                 <!-- 用户为组长级别 -->
                 <when test="postCodes != null and (postCodes.contains('operation_leader') or postCodes.contains('development_leader'))">
-                    and
+                    and (
                     <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
                         operation_group_name = #{user.operationGroupName}
-                    </if>
-                    <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
-                        <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
+                    </if><if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">       <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''"> OR </if>
                         development_group_name = #{user.developmentGroupName}
                     </if>
+                    )
                 </when>
                 <!-- 用户为普通员工 -->
                 <when test="postCodes != null and (postCodes.contains('operator') or postCodes.contains('developer'))">

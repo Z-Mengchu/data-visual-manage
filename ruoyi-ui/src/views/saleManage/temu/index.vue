@@ -534,9 +534,9 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 备注时间范围
+      // 发货日期时间范围
       daterangeShipmentDate: [],
-      // 备注时间范围
+      // 付款时间范围
       daterangePaymentDate: [],
       // 查询参数
       queryParams: {

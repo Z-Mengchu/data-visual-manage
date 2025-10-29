@@ -124,3 +124,12 @@ export function getFilterOptions() {
     method: 'get'
   })
 }
+
+// 获取预警数据
+export function getCategoryAlerts(params) {
+  return request({
+    url: '/sale/visual/alerts',
+    method: 'get',
+    params
+  })
+}

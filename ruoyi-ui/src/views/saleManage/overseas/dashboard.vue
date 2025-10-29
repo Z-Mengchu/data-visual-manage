@@ -7,22 +7,34 @@
           <!-- 顶部title部分 -->
           <el-row>
             <el-col :span="6">
-              <div class="country-filter">
-                <span class="filter-label">选择国家:</span>
-                <el-select
-                  v-model="selectedCountry"
-                  placeholder="全部国家"
-                  size="mini"
-                  @change="handleCountryChange"
-                >
-                  <el-option label="全部国家" value="" />
-                  <el-option
-                    v-for="country in countryList"
-                    :key="country"
-                    :label="country"
-                    :value="country"
+              <div class="top-filter">
+                <div class="filter-row">
+                  <el-select
+                    :popper-append-to-body="false"
+                    v-model="selectedCountry"
+                    placeholder="全部国家"
+                    size="mini"
+                    @change="handleFilterChange"
+                  >
+                    <el-option label="全部国家" value="" />
+                    <el-option
+                      v-for="country in countryList"
+                      :key="country"
+                      :label="country"
+                      :value="country"
+                    />
+                  </el-select>
+                  <el-date-picker
+                    clearable
+                    v-model="daterangeSettlementTime"
+                    value-format="yyyy-MM-dd"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    @change="handleFilterChange"
                   />
-                </el-select>
+                </div>
               </div>
               <dv-decoration-8
               class="title_right"
@@ -56,6 +68,7 @@
                   <div class="chart-header">
                     <p class="chart-title">运营员数据汇总图</p>
                     <el-select
+                      :popper-append-to-body="false"
                       v-model="operatorDimension"
                       placeholder="选择数据维度"
                       size="mini"
@@ -84,6 +97,7 @@
                   <div class="chart-header">
                     <p class="chart-title">开发员数据汇总图</p>
                     <el-select
+                      :popper-append-to-body="false"
                       v-model="developerDimension"
                       placeholder="选择数据维度"
                       size="mini"
@@ -179,6 +193,7 @@
                     >SKU 排 行 榜</dv-decoration-7
                     >
                     <el-select
+                      :popper-append-to-body="false"
                       v-model="skuDimension"
                       placeholder="选择数据维度"
                       size="mini"
@@ -206,6 +221,7 @@
                   <div class="chart-header">
                     <p class="chart-title">品牌类目数据汇总图</p>
                     <el-select
+                      :popper-append-to-body="false"
                       v-model="brandCategoryDimension"
                       placeholder="选择数据维度"
                       size="mini"
@@ -232,6 +248,7 @@
                     >仓 库 数 据 汇 总 图</dv-decoration-7
                     >
                     <el-select
+                      :popper-append-to-body="false"
                       v-model="warehouseDimension"
                       placeholder="选择数据维度"
                       size="mini"
@@ -284,6 +301,10 @@ export default {
       weekday: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
       // 选中国家
       selectedCountry: '',
+      // 时间范围
+      daterangeSettlementTime: [],
+      // 时间范围参数
+      daterangeParams: {},
       // 国家列表
       countryList: [],
       // 运营员当前数据维度
@@ -555,8 +576,8 @@ export default {
         this.countryList = [];
       }
     },
-    // 处理国家变化
-    handleCountryChange() {
+    // 处理数据筛选器变化
+    handleFilterChange() {
       this.loading = true;
       // 重新加载所有数据
       this.reloadAllData();
@@ -598,7 +619,12 @@ export default {
     // 获取运营员汇总数据
     async getOperatorSummaryData() {
       try {
-        const response = await getSummaryByOperator(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryByOperator(this.selectedCountry, this.daterangeParams);
         this.operatorSummaryData = response.data;
         // 初始化饼图和圆环图
         this.Rose_diagram();
@@ -610,7 +636,12 @@ export default {
     // 获取开发员汇总数据
     async getDeveloperSummaryData() {
       try {
-        const response = await getSummaryByDeveloper(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryByDeveloper(this.selectedCountry, this.daterangeParams);
         this.developerSummaryData = response.data;
         // 初始化柱状图
         this.columnar();
@@ -621,7 +652,12 @@ export default {
     // 获取仓库汇总数据
     async getWarehouseSummaryData() {
       try {
-        const response = await getSummaryByWarehouse(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryByWarehouse(this.selectedCountry, this.daterangeParams);
         this.warehouseSummaryData = response.data;
         // 更新饼状图数据
         this.updatePieChartData();
@@ -632,7 +668,12 @@ export default {
     // 获取品牌汇总数据
     async getBrandSummaryData() {
       try {
-        const response = await getSummaryByBrand(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryByBrand(this.selectedCountry, this.daterangeParams);
         this.brandSummaryData = response.data;
       } catch (error) {
         console.error('获取品牌汇总数据失败:', error);
@@ -641,7 +682,12 @@ export default {
     // 获取品牌类目汇总数据
     async getBrandCategorySummaryData() {
       try {
-        const response = await getSummaryByBrandAndCategory(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryByBrandAndCategory(this.selectedCountry, this.daterangeParams);
         this.brandCategorySummaryData = response.data;
         // 更新虚线柱状图数据
         this.updateDotterBarData();
@@ -652,7 +698,12 @@ export default {
     // 获取月度汇总数据
     async getMonthlySummaryData() {
       try {
-        const response = await getSummaryByMonthly(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryByMonthly(this.selectedCountry, this.daterangeParams);
         this.monthlySummaryData = response.data;
         // 更新折线图数据
         this.updateLineChartData();
@@ -663,7 +714,12 @@ export default {
     // 获取总体统计数据
     async getTotalSummaryData() {
       try {
-        const response = await getSummaryByTotal(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryByTotal(this.selectedCountry, this.daterangeParams);
         this.totalSummaryData = response.data;
         // 更新KPI指标数据
         this.updateKpiData();
@@ -674,7 +730,12 @@ export default {
     // 获取核心费用项数据
     async getCoreExpensesData() {
       try {
-        const response = await getSummaryByCoreExpenses(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryByCoreExpenses(this.selectedCountry, this.daterangeParams);
         this.coreExpensesData = response.data;
         // 更新中间模块图表数据
         this.updateCenterCharts();
@@ -706,19 +767,30 @@ export default {
     // 获取SKU汇总数据
     async getSkuSummaryData() {
       try {
-        const response = await getSummaryBySku(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryBySku(this.selectedCountry, this.daterangeParams);
         this.skuSummaryData = response.data;
-        // 更新排行榜数据
-        this.updateRankingData();
+        // 确保数据更新后再更新排行榜
+        this.$nextTick(() => {
+          this.updateRankingData();
+        });
       } catch (error) {
         console.error('获取SKU汇总数据失败:', error);
       }
     },
     // 更新排行榜数据
     updateRankingData() {
-      if (!this.skuSummaryData || this.skuSummaryData.length === 0) return;
-      // 处理SKU数据
-      const rankingData = this.skuSummaryData.map(item => {
+      let rankingData = [];
+      if (!this.skuSummaryData || this.skuSummaryData.length === 0) {
+        rankingData = [];
+      }
+      else {
+        // 处理SKU数据
+        rankingData = this.skuSummaryData.map(item => {
         let value = 0;
         // 根据当前选择的维度获取对应的数值
         switch (this.skuDimension) {
@@ -759,11 +831,12 @@ export default {
       }).filter(item => item.value > 0)
         .sort((a, b) => b.value - a.value)
         .slice(0, 100); // 取前100名
+      }
+
       // 更新排行榜配置
       this.config = {
         ...this.config,
-        data: rankingData,
-        unit: '元'
+        data: rankingData
       };
     },
     // 更新饼状图数据
@@ -946,7 +1019,12 @@ export default {
     // 获取费用项汇总数据
     async getFeeItemSummaryData() {
       try {
-        const response = await getSummaryByFeeItem(this.selectedCountry);
+        this.daterangeParams = {};
+        if (null != this.daterangeSettlementTime && '' !== this.daterangeSettlementTime) {
+          this.daterangeParams["beginSettlementDate"] = this.daterangeSettlementTime[0]
+          this.daterangeParams["endSettlementDate"] = this.daterangeSettlementTime[1]
+        }
+        const response = await getSummaryByFeeItem(this.selectedCountry, this.daterangeParams);
         this.feeItemSummaryData = response.data;
         // 更新轮播表格数据
         this.updateBoardData();
@@ -956,10 +1034,13 @@ export default {
     },
     // 更新轮播表格数据
     updateBoardData() {
-      if (!this.feeItemSummaryData || this.feeItemSummaryData.length === 0) return;
+      let tableData = [];
+      if (!this.feeItemSummaryData || this.feeItemSummaryData.length === 0) {
+        tableData = [];
+      }
 
       // 将费用项数据转换为轮播表格格式
-      const tableData = this.feeItemSummaryData.map(item => {
+      tableData = this.feeItemSummaryData.map(item => {
         return [
           item.feeItem || '未知费用项',
           this.formatNumber(item.amountCnySum || 0)
@@ -981,46 +1062,57 @@ export default {
       window.onresize = mapChart.resize; //如果容器变大小，自适应从新构图
 
       // 处理运营员数据
-      const chartData = this.operatorSummaryData.map(item => {
-        let value = 0;
-        // 根据当前选择的维度获取对应的数值
-        switch (this.operatorDimension) {
-          case 'revenueSum':
-            value = item.revenueSum || 0;
-            break;
-          case 'refundSum':
-            value = item.refundSum || 0;
-            break;
-          case 'purchaseCostSum':
-            value = item.purchaseCostSum || 0;
-            break;
-          case 'firstMileCostSum':
-            value = item.firstMileCostSum || 0;
-            break;
-          case 'logisticsFeeSum':
-            value = item.logisticsFeeSum || 0;
-            break;
-          case 'packagingCostSum':
-            value = item.packagingCostSum || 0;
-            break;
-          case 'otherCostsSum':
-            value = item.otherCostsSum || 0;
-            break;
-          case 'reshipmentCostSum':
-            value = item.reshipmentCostSum || 0;
-            break;
-          case 'grossProfitSum':
-            value = item.grossProfitSum || 0;
-            break;
-          default:
-            value = item.revenueSum || 0;
-        }
+      let chartData = [];
+      if (!this.operatorSummaryData || this.operatorSummaryData.length === 0){
+        chartData = [
+          {
+            name: '无',
+            value: 0
+          }
+        ];
+      }
+      else {
+        chartData = this.operatorSummaryData.map(item => {
+          let value;
+          // 根据当前选择的维度获取对应的数值
+          switch (this.operatorDimension) {
+            case 'revenueSum':
+              value = item.revenueSum || 0;
+              break;
+            case 'refundSum':
+              value = item.refundSum || 0;
+              break;
+            case 'purchaseCostSum':
+              value = item.purchaseCostSum || 0;
+              break;
+            case 'firstMileCostSum':
+              value = item.firstMileCostSum || 0;
+              break;
+            case 'logisticsFeeSum':
+              value = item.logisticsFeeSum || 0;
+              break;
+            case 'packagingCostSum':
+              value = item.packagingCostSum || 0;
+              break;
+            case 'otherCostsSum':
+              value = item.otherCostsSum || 0;
+              break;
+            case 'reshipmentCostSum':
+              value = item.reshipmentCostSum || 0;
+              break;
+            case 'grossProfitSum':
+              value = item.grossProfitSum || 0;
+              break;
+            default:
+              value = item.revenueSum || 0;
+          }
 
-        return {
-          value: Number(value),
-          name: item.groupValue || '未知运营员'
-        };
-      });
+          return {
+            value: Number(value),
+            name: item.groupValue || '未知运营员'
+          };
+        });
+      }
       let option = {
         color: [
           "#37a2da",
@@ -1078,49 +1170,58 @@ export default {
     },
     // 更新圆环图数据
     updateRingChartData() {
-      if (!this.operatorSummaryData || this.operatorSummaryData.length === 0) return;
+      if (!this.operatorSummaryData || this.operatorSummaryData.length === 0) {
+        this.ringChartConfig.data = [
+          {
+            value: 0,
+            name: '无'
+          }
+        ];
+      }
       // 为每个运营员创建圆环图数据项
       // 更新圆环图数据
-      this.ringChartConfig.data = this.operatorSummaryData.map(item => {
-        let value = 0;
-        // 根据当前选择的维度获取对应的数值
-        switch (this.operatorDimension) {
-          case 'revenueSum':
-            value = item.revenueSum || 0;
-            break;
-          case 'refundSum':
-            value = item.refundSum || 0;
-            break;
-          case 'purchaseCostSum':
-            value = item.purchaseCostSum || 0;
-            break;
-          case 'firstMileCostSum':
-            value = item.firstMileCostSum || 0;
-            break;
-          case 'logisticsFeeSum':
-            value = item.logisticsFeeSum || 0;
-            break;
-          case 'packagingCostSum':
-            value = item.packagingCostSum || 0;
-            break;
-          case 'otherCostsSum':
-            value = item.otherCostsSum || 0;
-            break;
-          case 'reshipmentCostSum':
-            value = item.reshipmentCostSum || 0;
-            break;
-          case 'grossProfitSum':
-            value = item.grossProfitSum || 0;
-            break;
-          default:
-            value = item.revenueSum || 0;
-        }
+      else{
+        this.ringChartConfig.data = this.operatorSummaryData.map(item => {
+          let value;
+          // 根据当前选择的维度获取对应的数值
+          switch (this.operatorDimension) {
+            case 'revenueSum':
+              value = item.revenueSum || 0;
+              break;
+            case 'refundSum':
+              value = item.refundSum || 0;
+              break;
+            case 'purchaseCostSum':
+              value = item.purchaseCostSum || 0;
+              break;
+            case 'firstMileCostSum':
+              value = item.firstMileCostSum || 0;
+              break;
+            case 'logisticsFeeSum':
+              value = item.logisticsFeeSum || 0;
+              break;
+            case 'packagingCostSum':
+              value = item.packagingCostSum || 0;
+              break;
+            case 'otherCostsSum':
+              value = item.otherCostsSum || 0;
+              break;
+            case 'reshipmentCostSum':
+              value = item.reshipmentCostSum || 0;
+              break;
+            case 'grossProfitSum':
+              value = item.grossProfitSum || 0;
+              break;
+            default:
+              value = item.revenueSum || 0;
+          }
 
-        return {
-          name: item.groupValue || '未知运营员',
-          value: Number(value)
-        };
-      }).filter(item => item.value > 0);
+          return {
+            name: item.groupValue || '未知运营员',
+            value: Number(value)
+          };
+        }).filter(item => item.value > 0);
+      }
       this.ringChartConfig = {...this.ringChartConfig}
     },
     //柱状图
@@ -1900,7 +2001,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 //全局样式部分！！！！
 * {
   margin: 0;
@@ -1962,8 +2063,15 @@ a {
     width: 100%;
     height: 50px;
   }
-  .country-filter {
+  .top-filter {
     text-align: center;
+
+    .filter-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px; // 元素之间的间距
+    }
   }
   //顶部中间文字数据可视化系统
   .title_text {
@@ -2152,76 +2260,6 @@ a {
     // 确保选择器本身有足够的 z-index
     z-index: 1000;
   }
-  // el-select 蓝色样式美化
-  .el-select {
-    .el-input {
-      .el-input__inner {
-        background-color: rgba(0, 140, 255, 0.1) !important;
-        border: 1px solid #008CFF !important;
-        color: #008CFF !important;
-        border-radius: 4px;
-
-        &:hover {
-          border-color: #00ADDD !important;
-        }
-
-        &:focus {
-          border-color: #008CFF !important;
-          box-shadow: 0 0 5px rgba(0, 140, 255, 0.5) !important;
-        }
-      }
-
-      .el-input__suffix {
-        .el-select__caret {
-          color: #008CFF !important;
-        }
-      }
-    }
-  }
-
-  .el-select-dropdown {
-    background-color: rgba(0, 0, 0, 0.9) !important;
-    border: 1px solid #008CFF !important;
-    border-radius: 4px;
-
-    .el-select-dropdown__item {
-      color: #008CFF !important;
-      background-color: transparent !important;
-
-      &:hover {
-        background-color: rgba(0, 140, 255, 0.2) !important;
-        color: #00ADDD !important;
-      }
-
-      &.selected {
-        background-color: rgba(0, 140, 255, 0.3) !important;
-        color: #00ADDD !important;
-      }
-
-      &.hover {
-        background-color: rgba(0, 140, 255, 0.2) !important;
-      }
-    }
-
-    .el-select-dropdown__empty {
-      color: #008CFF !important;
-    }
-
-    .el-select-dropdown__wrap {
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: rgba(0, 140, 255, 0.1);
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: #008CFF;
-        border-radius: 3px;
-      }
-    }
-  }
 
   .el-popper {
     &[x-placement^=bottom] {
@@ -2245,5 +2283,27 @@ a {
     }
   }
 }
+
+::v-deep .el-input__inner {
+  background-color: rgba(0, 140, 255, 0.1) !important;
+  border: 1px solid #008CFF !important;
+  color: #008CFF !important;
+  border-radius: 4px;
+  &:hover {
+    border-color: #00ADDD !important;
+  }
+
+  &:focus {
+    border-color: #008CFF !important;
+    box-shadow: 0 0 5px rgba(0, 140, 255, 0.5) !important;
+  }
+}
+
+//输入框中选中的开始时间和结束时间的的背景以及选中的时间段样式
+::v-deep .el-range-input {
+  background: transparent;
+  color: #fff !important;
+}
+
 </style>
 

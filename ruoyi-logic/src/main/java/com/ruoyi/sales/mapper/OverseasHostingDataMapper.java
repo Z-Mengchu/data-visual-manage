@@ -88,7 +88,9 @@ public interface OverseasHostingDataMapper
     public List<OverseasHostingDimensionSummary> selectSummaryByOperator(@Param("warehouseList") List<String> warehouseList,
                                                                          @Param("user") SysUser user,
                                                                          @Param("postCodes") List<String> postCodes,
-                                                                         @Param("roleKeys") List<String> roleKeys);
+                                                                         @Param("roleKeys") List<String> roleKeys,
+                                                                         @Param("beginSettlementDate") String beginSettlementDate,
+                                                                         @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 按开发员分组汇总数据
@@ -98,7 +100,9 @@ public interface OverseasHostingDataMapper
     public List<OverseasHostingDimensionSummary> selectSummaryByDeveloper(@Param("warehouseList") List<String> warehouseList,
                                                                           @Param("user") SysUser user,
                                                                           @Param("postCodes") List<String> postCodes,
-                                                                          @Param("roleKeys") List<String> roleKeys);
+                                                                          @Param("roleKeys") List<String> roleKeys,
+                                                                          @Param("beginSettlementDate") String beginSettlementDate,
+                                                                          @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 按品牌分组汇总数据
@@ -108,7 +112,9 @@ public interface OverseasHostingDataMapper
     public List<OverseasHostingDimensionSummary> selectSummaryByBrand(@Param("warehouseList") List<String> warehouseList,
                                                                       @Param("user") SysUser user,
                                                                       @Param("postCodes") List<String> postCodes,
-                                                                      @Param("roleKeys") List<String> roleKeys);
+                                                                      @Param("roleKeys") List<String> roleKeys,
+                                                                      @Param("beginSettlementDate") String beginSettlementDate,
+                                                                      @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 按仓库分组汇总数据
@@ -118,7 +124,9 @@ public interface OverseasHostingDataMapper
     public List<OverseasHostingDimensionSummary> selectSummaryByWarehouse(@Param("warehouseList") List<String> warehouseList,
                                                                           @Param("user") SysUser user,
                                                                           @Param("postCodes") List<String> postCodes,
-                                                                          @Param("roleKeys") List<String> roleKeys);
+                                                                          @Param("roleKeys") List<String> roleKeys,
+                                                                          @Param("beginSettlementDate") String beginSettlementDate,
+                                                                          @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 按类目分组汇总数据
@@ -128,7 +136,9 @@ public interface OverseasHostingDataMapper
     public List<OverseasHostingDimensionSummary> selectSummaryByCategory(@Param("warehouseList") List<String> warehouseList,
                                                                          @Param("user") SysUser user,
                                                                          @Param("postCodes") List<String> postCodes,
-                                                                         @Param("roleKeys") List<String> roleKeys);
+                                                                         @Param("roleKeys") List<String> roleKeys,
+                                                                         @Param("beginSettlementDate") String beginSettlementDate,
+                                                                         @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 按SKU分组汇总数据
@@ -138,7 +148,9 @@ public interface OverseasHostingDataMapper
     public List<OverseasHostingDimensionSummary> selectSummaryBySku(@Param("warehouseList") List<String> warehouseList,
                                                                     @Param("user") SysUser user,
                                                                     @Param("postCodes") List<String> postCodes,
-                                                                    @Param("roleKeys") List<String> roleKeys);
+                                                                    @Param("roleKeys") List<String> roleKeys,
+                                                                    @Param("beginSettlementDate") String beginSettlementDate,
+                                                                    @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 按费用项分组汇总金额
@@ -148,7 +160,9 @@ public interface OverseasHostingDataMapper
     public List<FeeItemSummary> selectSummaryByFeeItem(@Param("warehouseList") List<String> warehouseList,
                                                        @Param("user") SysUser user,
                                                        @Param("postCodes") List<String> postCodes,
-                                                       @Param("roleKeys") List<String> roleKeys);
+                                                       @Param("roleKeys") List<String> roleKeys,
+                                                       @Param("beginSettlementDate") String beginSettlementDate,
+                                                       @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 按品牌和类目分组汇总数据
@@ -158,7 +172,9 @@ public interface OverseasHostingDataMapper
     public List<Map<String, Object>> selectSummaryByBrandAndCategory(@Param("warehouseList") List<String> warehouseList,
                                                                      @Param("user") SysUser user,
                                                                      @Param("postCodes") List<String> postCodes,
-                                                                     @Param("roleKeys") List<String> roleKeys);
+                                                                     @Param("roleKeys") List<String> roleKeys,
+                                                                     @Param("beginSettlementDate") String beginSettlementDate,
+                                                                     @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 按月份分组汇总当前年份数据
@@ -168,7 +184,9 @@ public interface OverseasHostingDataMapper
     public List<Map<String, Object>> selectSummaryByMonthly(@Param("warehouseList") List<String> warehouseList,
                                                             @Param("user") SysUser user,
                                                             @Param("postCodes") List<String> postCodes,
-                                                            @Param("roleKeys") List<String> roleKeys);
+                                                            @Param("roleKeys") List<String> roleKeys,
+                                                            @Param("beginSettlementDate") String beginSettlementDate,
+                                                            @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 获取总体统计数据
@@ -178,7 +196,9 @@ public interface OverseasHostingDataMapper
     Map<String, Object> selectSummaryByTotal(@Param("warehouseList") List<String> warehouseList,
                                              @Param("user") SysUser user,
                                              @Param("postCodes") List<String> postCodes,
-                                             @Param("roleKeys") List<String> roleKeys);
+                                             @Param("roleKeys") List<String> roleKeys,
+                                             @Param("beginSettlementDate") String beginSettlementDate,
+                                             @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 获取核心费用项汇总数据
@@ -188,7 +208,9 @@ public interface OverseasHostingDataMapper
     Map<String, Object> selectSummaryByCoreExpenses(@Param("warehouseList") List<String> warehouseList,
                                                     @Param("user") SysUser user,
                                                     @Param("postCodes") List<String> postCodes,
-                                                    @Param("roleKeys") List<String> roleKeys);
+                                                    @Param("roleKeys") List<String> roleKeys,
+                                                    @Param("beginSettlementDate") String beginSettlementDate,
+                                                    @Param("endSettlementDate") String endSettlementDate);
 
     /**
      * 获取仓库信息

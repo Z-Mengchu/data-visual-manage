@@ -43,50 +43,28 @@
           </div>
         </div>
       </div>
-      <!-- 顶部筛选区-->
+      <!-- 筛选区域 -->
       <div class="filter-area">
-<!--        <el-row :gutter="20">
-          <el-col :span="4">
-            <el-select v-model="filterParams.paymentSettlementDate" placeholder="选择时间" clearable @change="handleFilterChange">
-              <el-option
-                v-for="item in filterOptions.dates"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
-          </el-col>
-          <el-col :span="4">
-            <el-select v-model="filterParams.firstLevelCategory" placeholder="选择一级品类" clearable @change="handleFilterChange">
-              <el-option
-                v-for="item in filterOptions.firstLevelCategories"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
-          </el-col>
-          <el-col :span="4">
-            <el-select v-model="filterParams.category" placeholder="选择品类" clearable @change="handleFilterChange">
-              <el-option
-                v-for="item in filterOptions.categories"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
-          </el-col>
-          <el-col :span="4">
-            <el-select v-model="filterParams.channel" placeholder="选择渠道" clearable @change="handleFilterChange">
-              <el-option
-                v-for="item in filterOptions.channels"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
-          </el-col>
-          <el-col :span="4">
+        <div class="filter-row">
+          <div class="filter-item">
+            <el-date-picker
+              v-model="filterParams.startTime"
+              type="date"
+              placeholder="付款日期开始"
+              value-format="yyyy-MM-dd"
+              @change="handleFilterChange"
+            />
+          </div>
+          <div class="filter-item">
+            <el-date-picker
+              v-model="filterParams.endTime"
+              type="date"
+              placeholder="付款日期结束"
+              value-format="yyyy-MM-dd"
+              @change="handleFilterChange"
+            />
+          </div>
+          <div class="filter-item">
             <el-select v-model="filterParams.country" placeholder="选择国家" clearable @change="handleFilterChange">
               <el-option
                 v-for="item in filterOptions.countries"
@@ -95,11 +73,11 @@
                 :value="item"
               />
             </el-select>
-          </el-col>
-          <el-col :span="4">
+          </div>
+          <div class="filter-item">
             <el-button type="primary" @click="resetFilters">重置</el-button>
-          </el-col>
-        </el-row>-->
+          </div>
+        </div>
       </div>
       <!-- 核心KPI区 -->
       <div class="kpi-area">
@@ -164,19 +142,40 @@
                 </div>
                 <div class="chart-content">
                   <!-- 品类退款率图表 -->
-                  <div v-if="selectedDimension === 'categoryRefund'" id="categoryRefundChart" style="width: 100%; height: 300px;"></div>
+                  <div v-if="selectedDimension === 'categoryRefund'" class="chart-wrapper">
+                    <div v-show="!categoryRefundData || categoryRefundData.length === 0" class="no-data-tip">暂无相关数据</div>
+                    <div v-show="categoryRefundData && categoryRefundData.length > 0" id="categoryRefundChart" style="width: 100%; height: 300px;"></div>
+                  </div>
                   <!-- SKU ROI图表 -->
-                  <div v-if="selectedDimension === 'skuRoi'" id="skuRoiChart" style="width: 100%; height: 300px;"></div>
+                  <div v-if="selectedDimension === 'skuRoi'" class="chart-wrapper">
+                    <div v-show="!skuRoiData || skuRoiData.length === 0" class="no-data-tip">暂无相关数据</div>
+                    <div v-show="skuRoiData && skuRoiData.length > 0" id="skuRoiChart" style="width: 100%; height: 300px;"></div>
+                  </div>
                   <!-- 一级品类图表 -->
-                  <div v-if="selectedDimension === 'firstLevelCategory'" id="firstLevelCategoryChart" style="width: 100%; height: 300px;"></div>
+                  <div v-if="selectedDimension === 'firstLevelCategory'" class="chart-wrapper">
+                    <div v-show="!firstLevelCategoryData || firstLevelCategoryData.length === 0" class="no-data-tip">暂无相关数据</div>
+                    <div v-show="firstLevelCategoryData && firstLevelCategoryData.length > 0" id="firstLevelCategoryChart" style="width: 100%; height: 300px;"></div>
+                  </div>
                   <!-- 渠道分析图表 -->
-                  <div v-if="selectedDimension === 'channel'" id="channelChart" style="width: 100%; height: 300px;"></div>
+                  <div v-if="selectedDimension === 'channel'" class="chart-wrapper">
+                    <div v-show="channelData && channelData.length > 0" id="channelChart" style="width: 100%; height: 300px;"></div>
+                    <div v-show="!channelData || channelData.length === 0" class="no-data-tip">暂无相关数据</div>
+                  </div>
                   <!-- 品牌分析图表 -->
-                  <div v-if="selectedDimension === 'brand'" id="brandChart" style="width: 100%; height: 300px;"></div>
+                  <div v-if="selectedDimension === 'brand'" class="chart-wrapper">
+                    <div v-show="brandData && brandData.length > 0" id="brandChart" style="width: 100%; height: 300px;"></div>
+                    <div v-show="!brandData || brandData.length === 0" class="no-data-tip">暂无相关数据</div>
+                  </div>
                   <!-- 国家分析图表 -->
-                  <div v-if="selectedDimension === 'country'" id="countryChart" style="width: 100%; height: 300px;"></div>
+                  <div v-if="selectedDimension === 'country'" class="chart-wrapper">
+                    <div v-show="countryData && countryData.length > 0" id="countryChart" style="width: 100%; height: 300px;"></div>
+                    <div v-show="!countryData || countryData.length === 0" class="no-data-tip">暂无相关数据</div>
+                  </div>
                   <!-- 店铺分析图表 -->
-                  <div v-if="selectedDimension === 'store'" id="storeChart" style="width: 100%; height: 300px;"></div>
+                  <div v-if="selectedDimension === 'store'" class="chart-wrapper">
+                    <div v-show="storeData && storeData.length > 0" id="storeChart" style="width: 100%; height: 300px;"></div>
+                    <div v-show="!storeData || storeData.length === 0" class="no-data-tip">暂无相关数据</div>
+                  </div>
                 </div>
               </div>
             </dv-border-box-8>
@@ -202,18 +201,6 @@
                         {{ formatAlertValue(alert.value, alert.alertType) }}
                       </span>
                     </div>
-                    <!-- 复制一份数据以实现无缝滚动 -->
-                    <div
-                      v-for="(alert, index) in sortedAlertData"
-                      :key="'copy-' + index"
-                      class="alert-item"
-                    >
-                      <span class="alert-type">{{ alert.alertType }}:</span>
-                      <span class="alert-item-name">{{ alert.item }}</span>
-                      <span class="alert-value" :class="{'negative': alert.value < 0}">
-                        {{ formatAlertValue(alert.value, alert.alertType) }}
-                      </span>
-                    </div>
                     <div v-if="sortedAlertData.length === 0" class="no-alerts">
                       暂无预警信息
                     </div>
@@ -230,7 +217,8 @@
                 <div class="chart-header">
                   <span>全球销售分布</span>
                 </div>
-                <div id="mapChart" style="width: 100%; height: 300px;"></div>
+                <div v-show="mapData && mapData.length > 0" id="mapChart" style="width: 100%; height: 300px;"></div>
+                <div v-show="!mapData || mapData.length === 0" class="no-data-tip">暂无相关数据</div>
               </div>
             </dv-border-box-8>
           </el-col>
@@ -247,7 +235,8 @@
                 <div class="chart-header">
                   <span>渠道销售分布</span>
                 </div>
-                <div id="channelDistributionChart" style="width: 100%; height: 200px;"></div>
+                <div v-show="channelDistributionData && channelDistributionData.length > 0" id="channelDistributionChart" style="width: 100%; height: 200px;"></div>
+                <div v-show="!channelDistributionData || channelDistributionData.length === 0" class="no-data-tip">暂无相关数据</div>
               </div>
             </dv-border-box-8>
           </el-col>
@@ -259,7 +248,8 @@
                 <div class="chart-header">
                   <span>销售趋势</span>
                 </div>
-                <div id="trendChart" style="width: 100%; height: 200px;"></div>
+                <div v-show="trendData && trendData.length > 0" id="trendChart" style="width: 100%; height: 200px;"></div>
+                <div v-show="!trendData || trendData.length === 0" class="no-data-tip">暂无相关数据</div>
               </div>
             </dv-border-box-8>
           </el-col>
@@ -273,10 +263,10 @@
 import drawMixin from "@/utils/drawMixin"; //自适应缩放
 import * as echarts from 'echarts'
 import '@/common/echart/world_fix'
-import { getKpiData, getCategoryRefundData, getSkuRoiData, getFirstLevelCategoryData,
+import { getKpiData, getCategoryAlerts, getSkuRoiData, getFirstLevelCategoryData,
   getChannelData, getBrandData, getCountryData, getStoreData, getMapData,
   getChannelDistributionData, getTrendData, getDetailData,
-  getFilterOptions } from '@/api/saleManage/salesData/visual'
+  getFilterOptions, getCategoryRefundData } from '@/api/saleManage/salesData/visual'
 import { formatTime2 } from "@/utils";
 
 export default {
@@ -291,10 +281,8 @@ export default {
       dateWeek: null,
       weekday: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
       filterParams: {
-        paymentSettlementDate: '',
-        firstLevelCategory: '',
-        category: '',
-        channel: '',
+        startTime: null,
+        endTime: null,
         country: ''
       },
       filterOptions: {
@@ -534,11 +522,11 @@ export default {
     async loadAlertData() {
       try {
         // 使用品类退款率数据作为预警数据
-        const response = await getCategoryRefundData(this.filterParams);
+        const response = await getCategoryAlerts(this.filterParams);
         this.alertData = response.data.map(item => ({
           alertType: '高退款率',
-          item: item.category || '未知',
-          value: item.refundRate
+          item: item.item || '未知',
+          value: item.value
         })).sort((a, b) => b.value - a.value) // 按退款率从高到低排序
       } catch (error) {
         console.error('加载预警数据失败:', error);
@@ -595,6 +583,11 @@ export default {
       if (this.currentChartInstance) {
         this.currentChartInstance.dispose()
       }
+      // 如果没有数据，不初始化图表
+      if (!this.categoryRefundData || this.categoryRefundData.length === 0) {
+        return
+      }
+
       const chartDom = document.getElementById('categoryRefundChart')
       if (!chartDom) {
         setTimeout(() => this.initCategoryRefundChart(), 100)
@@ -746,6 +739,10 @@ export default {
       if (this.currentChartInstance) {
         this.currentChartInstance.dispose()
       }
+      // 如果没有数据，不初始化图表
+      if (!this.skuRoiData || this.skuRoiData.length === 0) {
+        return
+      }
       const chartDom = document.getElementById('skuRoiChart')
       if (!chartDom) return
       if (!this.skuRoiData || this.skuRoiData.length === 0) {
@@ -754,15 +751,6 @@ export default {
       this.currentChartInstance = echarts.init(chartDom)
 
       // 准备平行坐标系数据
-      const dimensions = [
-        { name: '发货数量', type: 'number' },
-        { name: '商品成本', type: 'number' },
-        { name: '头程运费', type: 'number' },
-        { name: '订单净利', type: 'number' },
-        { name: 'ROI', type: 'number' },
-        { name: '回正天数', type: 'number' }
-      ]
-
       const data = this.skuRoiData.map(item => [
         item.shippingQuantity || 0,
         item.productCost || 0,
@@ -866,6 +854,10 @@ export default {
     initFirstLevelCategoryChart() {
       if (this.currentChartInstance) {
         this.currentChartInstance.dispose()
+      }
+      // 如果没有数据，不初始化图表
+      if (!this.firstLevelCategoryData || this.firstLevelCategoryData.length === 0) {
+        return
       }
       const chartDom = document.getElementById('firstLevelCategoryChart')
       if (!chartDom) return
@@ -1032,6 +1024,10 @@ export default {
       if (this.currentChartInstance) {
         this.currentChartInstance.dispose()
       }
+      // 如果没有数据，不初始化图表
+      if (!this.channelData || this.channelData.length === 0) {
+        return
+      }
       const chartDom = document.getElementById('channelChart')
       if (!chartDom) return
       if (!this.channelData || this.channelData.length === 0) {
@@ -1153,6 +1149,10 @@ export default {
       if (this.currentChartInstance) {
         this.currentChartInstance.dispose()
       }
+      // 如果没有数据，不初始化图表
+      if (!this.brandData || this.brandData.length === 0) {
+        return
+      }
       const chartDom = document.getElementById('brandChart')
       if (!chartDom) return
       if (!this.brandData || this.brandData.length === 0) {
@@ -1224,6 +1224,10 @@ export default {
       if (this.currentChartInstance) {
         this.currentChartInstance.dispose()
       }
+      // 如果没有数据，不初始化图表
+      if (!this.countryData || this.countryData.length === 0) {
+        return
+      }
       const chartDom = document.getElementById('countryChart')
       if (!chartDom) return
       if (!this.countryData || this.countryData.length === 0) {
@@ -1293,6 +1297,10 @@ export default {
     initStoreChart() {
       if (this.currentChartInstance) {
         this.currentChartInstance.dispose()
+      }
+      // 如果没有数据，不初始化图表
+      if (!this.storeData || this.storeData.length === 0) {
+        return
       }
       const chartDom = document.getElementById('storeChart')
       if (!chartDom) return
@@ -1419,6 +1427,7 @@ export default {
     initMapChart() {
       const chartDom = document.getElementById('mapChart')
       if (!chartDom) return
+      // 如果没有数据，不初始化图表
       if (!this.mapData || this.mapData.length === 0) {
         return
       }
@@ -1563,6 +1572,7 @@ export default {
     initChannelDistributionChart() {
       const chartDom = document.getElementById('channelDistributionChart')
       if (!chartDom) return
+      // 如果没有数据，不初始化图表
       if (!this.channelDistributionData || this.channelDistributionData.length === 0) {
         return
       }
@@ -1644,6 +1654,7 @@ export default {
     initTrendChart() {
       const chartDom = document.getElementById('trendChart')
       if (!chartDom) return
+      // 如果没有数据，不初始化图表
       if (!this.trendData || this.trendData.length === 0) {
         return
       }
@@ -1790,10 +1801,8 @@ export default {
     },
     resetFilters() {
       this.filterParams = {
-        paymentSettlementDate: '',
-        firstLevelCategory: '',
-        category: '',
-        channel: '',
+        startTime: null,
+        endTime: null,
         country: ''
       }
       this.handleFilterChange()
@@ -1847,7 +1856,24 @@ export default {
   height: 100%;
 }
 .filter-area {
-  margin-bottom: 20px;
+  height: 60px;
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.filter-item {
+  width: 16%;
+  height: 100%;
 }
 .kpi-area {
   margin-bottom: 20px;
@@ -1957,50 +1983,44 @@ export default {
 .channel-distribution-area {
   margin-top: 20px;
 }
-::v-deep .el-table .warning-row {
-  background-color: #fef0f0;
+
+/* 调整筛选器样式 */
+::v-deep .el-date-editor,
+::v-deep .el-select {
+  width: 100%;
+  height: 100%;
 }
-::v-deep .el-table {
-  background-color: transparent;
+
+::v-deep .el-date-editor .el-input__inner {
+  background-color: #1e3a68 !important;
+  border-color: #2a3f6c;
   color: #fff;
+  height: 100%;
+  line-height: normal;
 }
-::v-deep .el-table th {
-  background-color: #1e3a68;
-  color: #fff;
-}
-::v-deep .el-table tr {
-  background-color: transparent;
-}
-::v-deep .el-table--enable-row-hover .el-table__body tr:hover>td {
-  background-color: #2a3f6c;
-}
-::v-deep .el-select .el-input__inner {
+
+::v-deep .el-select .el-input__inner{
   background-color: #1e3a68 !important;
   border-color: #2a3f6c;
   color: #fff;
 }
-::v-deep .el-select .el-input__suffix {
+
+::v-deep .el-date-editor .el-input__icon {
   color: #fff;
+  line-height: 36px;
 }
+
 ::v-deep .el-button {
+  width: 100%;
+  height: 100%;
   background-color: #1e3a68;
   border-color: #2a3f6c;
   color: #fff;
 }
+
 ::v-deep .el-button:hover {
   background-color: #2a3f6c;
   border-color: #3a4f7c;
-}
-::v-deep .el-select-dropdown {
-  background-color: #000;
-  border: 1px solid #2a3f6c;
-}
-::v-deep .el-select-dropdown__item {
-  color: #fff;
-}
-::v-deep .el-select-dropdown__item.hover,
-::v-deep .el-select-dropdown__item:hover {
-  background-color: #2a3f6c;
 }
 
 /* 基础样式 */
@@ -2198,6 +2218,22 @@ body {
 }
 .scrolling-table:hover .el-table__body-wrapper {
   animation-play-state: paused;
+}
+
+.no-data-tip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px; // 设置固定高度，与图表高度一致
+  font-size: 16px;
+  color: #aaa;
+  text-align: center;
+}
+// 为渠道分布图和趋势图设置相应的高度
+.combined-chart-area {
+  .no-data-tip {
+    height: 200px; // 与这两个图表的高度一致
+  }
 }
 
 // 添加滚动动画

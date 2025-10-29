@@ -134,6 +134,10 @@ public class ChannelSalesDataVisualServiceImpl implements IChannelSalesDataVisua
 
     @Override
     public Map<String, List<String>> getFilterOptions() {
-        return channelSalesDataVisualMapper.selectFilterOptions();
+        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
+        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
+        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
+        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
+        return channelSalesDataVisualMapper.selectFilterOptions(currentUser, postCodes, roleKeys);
     }
 }

@@ -80,47 +80,47 @@ public interface IOverseasHostingDataService
     /**
      * 按运营分组汇总数据
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByOperator(String country);
+    public List<OverseasHostingDimensionSummary> getSummaryByOperator(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 按开发员分组汇总数据
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByDeveloper(String country);
+    public List<OverseasHostingDimensionSummary> getSummaryByDeveloper(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 按品牌分组汇总数据
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByBrand(String country);
+    public List<OverseasHostingDimensionSummary> getSummaryByBrand(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 按仓库分组汇总数据
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByWarehouse(String country);
+    public List<OverseasHostingDimensionSummary> getSummaryByWarehouse(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 按类目分组汇总数据
      */
-    public List<OverseasHostingDimensionSummary> getSummaryByCategory(String country);
+    public List<OverseasHostingDimensionSummary> getSummaryByCategory(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 按SKU分组汇总数据
      */
-    public List<OverseasHostingDimensionSummary> getSummaryBySku(String country);
+    public List<OverseasHostingDimensionSummary> getSummaryBySku(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 按费用项分组汇总金额
      */
-    public List<FeeItemSummary> getSummaryByFeeItem(String country);
+    public List<FeeItemSummary> getSummaryByFeeItem(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 按品牌和类目分组汇总数据
      */
-    public List<Map<String, Object>> getSummaryByBrandAndCategory(String country);
+    public List<Map<String, Object>> getSummaryByBrandAndCategory(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 按月份分组汇总当前年份数据
      */
-    public List<Map<String, Object>> getSummaryByMonthly(String country);
+    public List<Map<String, Object>> getSummaryByMonthly(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 获取总体统计数据
      */
-    Map<String, Object> getSummaryByTotal(String country);
+    Map<String, Object> getSummaryByTotal(String country, String beginSettlementDate, String endSettlementDate);
     /**
      * 获取核心费用项汇总数据
      */
-    Map<String, Object> getSummaryByCoreExpenses(String country);
+    Map<String, Object> getSummaryByCoreExpenses(String country, String beginSettlementDate, String endSettlementDate);
 
     /**
      * 获取所有仓库名称

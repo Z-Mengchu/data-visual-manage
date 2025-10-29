@@ -189,11 +189,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 运营维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByOperator(String country) {
+    public List<OverseasHostingDimensionSummary> getSummaryByOperator(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByOperator(
                 warehouseList, params.getCurrentUser(),
-                        params.getPostCodes(), params.getRoleKeys()));
+                        params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 按开发员分组汇总数据
@@ -201,11 +201,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 开发员维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByDeveloper(String country) {
+    public List<OverseasHostingDimensionSummary> getSummaryByDeveloper(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByDeveloper(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 按品牌分组汇总数据
@@ -213,11 +213,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 品牌维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByBrand(String country) {
+    public List<OverseasHostingDimensionSummary> getSummaryByBrand(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByBrand(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 按仓库分组汇总数据
@@ -225,11 +225,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 仓库维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByWarehouse(String country) {
+    public List<OverseasHostingDimensionSummary> getSummaryByWarehouse(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByWarehouse(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 按类目分组汇总数据
@@ -237,11 +237,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 类目维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryByCategory(String country) {
+    public List<OverseasHostingDimensionSummary> getSummaryByCategory(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByCategory(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 按SKU分组汇总数据
@@ -249,11 +249,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return SKU维度汇总列表
      */
     @Override
-    public List<OverseasHostingDimensionSummary> getSummaryBySku(String country) {
+    public List<OverseasHostingDimensionSummary> getSummaryBySku(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryBySku(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 按费用项分组汇总金额
@@ -261,11 +261,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 费用项汇总列表
      */
     @Override
-    public List<FeeItemSummary> getSummaryByFeeItem(String country) {
+    public List<FeeItemSummary> getSummaryByFeeItem(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByFeeItem(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 按品牌和类目分组汇总数据
@@ -273,11 +273,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 品牌类目维度汇总列表
      */
     @Override
-    public List<Map<String, Object>> getSummaryByBrandAndCategory(String country) {
+    public List<Map<String, Object>> getSummaryByBrandAndCategory(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByBrandAndCategory(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 按月份分组汇总当前年份数据
@@ -285,11 +285,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 月度汇总列表
      */
     @Override
-    public List<Map<String, Object>> getSummaryByMonthly(String country) {
+    public List<Map<String, Object>> getSummaryByMonthly(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByMonthly(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 获取总体统计数据
@@ -297,11 +297,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 总体统计数据
      */
     @Override
-    public Map<String, Object> getSummaryByTotal(String country) {
+    public Map<String, Object> getSummaryByTotal(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByTotal(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
     /**
      * 获取核心费用项汇总数据
@@ -309,11 +309,11 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 核心费用项汇总数据
      */
     @Override
-    public Map<String, Object> getSummaryByCoreExpenses(String country) {
+    public Map<String, Object> getSummaryByCoreExpenses(String country, String beginSettlementDate, String endSettlementDate) {
         List<String> warehouseList = getWarehouseList(country);
         return getSummaryByDimension(params -> overseasHostingDataMapper.selectSummaryByCoreExpenses(
                 warehouseList, params.getCurrentUser(),
-                params.getPostCodes(), params.getRoleKeys()));
+                params.getPostCodes(), params.getRoleKeys(), beginSettlementDate, endSettlementDate));
     }
 
     @Override
