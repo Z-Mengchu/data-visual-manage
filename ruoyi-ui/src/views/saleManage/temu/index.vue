@@ -208,7 +208,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="temuList" :row-key="row => row.id" height="850" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" fixed="left"/>
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="发货日期" align="center" prop="shipmentDate" width="180">
         <template slot-scope="scope">

@@ -209,7 +209,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="salesDataList" height="850" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column type="selection" width="55" align="center" fixed="left"/>
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="一级品类" align="center" prop="firstLevelCategory" />
       <el-table-column label="品类" align="center" prop="category" />

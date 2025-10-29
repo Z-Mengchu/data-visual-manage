@@ -171,7 +171,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="dataList" height="850" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" fixed="left"/>
       <el-table-column label="编号" align="center" prop="id" />
       <el-table-column label="店铺名称" align="center" prop="store" />
       <el-table-column label="结算时间" align="center" prop="settlementTime" width="180">
