@@ -198,26 +198,38 @@ export default {
     },
 
     updatePieChart() {
-      if (!this.pieChart || !this.tableData.length) return
+      let pieChartData = [];
+      if (!this.pieChart || !this.tableData || this.tableData.length === 0) {
+        pieChartData = [];
+        this.pieChartData = [];
+      }
 
       // 准备饼图数据
-      const totalValue = this.tableData.reduce((sum, item) => {
-        const value = item[this.selectedField] || 0
-        return sum + Math.abs(value) // 使用绝对值确保值为正
-      }, 0)
+      else{
+        const totalValue = this.tableData.reduce((sum, item) => {
+          const value = item[this.selectedField] || 0
+          return sum + Math.abs(value) // 使用绝对值确保值为正
+        }, 0)
+        this.pieChartData = this.tableData.map((item, index) => {
+          const value = item[this.selectedField] || 0
+          const absoluteValue = Math.abs(value)
+          const percentage = totalValue > 0 ? (absoluteValue / totalValue * 100).toFixed(2) : 0
 
-      this.pieChartData = this.tableData.map((item, index) => {
-        const value = item[this.selectedField] || 0
-        const absoluteValue = Math.abs(value)
-        const percentage = totalValue > 0 ? (absoluteValue / totalValue * 100).toFixed(2) : 0
-
-        return {
-          name: item.groupName || `运营员${index + 1}`,
-          value: absoluteValue,
-          percentage: percentage,
-          originalValue: value
-        }
-      }).filter(item => item.value > 0) // 过滤掉值为0的数据
+          return {
+            name: item.groupName || `运营员${index + 1}`,
+            value: absoluteValue,
+            percentage: percentage,
+            originalValue: value
+          }
+        }).filter(item => item.value > 0) // 过滤掉值为0的数据
+        pieChartData = this.pieChartData.map((item, index) => ({
+          name: item.name,
+          value: item.value,
+          itemStyle: {
+            color: this.getColor(index)
+          }
+        }))
+      }
 
       // 设置饼图选项
       const option = {
@@ -306,13 +318,7 @@ export default {
               length: 20,
               length2: 30
             },
-            data: this.pieChartData.map((item, index) => ({
-              name: item.name,
-              value: item.value,
-              itemStyle: {
-                color: this.getColor(index)
-              }
-            }))
+            data: pieChartData
           }
         ]
       }

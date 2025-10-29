@@ -33,6 +33,16 @@
                 />
               </div>
               <div class="filter-item">
+                <el-select v-model="filterParams.salesSite" placeholder="选择国家销售站点" clearable @change="handleFilterChange">
+                  <el-option
+                    v-for="option in filterOptions.countries"
+                    :key="option"
+                    :value="option"
+                    :label="option"
+                  />
+                </el-select>
+              </div>
+              <div class="filter-item">
                 <el-button type="primary" @click="resetFilters">重置</el-button>
               </div>
             </div>
@@ -111,10 +121,7 @@ export default {
       filterParams: {
         startDate: null,
         endDate: null,
-        category: null,
-        developer: null,
-        operator: null,
-        countryRegion: null
+        salesSite: null
       },
       filterOptions: {
         categories: [],
@@ -151,9 +158,6 @@ export default {
       try {
         const response = await getFilterOptions()
         const data = response.data || {}
-        this.filterOptions.categories = data.categories ? data.categories.split(',') : []
-        this.filterOptions.developers = data.developers ? data.developers.split(',') : []
-        this.filterOptions.operators = data.operators ? data.operators.split(',') : []
         this.filterOptions.countries = data.countries ? data.countries.split(',') : []
       } catch (error) {
         console.error('加载筛选选项失败:', error)
@@ -292,23 +296,13 @@ export default {
   flex-direction: column;
 }
 
-.left-panel {
-  flex: 1;
-}
-
-.right-panel {
-  flex: 1;
-}
-
 /* 调整筛选器样式 */
-::v-deep .el-date-editor,
-::v-deep .el-select {
+::v-deep .el-date-editor {
   width: 100%;
   height: 100%;
 }
 
-::v-deep .el-date-editor .el-input__inner,
-::v-deep .el-select .el-input__inner {
+::v-deep .el-date-editor .el-input__inner {
   background-color: #1e3a68 !important;
   border-color: #2a3f6c;
   color: #fff;
@@ -316,10 +310,15 @@ export default {
   line-height: normal;
 }
 
-::v-deep .el-date-editor .el-input__icon,
-::v-deep .el-select .el-input__icon {
+::v-deep .el-date-editor .el-input__icon {
   color: #fff;
   line-height: 36px;
+}
+
+::v-deep .el-input__inner {
+  background-color: #1e3a68 !important;
+  border-color: #2a3f6c;
+  color: #fff;
 }
 
 ::v-deep .el-button {

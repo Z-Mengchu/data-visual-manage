@@ -111,7 +111,6 @@ export default {
         this.avgMetrics = response.data || {}
         this.avgMetrics.averageGrossProfitRate = ((this.avgMetrics.averageGrossProfitRate || 0) * 100).toFixed(1)
         this.avgMetrics.averageRefundRate = ((this.avgMetrics.averageRefundRate || 0) * 100).toFixed(1)
-        console.log(this.avgMetrics);
       } catch (error) {
         console.error('加载平均指标数据失败:', error)
       }

@@ -114,45 +114,50 @@ export default {
       window.addEventListener('resize', this.handleResize)
     },
     updateChart() {
-      if (!this.treemapChart || !this.tableData.length) return
+      let treemapData = [];
+      if (!this.treemapChart || !this.tableData.length) {
+        treemapData = [];
+      }
       // 准备矩形树图数据
-      const treemapData = this.tableData.map((item, index) => {
-        const value = item[this.selectedField] || 0
-        const absoluteValue = Math.abs(value)
+      else {
+        treemapData = this.tableData.map((item, index) => {
+          const value = item[this.selectedField] || 0
+          const absoluteValue = Math.abs(value)
 
-        return {
-          name: item.groupName || `品类${index + 1}`,
-          value: absoluteValue,
-          originalValue: value,
-          itemStyle: {
-            color: this.colorPalette[index % this.colorPalette.length]
-          },
-          // 存储其他字段用于tooltip显示
-          income: item.income || 0,
-          grossProfit: item.grossProfit || 0,
-          tdActualGrossProfit: item.tdActualGrossProfit || 0,
-          grossProfitRate: item.grossProfitRate || 0,
-          tdActualGrossProfitRate: item.tdActualGrossProfitRate || 0,
-          refundAmount: item.refundAmount || 0,
-          productCost: item.productCost || 0,
-          firstLegCost: item.firstLegCost || 0,
-          channelFee: item.channelFee || 0,
-          logisticsShippingCost: item.logisticsShippingCost || 0,
-          usPlatformLabelFee: item.usPlatformLabelFee || 0,
-          otherCosts: item.otherCosts || 0,
-          backendRefundSubsidy: item.backendRefundSubsidy || 0,
-          advertisingFee: item.advertisingFee || 0,
-          replenishmentCost: item.replenishmentCost || 0,
-          packagingCost: item.packagingCost || 0,
-          clearanceSubsidy: item.clearanceSubsidy || 0,
-          distributionCommission: item.distributionCommission || 0,
-          productCostRatio: item.productCostRatio || 0,
-          firstLegCostRatio: item.firstLegCostRatio || 0,
-          logisticsShippingCostRatio: item.logisticsShippingCostRatio || 0,
-          refundRatio: item.refundRatio || 0,
-          replenishmentCostRatio: item.replenishmentCostRatio || 0
-        }
-      }).filter(item => item.value > 0) // 过滤掉值为0的数据
+          return {
+            name: item.groupName || `品类${index + 1}`,
+            value: absoluteValue,
+            originalValue: value,
+            itemStyle: {
+              color: this.colorPalette[index % this.colorPalette.length]
+            },
+            // 存储其他字段用于tooltip显示
+            income: item.income || 0,
+            grossProfit: item.grossProfit || 0,
+            tdActualGrossProfit: item.tdActualGrossProfit || 0,
+            grossProfitRate: item.grossProfitRate || 0,
+            tdActualGrossProfitRate: item.tdActualGrossProfitRate || 0,
+            refundAmount: item.refundAmount || 0,
+            productCost: item.productCost || 0,
+            firstLegCost: item.firstLegCost || 0,
+            channelFee: item.channelFee || 0,
+            logisticsShippingCost: item.logisticsShippingCost || 0,
+            usPlatformLabelFee: item.usPlatformLabelFee || 0,
+            otherCosts: item.otherCosts || 0,
+            backendRefundSubsidy: item.backendRefundSubsidy || 0,
+            advertisingFee: item.advertisingFee || 0,
+            replenishmentCost: item.replenishmentCost || 0,
+            packagingCost: item.packagingCost || 0,
+            clearanceSubsidy: item.clearanceSubsidy || 0,
+            distributionCommission: item.distributionCommission || 0,
+            productCostRatio: item.productCostRatio || 0,
+            firstLegCostRatio: item.firstLegCostRatio || 0,
+            logisticsShippingCostRatio: item.logisticsShippingCostRatio || 0,
+            refundRatio: item.refundRatio || 0,
+            replenishmentCostRatio: item.replenishmentCostRatio || 0
+          }
+        }).filter(item => item.value > 0) // 过滤掉值为0的数据
+      }
       // 设置矩形树图选项
       const option = {
         backgroundColor: 'transparent',
@@ -220,7 +225,7 @@ export default {
           label: {
             show: true,
             formatter: (params) => {
-              // 修复：添加安全检查
+              // 添加安全检查
               const name = params.data && params.data.name ? params.data.name : ''
               const maxLength = 8 // 最大显示字符数
               return name.length > maxLength ? name.substring(0, maxLength) + '...' : name

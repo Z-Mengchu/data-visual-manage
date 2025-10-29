@@ -80,11 +80,7 @@
     <!-- 筛选选项 -->
     <select id="selectFilterOptions" resultType="java.util.Map">
         SELECT
-            GROUP_CONCAT(DISTINCT DATE_FORMAT(payment_date, '%Y-%m-%d') ORDER BY payment_date DESC) as dates,
-            GROUP_CONCAT(DISTINCT category) as categories,
-            GROUP_CONCAT(DISTINCT developer) as developers,
-            GROUP_CONCAT(DISTINCT operator) as operators,
-            GROUP_CONCAT(DISTINCT country_region) as countries
+            GROUP_CONCAT(DISTINCT sales_site) as countries
         FROM temu_order_details
         WHERE payment_date IS NOT NULL
     </select>
@@ -279,6 +275,7 @@
     <sql id="visualWhereCondition">
         <if test="query.startDate != null"> AND payment_date >= #{query.startDate}</if>
         <if test="query.endDate != null"> AND payment_date &lt;= #{query.endDate}</if>
+        <if test="query.salesSite != null"> AND sales_site = #{query.salesSite}</if>
         <if test="query.category != null and category != ''"> AND category = #{query.category}</if>
         <if test="query.developer != null and developer != ''"> AND developer = #{query.developer}</if>
         <if test="query.operator != null and operator != ''"> AND operator = #{query.operator}</if>

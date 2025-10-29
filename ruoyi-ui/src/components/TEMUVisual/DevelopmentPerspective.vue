@@ -148,10 +148,12 @@ export default {
       window.addEventListener('resize', this.handleResize)
     },
     updateChart() {
-      if (!this.barChart || !this.tableData.length) return
-
+      let barData = []
+      if (!this.barChart || !this.tableData || this.tableData.length === 0) {
+        barData = [];
+      }
       // 准备数据
-      const barData = this.tableData.map((item, index) => {
+      barData = this.tableData.map((item, index) => {
         const value = item[this.selectedField] || 0
         return {
           name: item.groupName || `开发员${index + 1}`,

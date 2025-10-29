@@ -26,6 +26,9 @@ public class TEMUVisualQuery extends TEMUOrderDetails {
     /** 结束日期 */
     private Date endDate;
 
+    /** 销售站点 */
+    private String salesSite;
+
     /** 分组类型 */
     private String groupType;
 
