@@ -1,17 +1,14 @@
 package com.ruoyi.sales.service.impl;
 
-import com.ruoyi.common.constant.RoleConstants;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
 import com.ruoyi.sales.domain.ChannelSalesData;
 import com.ruoyi.sales.mapper.ChannelSalesDataMapper;
 import com.ruoyi.sales.service.IChannelSalesDataService;
 import com.ruoyi.system.domain.SysPost;
-import com.ruoyi.system.service.ISysPostService;
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 全渠道销售数据分析Service业务层处理
@@ -125,8 +121,8 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
      * @return 结果
      */
     @Override
-    public String importSalesData(List<ChannelSalesData> salesDataList, boolean updateSupport, String operName) {
-        if (StringUtils.isNull(salesDataList) || salesDataList.size() == 0)
+    public String importSalesData(List<ChannelSalesData> salesDataList, String operName) {
+        if (StringUtils.isNull(salesDataList) || salesDataList.isEmpty())
         {
             throw new ServiceException("导入数据不能为空！");
         }
@@ -134,6 +130,7 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
+
         for (ChannelSalesData salesData : salesDataList)
         {
             try
@@ -150,20 +147,6 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
                     channelSalesDataMapper.insertChannelSalesData(salesData);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、订单号 " + salesData.getOrderNumber() + " 导入成功");
-                }
-                else if (updateSupport)
-                {
-                    BeanValidators.validateWithException(validator, salesData);
-                    salesData.setUpdateBy(operName);
-                    salesData.setId(data.getId());
-                    channelSalesDataMapper.updateChannelSalesData(salesData);
-                    successNum++;
-                    successMsg.append("<br/>" + successNum + "、订单号 " + salesData.getOrderNumber() + " 更新成功");
-                }
-                else
-                {
-                    failureNum++;
-                    failureMsg.append("<br/>" + failureNum + "、订单号 " + salesData.getOrderNumber() + " 已存在");
                 }
             }
             catch (Exception e)
@@ -185,6 +168,4 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
         }
         return successMsg.toString();
     }
-
-
 }

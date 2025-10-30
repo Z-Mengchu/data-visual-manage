@@ -128,12 +128,12 @@ public class ChannelSalesDataController extends BaseController
     @Log(title = "销售数据管理", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('sale:data:import')")
     @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    public AjaxResult importData(MultipartFile file) throws Exception
     {
         ExcelUtil<ChannelSalesData> util = new ExcelUtil<>(ChannelSalesData.class);
         List<ChannelSalesData> salesDataList = util.importExcel(file.getInputStream());
         String operName = getUsername();
-        String message = channelSalesDataService.importSalesData(salesDataList, updateSupport, operName);
+        String message = channelSalesDataService.importSalesData(salesDataList, operName);
         return success(message);
     }
 

@@ -72,5 +72,5 @@ public interface IChannelSalesDataService
      * @param operName 操作用户
      * @return 结果
      */
-    String importSalesData(List<ChannelSalesData> salesDataList, boolean updateSupport, String operName);
+    String importSalesData(List<ChannelSalesData> salesDataList, String operName);
 }
