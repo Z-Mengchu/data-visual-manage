@@ -35,6 +35,14 @@ public interface OverseasHostingDataMapper
     public List<OverseasHostingData> selectOverseasHostingDataList(OverseasHostingData overseasHostingData);
 
     /**
+     * 根据订单号查询数据
+     *
+     * @param orderNumber 订单号
+     * @return 海外托管业务数据集合
+     */
+    public List<OverseasHostingData> selectOverseasHostingDataByOrderNumber(@Param("orderNumber") String orderNumber);
+
+    /**
      * 查询海外托管业务数据管理列表权限数据过滤
      *
      * @param overseasHostingData 海外托管业务数据管理

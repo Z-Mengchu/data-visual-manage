@@ -155,28 +155,49 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
             try
             {
                 if (overseasData.getCategory().equals("42")) overseasData.setCategory("");
+                // 忘记42是什么了，反正是读取错误数据自动转换成了42，所以改成空字符串
                 BeanValidators.validateWithException(validator, overseasData);
-                overseasData.setUpdateBy(operName);
-                overseasHostingDataMapper.insertOverseasHostingData(overseasData);
-                successNum++;
-                successMsg.append("<br/>" + successNum + "、订单号 " + overseasData.getOrderNumber() + " 导入成功");
+
+                // 判断这条数据在数据库中是否已经存在完全相同的数据
+                // 先通过相同订单号查询数据
+                if (overseasData.getOrderNumber().isEmpty()) overseasData.setOrderNumber(null);
+                List<OverseasHostingData> willEqualDataList = overseasHostingDataMapper.selectOverseasHostingDataByOrderNumber(overseasData.getOrderNumber());
+
+                boolean isExist = false;
+                // 再通过重写equal方法比较两者是否完全相同
+                for (OverseasHostingData hostingData : willEqualDataList) {
+                    if (hostingData.equals(overseasData)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                willEqualDataList.clear();
+                if (isExist) {
+                    // 数据已存在进行提示
+                    failureNum++;
+                    String msg = "<br/>第 " + (failureNum + successNum) + "条数据已存在，请勿重复导入";
+                    failureMsg.append(msg);
+                }else {
+                    // 数据不存在，可以插入
+                    overseasHostingDataMapper.insertOverseasHostingData(overseasData);
+                    successNum++;
+                    successMsg.append("<br/>").append(successNum).append("、订单号 ").append(overseasData.getOrderNumber()).append(" 导入成功");
+                }
             }
             catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>第 " + failureNum + "条数据导入失败：";
-                failureMsg.append(msg + e.getMessage());
+                String msg = "<br/>第 " + (failureNum + successNum) + "条数据导入失败：";
+                failureMsg.append(msg).append(e.getMessage());
                 log.error(msg, e);
             }
         }
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         if (failureNum > 0)
         {
+            if (successNum == 0) successMsg.delete(0, successMsg.length());
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-            throw new ServiceException(failureMsg.toString());
-        }
-        else
-        {
-            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+            throw new ServiceException(successMsg + "\n" + failureMsg);
         }
         return successMsg.toString();
     }

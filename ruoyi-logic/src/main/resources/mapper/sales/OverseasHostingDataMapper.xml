@@ -61,7 +61,7 @@
             <if test="store != null and store != ''"> and store = #{store}</if>
             <if test="params.beginSettlementTime != null and params.beginSettlementTime != '' and params.endSettlementTime != null and params.endSettlementTime != ''"> and settlement_time between #{params.beginSettlementTime} and #{params.endSettlementTime}</if>
             <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
-            <if test="productId != null  and productId != ''"> and product_id = #{productId}</if>
+            <if test="productId != null and productId != ''"> and product_id = #{productId}</if>
             <if test="brand != null  and brand != ''"> and brand = #{brand}</if>
             <if test="sku != null  and sku != ''"> and sku = #{sku}</if>
             <if test="category != null  and category != ''"> and category = #{category}</if>
@@ -83,6 +83,14 @@
             <if test="developer != null  and developer != ''"> and developer = #{developer}</if>
             <if test="operator != null  and operator != ''"> and operator = #{operator}</if>
             <if test="shippingWarehouse != null  and shippingWarehouse != ''"> and shipping_warehouse = #{shippingWarehouse}</if>
+        </where>
+    </select>
+
+    <select id="selectOverseasHostingDataByOrderNumber" resultMap="OverseasHostingDataResult">
+        <include refid="selectOverseasHostingDataVo"/>
+        <where>
+            <if test="orderNumber != null and orderNumber != ''"> and order_number = #{orderNumber}</if>
+            <if test="orderNumber == null"> and order_number is null </if>
         </where>
     </select>
 

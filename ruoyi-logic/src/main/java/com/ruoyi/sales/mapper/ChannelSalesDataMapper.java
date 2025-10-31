@@ -32,6 +32,15 @@ public interface ChannelSalesDataMapper
     public List<ChannelSalesData> selectChannelSalesDataList(ChannelSalesData channelSalesData);
 
     /**
+     * 根据订单号查询
+     *
+     * @param orderNumber 订单号
+     * @return 全渠道销售数据分析集合
+     */
+    public List<ChannelSalesData> selectChannelSalesDataByOrderNumber(@Param("orderNumber") String orderNumber);
+
+
+    /**
      * 查询全渠道销售数据分析列表过滤
      *
      * @param channelSalesData 全渠道销售数据分析
@@ -74,9 +83,4 @@ public interface ChannelSalesDataMapper
      */
     public int deleteChannelSalesDataByIds(Integer[] ids);
 
-    /**
-     * 根据订单号查询数据
-     */
-    @Select("select * from channel_sales_data where order_number = #{orderNumber}")
-    public ChannelSalesData selectChannelSalesDataByOrderNumber(String orderNumber);
 }

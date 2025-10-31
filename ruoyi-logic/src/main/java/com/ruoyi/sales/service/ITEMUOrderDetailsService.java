@@ -20,7 +20,7 @@ public interface ITEMUOrderDetailsService
      * @param orderNumber Temu订单明细主键
      * @return Temu订单明细
      */
-    public TEMUOrderDetails selectTEMUOrderDetailsByOrderNumber(String orderNumber);
+    public TEMUOrderDetails selectTEMUOrderDetailsById(Integer id);
 
     /**
      * 查询Temu订单明细列表

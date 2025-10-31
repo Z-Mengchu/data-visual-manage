@@ -28,6 +28,14 @@ public interface PurchasePaymentPeriodMapper
     public List<PurchasePaymentPeriod> selectPurchasePaymentPeriodList(PurchasePaymentPeriod purchasePaymentPeriod);
 
     /**
+     * 根据采购单号哦查询采购账期列表
+     *
+     * @param purchaseOrderNumber 采购单号
+     * @return 采购账期集合
+     */
+    public List<PurchasePaymentPeriod> selectPurchasePaymentPeriodByPurchaseOrderNumber(String purchaseOrderNumber);
+
+    /**
      * 新增采购账期
      *
      * @param purchasePaymentPeriod 采购账期

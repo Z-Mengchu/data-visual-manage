@@ -83,6 +83,7 @@
             <if test="packageNumber != null  and packageNumber != ''"> and package_number = #{packageNumber}</if>
             <if test="shippingMethod != null  and shippingMethod != ''"> and shipping_method = #{shippingMethod}</if>
             <if test="logisticsNumber != null  and logisticsNumber != ''"> and logistics_number = #{logisticsNumber}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
             <if test="buyerName != null  and buyerName != ''"> and buyer_name like concat('%', #{buyerName}, '%')</if>
             <if test="countryRegion != null  and countryRegion != ''"> and country_region = #{countryRegion}</if>
             <if test="params.beginPaymentDate != null and params.beginPaymentDate != '' and params.endPaymentDate != null and params.endPaymentDate != ''"> and payment_date between #{params.beginPaymentDate} and #{params.endPaymentDate}</if>
@@ -125,6 +126,14 @@
         </where>
     </select>
 
+    <select id="selectTEMUOrderDetailsByOrderNumber" resultMap="TEMUOrderDetailsResult">
+        <include refid="selectTEMUOrderDetailsVo"/>
+        <where>
+            <if test="orderNumber != null and orderNumber != ''"> and order_number = #{orderNumber}</if>
+            <if test="orderNumber == null"> and order_number IS NULL</if>
+        </where>
+    </select>
+
     <!-- 新增带数据权限的查询方法 -->
     <select id="selectTEMUOrderDetailsListWithPermission" parameterType="map" resultMap="TEMUOrderDetailsResult">
         <include refid="selectTEMUOrderDetailsVo"/>
@@ -143,6 +152,7 @@
             <if test="data.packageNumber != null  and data.packageNumber != ''"> and package_number = #{data.packageNumber}</if>
             <if test="data.shippingMethod != null  and data.shippingMethod != ''"> and shipping_method = #{data.shippingMethod}</if>
             <if test="data.logisticsNumber != null  and data.logisticsNumber != ''"> and logistics_number = #{data.logisticsNumber}</if>
+            <if test="data.orderNumber != null  and data.orderNumber != ''"> and oorder_number = #{orderNumber}</if>
             <if test="data.buyerName != null  and data.buyerName != ''"> and buyer_name like concat('%', #{data.buyerName}, '%')</if>
             <if test="data.countryRegion != null  and data.countryRegion != ''"> and country_region = #{data.countryRegion}</if>
             <if test="data.params.beginPaymentDate != null and data.params.beginPaymentDate != '' and data.params.endPaymentDate != null and data.params.endPaymentDate != ''"> and payment_date between #{data.params.beginPaymentDate} and #{data.params.endPaymentDate}</if>
@@ -228,9 +238,9 @@
         </where>
     </select>
 
-    <select id="selectTEMUOrderDetailsByOrderNumber" parameterType="String" resultMap="TEMUOrderDetailsResult">
+    <select id="selectTEMUOrderDetailsById" parameterType="Integer" resultMap="TEMUOrderDetailsResult">
         <include refid="selectTEMUOrderDetailsVo"/>
-        where order_number = #{orderNumber}
+        where id = #{id}
     </select>
 
     <insert id="insertTEMUOrderDetails" parameterType="TEMUOrderDetails">
@@ -367,6 +377,7 @@
             <if test="packageNumber != null and packageNumber != ''">package_number = #{packageNumber},</if>
             <if test="shippingMethod != null and shippingMethod != ''">shipping_method = #{shippingMethod},</if>
             <if test="logisticsNumber != null and logisticsNumber != ''">logistics_number = #{logisticsNumber},</if>
+            <if test="orderNumber != null and orderNumber != ''">order_number = #{orderNumber},</if>
             <if test="buyerName != null and buyerName != ''">buyer_name = #{buyerName},</if>
             <if test="countryRegion != null and countryRegion != ''">country_region = #{countryRegion},</if>
             <if test="paymentDate != null">payment_date = #{paymentDate},</if>

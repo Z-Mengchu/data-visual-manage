@@ -81,10 +81,10 @@ public class TEMUOrderDetailsController extends BaseController
      * 获取Temu订单明细详细信息
      */
     @PreAuthorize("@ss.hasPermi('temu:details:query')")
-    @GetMapping(value = "/{orderNumber}")
-    public AjaxResult getInfo(@PathVariable("orderNumber") String orderNumber)
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
-        return success(tEMUOrderDetailsService.selectTEMUOrderDetailsByOrderNumber(orderNumber));
+        return success(tEMUOrderDetailsService.selectTEMUOrderDetailsById(id));
     }
 
     /**

@@ -20,7 +20,7 @@ public interface TEMUOrderDetailsMapper
      * @param orderNumber Temu订单明细主键
      * @return Temu订单明细
      */
-    public TEMUOrderDetails selectTEMUOrderDetailsByOrderNumber(String orderNumber);
+    public TEMUOrderDetails selectTEMUOrderDetailsById(Integer id);
 
     /**
      * 查询Temu订单明细列表
@@ -29,6 +29,14 @@ public interface TEMUOrderDetailsMapper
      * @return Temu订单明细集合
      */
     public List<TEMUOrderDetails> selectTEMUOrderDetailsList(TEMUOrderDetails tEMUOrderDetails);
+
+    /**
+     * 查询Temu订单明细列表
+     *
+     * @param orderNumber 订单号
+     * @return Temu订单明细集合
+     */
+    public List<TEMUOrderDetails> selectTEMUOrderDetailsByOrderNumber(@Param("orderNumber") String orderNumber);
 
     /**
      * 查询Temu订单明细列表（带数据权限）

@@ -66,6 +66,14 @@
         </where>
     </select>
 
+    <select id="selectPurchasePaymentPeriodByPurchaseOrderNumber" resultMap="PurchasePaymentPeriodResult">
+        <include refid="selectPurchasePaymentPeriodVo"/>
+        <where>
+            <if test="purchaseOrderNumber != null and purchaseOrderNumber != ''"> and purchase_order_number = #{purchaseOrderNumber}</if>
+            <if test="purchaseOrderNumber == null"> and purchase_order_number IS NULL</if>
+        </where>
+    </select>
+
     <select id="selectPurchasePaymentPeriodById" parameterType="Integer" resultMap="PurchasePaymentPeriodResult">
         <include refid="selectPurchasePaymentPeriodVo"/>
         where id = #{id}

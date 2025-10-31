@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 全渠道销售数据分析对象 channel_sales_data
@@ -228,5 +230,65 @@ public class ChannelSalesData extends BaseEntity
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChannelSalesData that = (ChannelSalesData) o;
+        return Objects.equals(firstLevelCategory != null && firstLevelCategory.isEmpty() ? null : firstLevelCategory, that.firstLevelCategory != null && that.firstLevelCategory.isEmpty() ? null : that.firstLevelCategory) &&
+                Objects.equals(category != null && category.isEmpty() ? null : category, that.category != null && that.category.isEmpty() ? null : that.category) &&
+                Objects.equals(tongtuSku != null && tongtuSku.isEmpty() ? null : tongtuSku, that.tongtuSku != null && that.tongtuSku.isEmpty() ? null : that.tongtuSku) &&
+                Objects.equals(productName != null && productName.isEmpty() ? null : productName, that.productName != null && that.productName.isEmpty() ? null : that.productName) &&
+                Objects.equals(operationGroupName != null && operationGroupName.isEmpty() ? null : operationGroupName, that.operationGroupName != null && that.operationGroupName.isEmpty() ? null : that.operationGroupName) &&
+                Objects.equals(operator != null && operator.isEmpty() ? null : operator, that.operator != null && that.operator.isEmpty() ? null : that.operator) &&
+                Objects.equals(developmentGroupName != null && developmentGroupName.isEmpty() ? null : developmentGroupName, that.developmentGroupName != null && that.developmentGroupName.isEmpty() ? null : that.developmentGroupName) &&
+                Objects.equals(productDeveloper != null && productDeveloper.isEmpty() ? null : productDeveloper, that.productDeveloper != null && that.productDeveloper.isEmpty() ? null : that.productDeveloper) &&
+                Objects.equals(channel != null && channel.isEmpty() ? null : channel, that.channel != null && that.channel.isEmpty() ? null : that.channel) &&
+                Objects.equals(channelAccount != null && channelAccount.isEmpty() ? null : channelAccount, that.channelAccount != null && that.channelAccount.isEmpty() ? null : that.channelAccount) &&
+                Objects.equals(operationDepartment != null && operationDepartment.isEmpty() ? null : operationDepartment, that.operationDepartment != null && that.operationDepartment.isEmpty() ? null : that.operationDepartment) &&
+                Objects.equals(storeCode != null && storeCode.isEmpty() ? null : storeCode, that.storeCode != null && that.storeCode.isEmpty() ? null : that.storeCode) &&
+                Objects.equals(region != null && region.isEmpty() ? null : region, that.region != null && that.region.isEmpty() ? null : that.region) &&
+                Objects.equals(country != null && country.isEmpty() ? null : country, that.country != null && that.country.isEmpty() ? null : that.country) &&
+                Objects.equals(countryRegion != null && countryRegion.isEmpty() ? null : countryRegion, that.countryRegion != null && that.countryRegion.isEmpty() ? null : that.countryRegion) &&
+                Objects.equals(brand != null && brand.isEmpty() ? null : brand, that.brand != null && that.brand.isEmpty() ? null : that.brand) &&
+                Objects.equals(salesMode != null && salesMode.isEmpty() ? null : salesMode, that.salesMode != null && that.salesMode.isEmpty() ? null : that.salesMode) &&
+                Objects.equals(orderNumber != null && orderNumber.isEmpty() ? null : orderNumber, that.orderNumber != null && that.orderNumber.isEmpty() ? null : that.orderNumber) &&
+                ((ChannelSalesData) o).getPaymentSettlementDate() == (that.paymentSettlementDate) &&
+                Objects.equals(shippingWarehouse != null && shippingWarehouse.isEmpty() ? null : shippingWarehouse, that.shippingWarehouse != null && that.shippingWarehouse.isEmpty() ? null : that.shippingWarehouse) &&
+                Objects.equals(shippingQuantity, that.shippingQuantity) &&
+                compareBigDecimal(revenueRmb, that.revenueRmb) &&
+                compareBigDecimal(productCost, that.productCost) &&
+                compareBigDecimal(firstMileShipping, that.firstMileShipping) &&
+                compareBigDecimal(packagingCost, that.packagingCost) &&
+                compareBigDecimal(logisticsShipping, that.logisticsShipping) &&
+                compareBigDecimal(channelTransactionFeeRmb, that.channelTransactionFeeRmb) &&
+                compareBigDecimal(taxes, that.taxes) &&
+                compareBigDecimal(refund, that.refund) &&
+                compareBigDecimal(reshipmentAmount, that.reshipmentAmount) &&
+                compareBigDecimal(sampleCost, that.sampleCost) &&
+                compareBigDecimal(unsoldSubsidy, that.unsoldSubsidy) &&
+                compareBigDecimal(orderGrossProfit, that.orderGrossProfit) &&
+                compareBigDecimal(orderGrossProfitRate, that.orderGrossProfitRate) &&
+                compareBigDecimal(advertisingPromotion, that.advertisingPromotion) &&
+                compareBigDecimal(storageFee, that.storageFee) &&
+                compareBigDecimal(removalFee, that.removalFee) &&
+                compareBigDecimal(returnProcessingFee, that.returnProcessingFee) &&
+                compareBigDecimal(otherFees, that.otherFees) &&
+                compareBigDecimal(unsoldBudget, that.unsoldBudget) &&
+                compareBigDecimal(handlingFee, that.handlingFee) &&
+                compareBigDecimal(orderNetProfit, that.orderNetProfit) &&
+                compareBigDecimal(roi, that.roi) &&
+                Objects.equals(daysToPositiveCashFlow, that.daysToPositiveCashFlow) &&
+                compareBigDecimal(verificationFormula, that.verificationFormula) &&
+                Objects.equals(isGrossProfitPositive != null && isGrossProfitPositive.isEmpty() ? null : isGrossProfitPositive, that.isGrossProfitPositive != null && that.isGrossProfitPositive.isEmpty() ? null : that.isGrossProfitPositive);
+    }
+
+
+    private boolean compareBigDecimal(BigDecimal bd1, BigDecimal bd2) {
+        if (bd1 == null && bd2 == null) return true;
+        if (bd1 == null || bd2 == null) return false;
+        return bd1.compareTo(bd2.setScale(bd1.scale(), RoundingMode.HALF_UP)) == 0;
+    }
 
 }

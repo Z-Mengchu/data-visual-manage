@@ -8,6 +8,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
+import com.ruoyi.sales.domain.ChannelSalesData;
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,29 +136,49 @@ public class PurchasePaymentPeriodServiceImpl implements IPurchasePaymentPeriodS
             {
                 BeanValidators.validateWithException(validator, purchasePaymentPeriod);
                 purchasePaymentPeriod.setUpdateBy(operName);
-                purchasePaymentPeriodMapper.insertPurchasePaymentPeriod(purchasePaymentPeriod);
-                successNum++;
-                successMsg.append("<br/>" + successNum + "、编号 " + purchasePaymentPeriod.getId() + " 导入成功");
+
+                // 判断这条数据在数据库中是否已经存在完全相同的数据
+                // 先通过相同订单号查询数据
+                if (purchasePaymentPeriod.getPurchaseOrderNumber().isEmpty()) purchasePaymentPeriod.setPurchaseOrderNumber(null);
+                List<PurchasePaymentPeriod> willEqualDataList = purchasePaymentPeriodMapper.selectPurchasePaymentPeriodByPurchaseOrderNumber(purchasePaymentPeriod.getPurchaseOrderNumber());
+
+                boolean isExist = false;
+                // 再通过重写equal方法比较两者是否完全相同
+                for (PurchasePaymentPeriod paymentPeriod : willEqualDataList) {
+                    if (paymentPeriod.equals(purchasePaymentPeriod)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                willEqualDataList.clear();
+                if (isExist) {
+                    // 数据已存在进行提示
+                    failureNum++;
+                    String msg = "<br/>第 " + (failureNum + successNum) + "条数据已存在，请勿重复导入";
+                    failureMsg.append(msg);
+                }else {
+                    // 数据不存在进行插入
+                    purchasePaymentPeriodMapper.insertPurchasePaymentPeriod(purchasePaymentPeriod);
+                    successNum++;
+                    successMsg.append("<br/>第 ").append(failureNum + successNum).append("条数据导入成功");
+                }
             }
             catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>第 " + failureNum + "条数据导入失败：";
-                failureMsg.append(msg + e.getMessage());
+                String msg = "<br/>第 " + (failureNum + successNum) + "条数据导入失败：";
+                failureMsg.append(msg).append(e.getMessage());
                 log.error(msg, e);
             }
         }
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         if (failureNum > 0)
         {
+            if (successNum == 0) successMsg.delete(0, successMsg.length());
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-            throw new ServiceException(failureMsg.toString());
+            throw new ServiceException(successMsg + "\n" + failureMsg);
         }
-        else
-        {
-            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
-        }
-        message.append(successMsg).append(failureMsg);
-        return message.toString();
+        return successMsg.toString();
     }
 
     /**

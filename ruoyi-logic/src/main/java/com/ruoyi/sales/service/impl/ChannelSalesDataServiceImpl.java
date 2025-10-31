@@ -6,6 +6,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
 import com.ruoyi.sales.domain.ChannelSalesData;
+import com.ruoyi.sales.domain.TEMUOrderDetails;
 import com.ruoyi.sales.mapper.ChannelSalesDataMapper;
 import com.ruoyi.sales.service.IChannelSalesDataService;
 import com.ruoyi.system.domain.SysPost;
@@ -116,7 +117,6 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
      * 导入数据
      *
      * @param salesDataList 数据列表
-     * @param updateSupport 是否更新
      * @param operName 操作人员
      * @return 结果
      */
@@ -136,35 +136,49 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
             try
             {
                 // 验证是否存在这个数据
-                ChannelSalesData data = null;
-                if (!StringUtils.isEmpty(salesData.getOrderNumber())){
-                    data = channelSalesDataMapper.selectChannelSalesDataByOrderNumber(salesData.getOrderNumber());
+                BeanValidators.validateWithException(validator, salesData);
+                salesData.setUpdateBy(operName);
+
+                // 判断这条数据在数据库中是否已经存在完全相同的数据
+                // 先通过相同订单号查询数据
+                if (salesData.getOrderNumber().isEmpty()) salesData.setOrderNumber(null);
+                List<ChannelSalesData> willEqualDataList = channelSalesDataMapper.selectChannelSalesDataByOrderNumber(salesData.getOrderNumber());
+
+                boolean isExist = false;
+                // 再通过重写equal方法比较两者是否完全相同
+                for (ChannelSalesData channelSalesData : willEqualDataList) {
+                    if (channelSalesData.equals(salesData)) {
+                        isExist = true;
+                        break;
+                    }
                 }
-                if (StringUtils.isNull(data))
-                {
-                    BeanValidators.validateWithException(validator, salesData);
-                    salesData.setUpdateBy(operName);
+                willEqualDataList.clear();
+                if (isExist) {
+                    // 数据已存在进行提示
+                    failureNum++;
+                    String msg = "<br/>第 " + (failureNum + successNum) + "条数据已存在，请勿重复导入";
+                    failureMsg.append(msg);
+                }else {
+                    // 数据不存在进行插入
                     channelSalesDataMapper.insertChannelSalesData(salesData);
                     successNum++;
-                    successMsg.append("<br/>" + successNum + "、订单号 " + salesData.getOrderNumber() + " 导入成功");
+                    successMsg.append("<br/>第 ").append(failureNum + successNum).append(" 条数据导入成功");
                 }
             }
             catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>第 " + failureNum + "条数据导入失败：";
-                failureMsg.append(msg + e.getMessage());
+                String msg = "<br/>第 " + (failureNum + successNum) + "条数据导入失败：";
+                failureMsg.append(msg).append(e.getMessage());
                 log.error(msg, e);
             }
         }
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         if (failureNum > 0)
         {
+            if (successNum == 0) successMsg.delete(0, successMsg.length());
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-            throw new ServiceException(failureMsg.toString());
-        }
-        else
-        {
-            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+            throw new ServiceException(successMsg + "\n" + failureMsg);
         }
         return successMsg.toString();
     }

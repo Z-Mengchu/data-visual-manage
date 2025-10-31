@@ -2,7 +2,10 @@ package com.ruoyi.sales.domain;
 
 import java.io.Serial;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,8 +39,8 @@ public class OverseasHostingData extends BaseEntity
     private String store;
 
     /** 结算时间，格式为 YYYY-MM-DD HH:MM:SS */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "结算时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "结算时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date settlementTime;
 
     /** 订单号，可能包含长数字字符串 */
@@ -131,6 +134,44 @@ public class OverseasHostingData extends BaseEntity
     /** 发货仓库 */
     @Excel(name = "发货仓库")
     private String shippingWarehouse;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OverseasHostingData that = (OverseasHostingData) o;
+        return Objects.equals(store.isEmpty() ? null : store, that.store.isEmpty() ? null : that.store) &&
+                ((OverseasHostingData) o).getSettlementTime() == (that.settlementTime) &&
+                Objects.equals(orderNumber.isEmpty() ? null : orderNumber, that.orderNumber.isEmpty() ? null : that.orderNumber) &&
+                Objects.equals(productId.isEmpty() ? null : productId, that.productId.isEmpty() ? null : that.productId) &&
+                Objects.equals(brand.isEmpty() ? null : brand, that.brand.isEmpty() ? null : that.brand) &&
+                Objects.equals(sku.isEmpty() ? null : sku, that.sku.isEmpty() ? null : that.sku) &&
+                Objects.equals(category.isEmpty() ? null : category, that.category.isEmpty() ? null : that.category) &&
+                Objects.equals(feeItem.isEmpty() ? null : feeItem, that.feeItem.isEmpty() ? null : that.feeItem) &&
+                compareBigDecimal(amountCny, that.amountCny) &&
+                Objects.equals(platformTransactionNumber.isEmpty() ? null : platformTransactionNumber, that.platformTransactionNumber.isEmpty() ? null : that.platformTransactionNumber) &&
+                Objects.equals(limitedSupplyPriceTaskId.isEmpty() ? null : limitedSupplyPriceTaskId, that.limitedSupplyPriceTaskId.isEmpty() ? null : that.limitedSupplyPriceTaskId) &&
+                compareBigDecimal(revenue, that.revenue) &&
+                compareBigDecimal(refund, that.refund) &&
+                compareBigDecimal(allocationRatio, that.allocationRatio) &&
+                compareBigDecimal(purchaseCost, that.purchaseCost) &&
+                compareBigDecimal(firstMileCost, that.firstMileCost) &&
+                compareBigDecimal(logisticsFee, that.logisticsFee) &&
+                compareBigDecimal(packagingCost, that.packagingCost) &&
+                compareBigDecimal(otherCosts, that.otherCosts) &&
+                compareBigDecimal(reshipmentCost, that.reshipmentCost) &&
+                compareBigDecimal(grossProfit, that.grossProfit) &&
+                compareBigDecimal(grossProfitMargin, that.grossProfitMargin) &&
+                Objects.equals(developer.isEmpty() ? null : developer, that.developer.isEmpty() ? null : that.developer) &&
+                Objects.equals(operator.isEmpty() ? null : operator, that.operator.isEmpty() ? null : that.operator) &&
+                Objects.equals(shippingWarehouse.isEmpty() ? null : shippingWarehouse, that.shippingWarehouse.isEmpty() ? null : that.shippingWarehouse);
+    }
+
+    private boolean compareBigDecimal(BigDecimal bd1, BigDecimal bd2) {
+        if (bd1 == null && bd2 == null) return true;
+        if (bd1 == null || bd2 == null) return false;
+        return bd1.compareTo(bd2.setScale(bd1.scale(), RoundingMode.HALF_UP)) == 0;
+    }
 
     @Override
     public String toString() {

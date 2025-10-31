@@ -115,6 +115,14 @@
         </where>
     </select>
 
+    <select id="selectChannelSalesDataByOrderNumber" resultMap="ChannelSalesDataResult">
+        <include refid="selectChannelSalesDataVo"/>
+        <where>
+            <if test="orderNumber != null and orderNumber != ''">and order_number = #{orderNumber}</if>
+            <if test="orderNumber == null">and order_number IS NULL</if>
+        </where>
+    </select>
+
     <select id="selectChannelSalesDataListWithFilter" parameterType="ChannelSalesData" resultMap="ChannelSalesDataResult">
         <include refid="selectChannelSalesDataVo"/>
         <where>

@@ -1,25 +1,22 @@
 package com.ruoyi.sales.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
-import com.ruoyi.sales.domain.ChannelSalesData;
+import com.ruoyi.sales.domain.OverseasHostingData;
+import com.ruoyi.sales.domain.TEMUOrderDetails;
+import com.ruoyi.sales.mapper.TEMUOrderDetailsMapper;
+import com.ruoyi.sales.service.ITEMUOrderDetailsService;
 import com.ruoyi.system.domain.SysPost;
-import com.ruoyi.system.service.ISysPostService;
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.sales.mapper.TEMUOrderDetailsMapper;
-import com.ruoyi.sales.domain.TEMUOrderDetails;
-import com.ruoyi.sales.service.ITEMUOrderDetailsService;
+
+import java.util.List;
 
 /**
  * Temu订单明细Service业务层处理
@@ -41,13 +38,13 @@ public class TEMUOrderDetailsServiceImpl implements ITEMUOrderDetailsService
     /**
      * 查询Temu订单明细
      *
-     * @param orderNumber Temu订单明细主键
+     * @param id Temu订单明细主键
      * @return Temu订单明细
      */
     @Override
-    public TEMUOrderDetails selectTEMUOrderDetailsByOrderNumber(String orderNumber)
+    public TEMUOrderDetails selectTEMUOrderDetailsById(Integer id)
     {
-        return TEMUOrderDetailsMapper.selectTEMUOrderDetailsByOrderNumber(orderNumber);
+        return TEMUOrderDetailsMapper.selectTEMUOrderDetailsById(id);
     }
 
     /**
@@ -149,26 +146,46 @@ public class TEMUOrderDetailsServiceImpl implements ITEMUOrderDetailsService
             {
                 BeanValidators.validateWithException(validator, temuData);
                 temuData.setUpdateBy(operName);
-                TEMUOrderDetailsMapper.insertTEMUOrderDetails(temuData);
-                successNum++;
-                successMsg.append("<br/>" + successNum + "、订单号 " + temuData.getOrderNumber() + " 导入成功");
+                // 判断这条数据在数据库中是否已经存在完全相同的数据
+                // 先通过相同订单号查询数据
+                if (temuData.getOrderNumber().isEmpty()) temuData.setOrderNumber(null);
+                List<TEMUOrderDetails> willEqualDataList = TEMUOrderDetailsMapper.selectTEMUOrderDetailsByOrderNumber(temuData.getOrderNumber());
+
+                boolean isExist = false;
+                // 再通过重写equal方法比较两者是否完全相同
+                for (TEMUOrderDetails temuOrderDetails : willEqualDataList) {
+                    if (temuOrderDetails.equals(temuData)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                willEqualDataList.clear();
+                if (isExist){
+                    // 数据已存在进行提示
+                    failureNum++;
+                    String msg = "<br/>第 " + (failureNum + successNum) + "条数据已存在，请勿重复导入";
+                    failureMsg.append(msg);
+                }else {
+                    // 数据不存在进行插入
+                    TEMUOrderDetailsMapper.insertTEMUOrderDetails(temuData);
+                    successNum++;
+                    successMsg.append("<br/>第 ").append(failureNum + successNum).append(" 条数据导入成功");
+                }
             }
             catch (Exception e)
             {
                 failureNum++;
-                String msg = "<br/>第 " + failureNum + "条数据导入失败：";
-                failureMsg.append(msg + e.getMessage());
+                String msg = "<br/>第 " + (failureNum + successNum) + "条数据导入失败：";
+                failureMsg.append(msg).append(e.getMessage());
                 log.error(msg, e);
             }
         }
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         if (failureNum > 0)
         {
+            if (successNum == 0) successMsg.delete(0, successMsg.length());
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-            throw new ServiceException(failureMsg.toString());
-        }
-        else
-        {
-            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+            throw new ServiceException(successMsg + "\n" + failureMsg);
         }
         return successMsg.toString();
     }
