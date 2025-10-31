@@ -306,9 +306,6 @@
     <!-- 添加或修改Temu订单明细对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="主键ID" prop="id">
-          <el-input v-model="form.id" placeholder="请输入主键ID" />
-        </el-form-item>
         <el-form-item label="发货日期" prop="shipmentDate">
           <el-date-picker clearable
                           v-model="form.shipmentDate"
@@ -359,6 +356,9 @@
         </el-form-item>
         <el-form-item label="物流商单号" prop="logisticsNumber">
           <el-input v-model="form.logisticsNumber" placeholder="请输入物流商单号" />
+        </el-form-item>
+        <el-form-item label="订单号" prop="orderNumber">
+          <el-input v-model="form.orderNumber" placeholder="请输入订单号" />
         </el-form-item>
         <el-form-item label="买家姓名" prop="buyerName">
           <el-input v-model="form.buyerName" placeholder="请输入买家姓名" />
@@ -495,7 +495,8 @@
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip text-center" slot="tip">
-          <span>仅允许导入xls、xlsx格式文件。</span>
+          <span>仅允许导入xls、xlsx格式文件。</span><br/>
+          <span>系统将自动去除完全雷同的数据，请勿重复导入。</span>
           <el-link type="primary" :underline="false" style="font-size: 12px; vertical-align: baseline" @click="importTemplate">下载模板</el-link>
         </div>
       </el-upload>
@@ -612,7 +613,8 @@ export default {
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + "/temu/details/importData"
-      }
+      },
+      importLoading: false
     }
   },
   created() {
@@ -716,7 +718,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.orderNumber)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -729,7 +731,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const orderNumber = row.orderNumber || this.ids
+      const orderNumber = row.id || this.ids
       getTemu(orderNumber).then(response => {
         this.form = response.data
         this.open = true
@@ -740,7 +742,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.orderNumber != null) {
+          if (this.form.id != null) {
             updateTemu(this.form).then(response => {
               this.$modal.msgSuccess("修改成功")
               this.open = false
@@ -788,9 +790,10 @@ export default {
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
-      this.upload.open = false
       this.upload.isUploading = false
       this.$refs.upload.clearFiles()
+      this.importLoading = false
+      this.$message.closeAll()
       this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true })
       this.getList()
     },
@@ -801,6 +804,18 @@ export default {
         this.$modal.msgError("请选择后缀为 “xls”或“xlsx”的文件。")
         return
       }
+
+      // 关闭导入对话框
+      this.upload.open = false
+      // 显示导入等待提示
+      this.importLoading = true
+      this.$message({
+        message: '系统正在导入数据，预计导入时间过长，请耐心等待......',
+        type: 'success',
+        duration: 0, // 0表示不会自动关闭
+        showClose: true
+      })
+
       this.$refs.upload.submit()
     }
   }

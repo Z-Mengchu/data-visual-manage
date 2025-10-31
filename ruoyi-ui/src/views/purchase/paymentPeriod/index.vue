@@ -492,7 +492,8 @@
           <div class="el-upload__tip" slot="tip">
             若单元格内为图片，请确保图片整体在单元格
           </div>
-          <span>仅允许导入xls、xlsx格式文件。</span>
+          <span>仅允许导入xls、xlsx格式文件。</span><br/>
+          <span>系统将自动去除完全雷同的数据，请勿重复导入。</span>
           <el-link type="primary" :underline="false" style="font-size: 12px; vertical-align: baseline" @click="importTemplate">下载模板</el-link>
         </div>
       </el-upload>
@@ -596,6 +597,7 @@ export default {
         unpaidCount: 0,
         unknownCount: 0
       },
+      importLoading: false
     }
   },
   created() {
@@ -773,9 +775,10 @@ export default {
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
-      this.upload.open = false
       this.upload.isUploading = false
       this.$refs.upload.clearFiles()
+      this.importLoading = false
+      this.$message.closeAll()
       this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true })
       this.getList()
     },
@@ -786,6 +789,18 @@ export default {
         this.$modal.msgError("请选择后缀为 “xls”或“xlsx”的文件。")
         return
       }
+
+      // 关闭导入对话框
+      this.upload.open = false
+      // 显示导入等待提示
+      this.importLoading = true
+      this.$message({
+        message: '系统正在导入数据，预计导入时间过长，请耐心等待......',
+        type: 'success',
+        duration: 0, // 0表示不会自动关闭
+        showClose: true
+      })
+
       this.$refs.upload.submit()
     },
     // 修改已付款状态

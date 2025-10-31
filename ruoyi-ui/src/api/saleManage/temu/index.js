@@ -10,9 +10,9 @@ export function listTemu(query) {
 }
 
 // 查询Temu订单明细详细
-export function getTemu(orderNumber) {
+export function getTemu(id) {
   return request({
-    url: '/temu/details/' + orderNumber,
+    url: '/temu/details/' + id,
     method: 'get'
   })
 }

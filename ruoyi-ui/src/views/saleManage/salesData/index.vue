@@ -460,7 +460,8 @@
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip text-center" slot="tip">
-          <span>仅允许导入xls、xlsx格式文件。</span>
+          <span>仅允许导入xls、xlsx格式文件。</span><br/>
+          <span>系统将自动去除完全雷同的数据，请勿重复导入。</span>
           <el-link type="primary" :underline="false" style="font-size: 12px; vertical-align: baseline" @click="importTemplate">下载模板</el-link>
         </div>
       </el-upload>
@@ -573,30 +574,13 @@ export default {
       // 权限提示相关数据
       showPermissionTip: false,
       permissionTip: '',
+      importLoading: false
     }
   },
   created() {
     this.getList()
   },
   methods: {
-    /** 检查用户权限并显示提示 */
-    checkUserPermission() {
-      const user = this.$store.getters
-      const roles = user.roles || []
-      const permissions = user.permissions || []
-
-      // 根据用户岗位显示不同的权限提示
-      if (permissions.includes('sale:data:all')) {
-        this.permissionTip = '您拥有所有数据的查看权限（大组长权限）'
-        this.showPermissionTip = true
-      } else if (permissions.includes('sale:data:group')) {
-        this.permissionTip = `您拥有组内数据的查看权限（组长权限）- 运营组：${user.operationGroupName || '未设置'}，开发组：${user.developmentGroupName || '未设置'}`
-        this.showPermissionTip = true
-      } else if (permissions.includes('sale:data:self')) {
-        this.permissionTip = '您只能查看自己负责的数据（员工权限）'
-        this.showPermissionTip = true
-      }
-    },
     /** 查询销售数据管理列表 */
     getList() {
       this.loading = true
@@ -751,9 +735,10 @@ export default {
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
-      this.upload.open = false
       this.upload.isUploading = false
       this.$refs.upload.clearFiles()
+      this.importLoading = false
+      this.$message.closeAll()
       this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true })
       this.getList()
     },
@@ -764,6 +749,19 @@ export default {
         this.$modal.msgError("请选择后缀为 “xls”或“xlsx”的文件。")
         return
       }
+
+      // 关闭导入对话框
+      this.upload.open = false
+      // 显示导入等待提示
+      this.importLoading = true
+      this.$message({
+        message: '系统正在导入数据，预计导入时间过长，请耐心等待......',
+        type: 'success',
+        duration: 0, // 0表示不会自动关闭
+        showClose: true
+      })
+
+      // 提交上传
       this.$refs.upload.submit()
     }
   }
