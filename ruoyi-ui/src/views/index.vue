@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container">
 
     <!-- 管理员身份 -->
-    <el-divider content-position="left" v-if="checkRole(['admin', 'finance'])">常用功能管理</el-divider>
+    <el-divider content-position="left">常用功能管理</el-divider>
     <CommonManageQuickMenu v-if="checkRole(['admin', 'finance'])" />
 
   </div>
