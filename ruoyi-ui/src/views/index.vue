@@ -3,7 +3,7 @@
 
     <!-- 管理员身份 -->
     <el-divider content-position="left">常用功能管理</el-divider>
-    <CommonManageQuickMenu v-if="checkRole(['admin', 'finance'])" />
+    <CommonManageQuickMenu/>
 
   </div>
 </template>

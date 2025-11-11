@@ -1,14 +1,14 @@
 package com.ruoyi.sales.mapper;
 
-import java.util.List;
-import java.util.Map;
-
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.sales.domain.FeeItemSummary;
 import com.ruoyi.sales.domain.OverseasHostingData;
 import com.ruoyi.sales.domain.OverseasHostingDimensionSummary;
-import com.ruoyi.sales.domain.FeeItemSummary;
-import com.ruoyi.sales.domain.TEMUOrderDetails;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 海外托管业务数据管理Mapper接口
@@ -226,4 +226,24 @@ public interface OverseasHostingDataMapper
      * @return 仓库信息
      */
     List<String> selectWarehouse();
+
+    /**
+     * 根据订单号列表查询海外数据
+     * @param orderNumbers 订单号集合
+     * @return 海外数据列表
+     */
+    List<OverseasHostingData> selectOverseasHostingDataByOrderNumbers(@Param("orderNumbers") Set<String> orderNumbers);
+
+    /**
+     * 查询订单号为null的海外数据
+     * @return 订单号为null的海外数据列表
+     */
+    List<OverseasHostingData> selectOverseasHostingDataByOrderNumberIsNull();
+
+    /**
+     * 批量插入海外数据
+     * @param list 海外数据列表
+     * @return 插入的行数
+     */
+    int batchInsertOverseasHostingData(@Param("list") List<OverseasHostingData> list);
 }

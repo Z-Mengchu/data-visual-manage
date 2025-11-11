@@ -3,9 +3,9 @@ package com.ruoyi.sales.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
@@ -20,7 +20,6 @@ import java.util.Objects;
  * @author ZMJ
  * @date 2025-09-02
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -236,26 +235,26 @@ public class ChannelSalesData extends BaseEntity
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChannelSalesData that = (ChannelSalesData) o;
-        return Objects.equals(firstLevelCategory != null && firstLevelCategory.isEmpty() ? null : firstLevelCategory, that.firstLevelCategory != null && that.firstLevelCategory.isEmpty() ? null : that.firstLevelCategory) &&
-                Objects.equals(category != null && category.isEmpty() ? null : category, that.category != null && that.category.isEmpty() ? null : that.category) &&
-                Objects.equals(tongtuSku != null && tongtuSku.isEmpty() ? null : tongtuSku, that.tongtuSku != null && that.tongtuSku.isEmpty() ? null : that.tongtuSku) &&
-                Objects.equals(productName != null && productName.isEmpty() ? null : productName, that.productName != null && that.productName.isEmpty() ? null : that.productName) &&
-                Objects.equals(operationGroupName != null && operationGroupName.isEmpty() ? null : operationGroupName, that.operationGroupName != null && that.operationGroupName.isEmpty() ? null : that.operationGroupName) &&
-                Objects.equals(operator != null && operator.isEmpty() ? null : operator, that.operator != null && that.operator.isEmpty() ? null : that.operator) &&
-                Objects.equals(developmentGroupName != null && developmentGroupName.isEmpty() ? null : developmentGroupName, that.developmentGroupName != null && that.developmentGroupName.isEmpty() ? null : that.developmentGroupName) &&
-                Objects.equals(productDeveloper != null && productDeveloper.isEmpty() ? null : productDeveloper, that.productDeveloper != null && that.productDeveloper.isEmpty() ? null : that.productDeveloper) &&
-                Objects.equals(channel != null && channel.isEmpty() ? null : channel, that.channel != null && that.channel.isEmpty() ? null : that.channel) &&
-                Objects.equals(channelAccount != null && channelAccount.isEmpty() ? null : channelAccount, that.channelAccount != null && that.channelAccount.isEmpty() ? null : that.channelAccount) &&
-                Objects.equals(operationDepartment != null && operationDepartment.isEmpty() ? null : operationDepartment, that.operationDepartment != null && that.operationDepartment.isEmpty() ? null : that.operationDepartment) &&
-                Objects.equals(storeCode != null && storeCode.isEmpty() ? null : storeCode, that.storeCode != null && that.storeCode.isEmpty() ? null : that.storeCode) &&
-                Objects.equals(region != null && region.isEmpty() ? null : region, that.region != null && that.region.isEmpty() ? null : that.region) &&
-                Objects.equals(country != null && country.isEmpty() ? null : country, that.country != null && that.country.isEmpty() ? null : that.country) &&
-                Objects.equals(countryRegion != null && countryRegion.isEmpty() ? null : countryRegion, that.countryRegion != null && that.countryRegion.isEmpty() ? null : that.countryRegion) &&
-                Objects.equals(brand != null && brand.isEmpty() ? null : brand, that.brand != null && that.brand.isEmpty() ? null : that.brand) &&
-                Objects.equals(salesMode != null && salesMode.isEmpty() ? null : salesMode, that.salesMode != null && that.salesMode.isEmpty() ? null : that.salesMode) &&
-                Objects.equals(orderNumber != null && orderNumber.isEmpty() ? null : orderNumber, that.orderNumber != null && that.orderNumber.isEmpty() ? null : that.orderNumber) &&
+        return Objects.equals(StringUtils.isEmpty(firstLevelCategory) ? null : firstLevelCategory, StringUtils.isEmpty(that.firstLevelCategory) ? null : that.firstLevelCategory) &&
+                Objects.equals(StringUtils.isEmpty(category) ? null : category, StringUtils.isEmpty(that.category) ? null : that.category) &&
+                Objects.equals(StringUtils.isEmpty(tongtuSku) ? null : tongtuSku, StringUtils.isEmpty(that.tongtuSku) ? null : that.tongtuSku) &&
+                Objects.equals(StringUtils.isEmpty(productName) ? null : productName, StringUtils.isEmpty(that.productName) ? null : that.productName) &&
+                Objects.equals(StringUtils.isEmpty(operationGroupName) ? null : operationGroupName, StringUtils.isEmpty(that.operationGroupName) ? null : that.operationGroupName) &&
+                Objects.equals(StringUtils.isEmpty(operator) ? null : operator, StringUtils.isEmpty(that.operator) ? null : that.operator) &&
+                Objects.equals(StringUtils.isEmpty(developmentGroupName) ? null : developmentGroupName, StringUtils.isEmpty(that.developmentGroupName) ? null : that.developmentGroupName) &&
+                Objects.equals(StringUtils.isEmpty(productDeveloper) ? null : productDeveloper, StringUtils.isEmpty(that.productDeveloper) ? null : that.productDeveloper) &&
+                Objects.equals(StringUtils.isEmpty(channel) ? null : channel, StringUtils.isEmpty(that.channel) ? null : that.channel) &&
+                Objects.equals(StringUtils.isEmpty(channelAccount) ? null : channelAccount, StringUtils.isEmpty(that.channelAccount) ? null : that.channelAccount) &&
+                Objects.equals(StringUtils.isEmpty(operationDepartment) ? null : operationDepartment, StringUtils.isEmpty(that.operationDepartment) ? null : that.operationDepartment) &&
+                Objects.equals(StringUtils.isEmpty(storeCode) ? null : storeCode, StringUtils.isEmpty(that.storeCode) ? null : that.storeCode) &&
+                Objects.equals(StringUtils.isEmpty(region) ? null : region, StringUtils.isEmpty(that.region) ? null : that.region) &&
+                Objects.equals(StringUtils.isEmpty(country) ? null : country, StringUtils.isEmpty(that.country) ? null : that.country) &&
+                Objects.equals(StringUtils.isEmpty(countryRegion) ? null : countryRegion, StringUtils.isEmpty(that.countryRegion) ? null : that.countryRegion) &&
+                Objects.equals(StringUtils.isEmpty(brand) ? null : brand, StringUtils.isEmpty(that.brand) ? null : that.brand) &&
+                Objects.equals(StringUtils.isEmpty(salesMode) ? null : salesMode, StringUtils.isEmpty(that.salesMode) ? null : that.salesMode) &&
+                Objects.equals(StringUtils.isEmpty(orderNumber) ? null : orderNumber, StringUtils.isEmpty(that.orderNumber) ? null : that.orderNumber) &&
                 ((ChannelSalesData) o).getPaymentSettlementDate() == (that.paymentSettlementDate) &&
-                Objects.equals(shippingWarehouse != null && shippingWarehouse.isEmpty() ? null : shippingWarehouse, that.shippingWarehouse != null && that.shippingWarehouse.isEmpty() ? null : that.shippingWarehouse) &&
+                Objects.equals(StringUtils.isEmpty(shippingWarehouse) ? null : shippingWarehouse, StringUtils.isEmpty(that.shippingWarehouse) ? null : that.shippingWarehouse) &&
                 Objects.equals(shippingQuantity, that.shippingQuantity) &&
                 compareBigDecimal(revenueRmb, that.revenueRmb) &&
                 compareBigDecimal(productCost, that.productCost) &&
@@ -281,9 +280,13 @@ public class ChannelSalesData extends BaseEntity
                 compareBigDecimal(roi, that.roi) &&
                 Objects.equals(daysToPositiveCashFlow, that.daysToPositiveCashFlow) &&
                 compareBigDecimal(verificationFormula, that.verificationFormula) &&
-                Objects.equals(isGrossProfitPositive != null && isGrossProfitPositive.isEmpty() ? null : isGrossProfitPositive, that.isGrossProfitPositive != null && that.isGrossProfitPositive.isEmpty() ? null : that.isGrossProfitPositive);
+                Objects.equals(StringUtils.isEmpty(isGrossProfitPositive) ? null : isGrossProfitPositive, StringUtils.isEmpty(that.isGrossProfitPositive) ? null : that.isGrossProfitPositive);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstLevelCategory, category, tongtuSku, productName, operationGroupName, operator, developmentGroupName, productDeveloper, channel, channelAccount, operationDepartment, storeCode, region, country, countryRegion, brand, salesMode, orderNumber, paymentSettlementDate, shippingWarehouse, shippingQuantity, revenueRmb, productCost, firstMileShipping, packagingCost, logisticsShipping, channelTransactionFeeRmb, taxes, refund, reshipmentAmount, sampleCost, unsoldSubsidy, orderGrossProfit, orderGrossProfitRate, advertisingPromotion, storageFee, removalFee, returnProcessingFee, otherFees, unsoldBudget, handlingFee, orderNetProfit, roi, daysToPositiveCashFlow, verificationFormula, isGrossProfitPositive, createdAt, updatedAt, startTime, endTime);
+    }
 
     private boolean compareBigDecimal(BigDecimal bd1, BigDecimal bd2) {
         if (bd1 == null && bd2 == null) return true;

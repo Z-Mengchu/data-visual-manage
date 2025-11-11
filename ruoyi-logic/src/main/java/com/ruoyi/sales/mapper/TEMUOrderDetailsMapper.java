@@ -1,10 +1,11 @@
 package com.ruoyi.sales.mapper;
 
-import java.util.List;
-
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.sales.domain.TEMUOrderDetails;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Temu订单明细Mapper接口
@@ -82,4 +83,24 @@ public interface TEMUOrderDetailsMapper
      * @return 结果
      */
     public int deleteTEMUOrderDetailsByIds(Integer[] ids);
+
+    /**
+     * 根据订单号列表查询全渠道销售数据
+     * @param orderNumbers 订单号集合
+     * @return 全渠道销售数据列表
+     */
+    List<TEMUOrderDetails> selectTEMUOrderDetailsByOrderNumbers(@Param("orderNumbers") Set<String> orderNumbers);
+
+    /**
+     * 查询订单号为null的全渠道销售数据
+     * @return 订单号为null的全渠道销售数据列表
+     */
+    List<TEMUOrderDetails> selectTEMUOrderDetailsByOrderNumberIsNull();
+
+    /**
+     * 批量插入全渠道销售数据
+     * @param list 全渠道销售数据列表
+     * @return 插入的行数
+     */
+    int batchInsertTEMUOrderDetails(@Param("list") List<TEMUOrderDetails> list);
 }

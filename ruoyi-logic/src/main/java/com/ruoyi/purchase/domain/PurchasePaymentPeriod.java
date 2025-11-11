@@ -1,19 +1,19 @@
 package com.ruoyi.purchase.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.utils.StringUtils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * 采购账期对象 purchase_payment_period
@@ -139,26 +139,31 @@ public class PurchasePaymentPeriod extends BaseEntity
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PurchasePaymentPeriod that = (PurchasePaymentPeriod) o;
-        return Objects.equals(purchaseOrderNumber != null && purchaseOrderNumber.isEmpty() ? null : purchaseOrderNumber, that.purchaseOrderNumber != null && that.purchaseOrderNumber.isEmpty() ? null : that.purchaseOrderNumber) &&
-                Objects.equals(purchasePlanNumber != null && purchasePlanNumber.isEmpty() ? null : purchasePlanNumber, that.purchasePlanNumber != null && that.purchasePlanNumber.isEmpty() ? null : that.purchasePlanNumber) &&
-                Objects.equals(account1688 != null && account1688.isEmpty() ? null : account1688, that.account1688 != null && that.account1688.isEmpty() ? null : that.account1688) &&
-                Objects.equals(purchaseWarehouse != null && purchaseWarehouse.isEmpty() ? null : purchaseWarehouse, that.purchaseWarehouse != null && that.purchaseWarehouse.isEmpty() ? null : that.purchaseWarehouse) &&
-                Objects.equals(purchaser != null && purchaser.isEmpty() ? null : purchaser, that.purchaser != null && that.purchaser.isEmpty() ? null : that.purchaser) &&
+        return Objects.equals(StringUtils.isEmpty(purchaseOrderNumber) ? null : purchaseOrderNumber, StringUtils.isEmpty(that.purchaseOrderNumber) ? null : that.purchaseOrderNumber) &&
+                Objects.equals(StringUtils.isEmpty(purchasePlanNumber) ? null : purchasePlanNumber, StringUtils.isEmpty(that.purchasePlanNumber) ? null : that.purchasePlanNumber) &&
+                Objects.equals(StringUtils.isEmpty(account1688) ? null : account1688, StringUtils.isEmpty(that.account1688) ? null : that.account1688) &&
+                Objects.equals(StringUtils.isEmpty(purchaseWarehouse) ? null : purchaseWarehouse, StringUtils.isEmpty(that.purchaseWarehouse) ? null : that.purchaseWarehouse) &&
+                Objects.equals(StringUtils.isEmpty(purchaser) ? null : purchaser, StringUtils.isEmpty(that.purchaser) ? null : that.purchaser) &&
                 ((PurchasePaymentPeriod) o).getPurchaseDate() == (that.purchaseDate) &&
-                Objects.equals(location != null && location.isEmpty() ? null : location, that.location != null && that.location.isEmpty() ? null : that.location) &&
-                Objects.equals(sku != null && sku.isEmpty() ? null : sku, that.sku != null && that.sku.isEmpty() ? null : that.sku) &&
-                Objects.equals(productName != null && productName.isEmpty() ? null : productName, that.productName != null && that.productName.isEmpty() ? null : that.productName) &&
-                Objects.equals(specifications != null && specifications.isEmpty() ? null : specifications, that.specifications != null && that.specifications.isEmpty() ? null : that.specifications) &&
+                Objects.equals(StringUtils.isEmpty(location) ? null : location, StringUtils.isEmpty(that.location) ? null : that.location) &&
+                Objects.equals(StringUtils.isEmpty(sku) ? null : sku, StringUtils.isEmpty(that.sku) ? null : that.sku) &&
+                Objects.equals(StringUtils.isEmpty(productName) ? null : productName, StringUtils.isEmpty(that.productName) ? null : that.productName) &&
+                Objects.equals(StringUtils.isEmpty(specifications) ? null : specifications, StringUtils.isEmpty(that.specifications) ? null : that.specifications) &&
                 compareBigDecimal(purchaseUnitPrice, that.purchaseUnitPrice) &&
                 Objects.equals(purchaseQuantity, that.purchaseQuantity) &&
                 compareBigDecimal(goodsPayment, that.goodsPayment) &&
-                Objects.equals(supplierName != null && supplierName.isEmpty() ? null : supplierName, that.supplierName != null && that.supplierName.isEmpty() ? null : that.supplierName) &&
+                Objects.equals(StringUtils.isEmpty(supplierName) ? null : supplierName, StringUtils.isEmpty(that.supplierName) ? null : that.supplierName) &&
                 ((PurchasePaymentPeriod) o).getArrivalDate() == (that.arrivalDate) &&
-                Objects.equals(purchaseNotes != null && purchaseNotes.isEmpty() ? null : purchaseNotes, that.purchaseNotes != null && that.purchaseNotes.isEmpty() ? null : that.purchaseNotes) &&
+                Objects.equals(StringUtils.isEmpty(purchaseNotes) ? null : purchaseNotes, StringUtils.isEmpty(that.purchaseNotes) ? null : that.purchaseNotes) &&
                 Objects.equals(paymentPeriodDays, that.paymentPeriodDays) &&
                 ((PurchasePaymentPeriod) o).getDuePaymentDate() == (that.duePaymentDate) &&
-                Objects.equals(purchaseDepartment != null && purchaseDepartment.isEmpty() ? null : purchaseDepartment, that.purchaseDepartment != null && that.purchaseDepartment.isEmpty() ? null : that.purchaseDepartment) &&
-                Objects.equals(isPaid != null && isPaid.isEmpty() ? null : isPaid, that.isPaid != null && that.isPaid.isEmpty() ? null : that.isPaid);
+                Objects.equals(StringUtils.isEmpty(purchaseDepartment) ? null : purchaseDepartment, StringUtils.isEmpty(that.purchaseDepartment) ? null : that.purchaseDepartment) &&
+                Objects.equals(StringUtils.isEmpty(isPaid) ? null : isPaid, StringUtils.isEmpty(that.isPaid) ? null : that.isPaid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, purchaseOrderNumber, purchasePlanNumber, account1688, purchaseWarehouse, purchaser, purchaseDate, imageUrl, location, sku, productName, specifications, purchaseUnitPrice, purchaseQuantity, goodsPayment, supplierName, arrivalDate, purchaseNotes, paymentPeriodDays, duePaymentDate, purchaseDepartment, isPaid, isOverdue, daysUntilDue, createdAt, updatedAt);
     }
 
     private boolean compareBigDecimal(BigDecimal bd1, BigDecimal bd2) {

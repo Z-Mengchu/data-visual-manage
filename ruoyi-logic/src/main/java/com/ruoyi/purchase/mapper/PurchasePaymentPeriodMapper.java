@@ -1,7 +1,10 @@
 package com.ruoyi.purchase.mapper;
 
-import java.util.List;
 import com.ruoyi.purchase.domain.PurchasePaymentPeriod;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 采购账期Mapper接口
@@ -80,4 +83,24 @@ public interface PurchasePaymentPeriodMapper
      * @return 数量
      */
     public int selectPurchasePaymentPeriodCountUnknown(PurchasePaymentPeriod purchasePaymentPeriod);
+
+    /**
+     * 根据采购单号列表查询海外数据
+     * @param purchaseOrderNumbers 采购单号集合
+     * @return 海外数据列表
+     */
+    List<PurchasePaymentPeriod> selectPurchasePaymentPeriodByPurchaseOrderNumbers(@Param("purchaseOrderNumbers") Set<String> purchaseOrderNumbers);
+
+    /**
+     * 查询采购单号为null的海外数据
+     * @return 订单号为null的海外数据列表
+     */
+    List<PurchasePaymentPeriod> selectPurchasePaymentPeriodByPurchaseOrderNumberIsNull();
+
+    /**
+     * 批量插入采购账期数据
+     * @param list 采购账期数据列表
+     * @return 插入的行数
+     */
+    int batchInsertPurchasePaymentPeriod(@Param("list") List<PurchasePaymentPeriod> list, @Param("operName") String operName);
 }

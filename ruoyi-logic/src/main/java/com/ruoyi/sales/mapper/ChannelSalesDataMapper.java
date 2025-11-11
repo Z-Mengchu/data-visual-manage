@@ -3,9 +3,9 @@ package com.ruoyi.sales.mapper;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.sales.domain.ChannelSalesData;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 全渠道销售数据分析Mapper接口
@@ -83,4 +83,23 @@ public interface ChannelSalesDataMapper
      */
     public int deleteChannelSalesDataByIds(Integer[] ids);
 
+    /**
+     * 根据订单号列表查询全渠道销售数据
+     * @param orderNumbers 订单号集合
+     * @return 全渠道销售数据列表
+     */
+    List<ChannelSalesData> selectChannelSalesDataByOrderNumbers(@Param("orderNumbers") Set<String> orderNumbers);
+
+    /**
+     * 查询订单号为null的全渠道销售数据
+     * @return 订单号为null的全渠道销售数据列表
+     */
+    List<ChannelSalesData> selectChannelSalesDataByOrderNumberIsNull();
+
+    /**
+     * 批量插入全渠道销售数据
+     * @param list 全渠道销售数据列表
+     * @return 插入的行数
+     */
+    int batchInsertChannelSalesData(@Param("list") List<ChannelSalesData> list);
 }

@@ -433,4 +433,79 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectTEMUOrderDetailsByOrderNumbers" resultMap="TEMUOrderDetailsResult" parameterType="java.util.Set">
+        <include refid="selectTEMUOrderDetailsVo"/>
+        where order_number in
+        <foreach item="orderNumber" collection="orderNumbers" index="index" open="(" separator="," close=")">
+            #{orderNumber}
+        </foreach>
+    </select>
+
+    <select id="selectTEMUOrderDetailsByOrderNumberIsNull" resultMap="TEMUOrderDetailsResult">
+        <include refid="selectTEMUOrderDetailsVo"/>
+        where order_number IS NULL
+    </select>
+
+    <insert id="batchInsertTEMUOrderDetails" parameterType="java.util.List">
+        insert into temu_order_details
+            (
+                shipment_date, is_replenishment,
+                tongtu_sku, product_name,
+                category, shipment_quantity,
+                channel, channel_account,
+                sales_site, shipment_warehouse,
+                package_number, shipping_method,
+                logistics_number, order_number,
+                buyer_name, country_region,
+                payment_date, product_developer,
+                receipt_currency, total_order_price,
+                total_order_price_cny, selling_price,
+                selling_price_cny, product_cost,
+                channel_fee_cny, income_cny,
+                first_leg_shipping_cost, first_leg_customs_fee,
+                first_leg_other_fee, packaging_material,
+                packaging_cost, tongtu_shipping_cost,
+                logistics_shipping_cost, order_notes,
+                sorted_order_number, first_leg_cost,
+                refund_amount, replenishment_cost,
+                other_costs, backend_refund_subsidy,
+                advertising_fee, clearance_subsidy,
+                us_platform_label_fee, ratio, gross_profit,
+                gross_profit_rate, distribution_commission,
+                td_actual_gross_profit, td_actual_gross_profit_rate,
+                operator, developer, order_quantity, created_at,
+                update_at, remarks
+            ) VALUES
+        <foreach item="item" index="index" collection="list" separator=",">
+            (
+                 #{item.shipmentDate}, #{item.isReplenishment},
+                #{item.tongtuSku}, #{item.productName},
+                #{item.category}, #{item.shipmentQuantity},
+                #{item.channel}, #{item.channelAccount},
+                #{item.salesSite}, #{item.shipmentWarehouse},
+                #{item.packageNumber}, #{item.shippingMethod},
+                #{item.logisticsNumber}, #{item.orderNumber},
+                #{item.buyerName}, #{item.countryRegion},
+                #{item.paymentDate}, #{item.productDeveloper},
+                #{item.receiptCurrency}, #{item.totalOrderPrice},
+                #{item.totalOrderPriceCny}, #{item.sellingPrice},
+                #{item.sellingPriceCny}, #{item.productCost},
+                #{item.channelFeeCny}, #{item.incomeCny},
+                #{item.firstLegShippingCost}, #{item.firstLegCustomsFee},
+                #{item.firstLegOtherFee}, #{item.packagingMaterial},
+                #{item.packagingCost}, #{item.tongtuShippingCost},
+                #{item.logisticsShippingCost}, #{item.orderNotes},
+                #{item.sortedOrderNumber}, #{item.firstLegCost},
+                #{item.refundAmount}, #{item.replenishmentCost},
+                #{item.otherCosts}, #{item.backendRefundSubsidy},
+                #{item.advertisingFee}, #{item.clearanceSubsidy},
+                #{item.usPlatformLabelFee}, #{item.ratio}, #{item.grossProfit},
+                #{item.grossProfitRate}, #{item.distributionCommission},
+                #{item.tdActualGrossProfit}, #{item.tdActualGrossProfitRate},
+                #{item.operator}, #{item.developer}, #{item.orderQuantity}, sysdate(),
+                sysdate(),#{item.remarks}
+            )
+        </foreach>
+    </insert>
 </mapper>

@@ -1,20 +1,20 @@
 package com.ruoyi.sales.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.utils.StringUtils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.io.Serial;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 海外托管业务数据管理对象 overseas_hosting_data
@@ -22,7 +22,6 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ZMJ
  * @date 2025-09-30
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -140,17 +139,17 @@ public class OverseasHostingData extends BaseEntity
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OverseasHostingData that = (OverseasHostingData) o;
-        return Objects.equals(store.isEmpty() ? null : store, that.store.isEmpty() ? null : that.store) &&
+        return Objects.equals(StringUtils.isEmpty(store) ? null : store, StringUtils.isEmpty(that.store) ? null : that.store) &&
                 ((OverseasHostingData) o).getSettlementTime() == (that.settlementTime) &&
-                Objects.equals(orderNumber.isEmpty() ? null : orderNumber, that.orderNumber.isEmpty() ? null : that.orderNumber) &&
-                Objects.equals(productId.isEmpty() ? null : productId, that.productId.isEmpty() ? null : that.productId) &&
-                Objects.equals(brand.isEmpty() ? null : brand, that.brand.isEmpty() ? null : that.brand) &&
-                Objects.equals(sku.isEmpty() ? null : sku, that.sku.isEmpty() ? null : that.sku) &&
-                Objects.equals(category.isEmpty() ? null : category, that.category.isEmpty() ? null : that.category) &&
-                Objects.equals(feeItem.isEmpty() ? null : feeItem, that.feeItem.isEmpty() ? null : that.feeItem) &&
+                Objects.equals(StringUtils.isEmpty(orderNumber) ? null : orderNumber, StringUtils.isEmpty(that.orderNumber) ? null : that.orderNumber) &&
+                Objects.equals(StringUtils.isEmpty(productId) ? null : productId, StringUtils.isEmpty(that.productId) ? null : that.productId) &&
+                Objects.equals(StringUtils.isEmpty(brand) ? null : brand, StringUtils.isEmpty(that.brand) ? null : that.brand) &&
+                Objects.equals(StringUtils.isEmpty(sku) ? null : sku, StringUtils.isEmpty(that.sku) ? null : that.sku) &&
+                Objects.equals(StringUtils.isEmpty(category) ? null : category, StringUtils.isEmpty(that.category) ? null : that.category) &&
+                Objects.equals(StringUtils.isEmpty(feeItem) ? null : feeItem, StringUtils.isEmpty(that.feeItem) ? null : that.feeItem) &&
                 compareBigDecimal(amountCny, that.amountCny) &&
-                Objects.equals(platformTransactionNumber.isEmpty() ? null : platformTransactionNumber, that.platformTransactionNumber.isEmpty() ? null : that.platformTransactionNumber) &&
-                Objects.equals(limitedSupplyPriceTaskId.isEmpty() ? null : limitedSupplyPriceTaskId, that.limitedSupplyPriceTaskId.isEmpty() ? null : that.limitedSupplyPriceTaskId) &&
+                Objects.equals(StringUtils.isEmpty(platformTransactionNumber) ? null : platformTransactionNumber, StringUtils.isEmpty(that.platformTransactionNumber) ? null : that.platformTransactionNumber) &&
+                Objects.equals(StringUtils.isEmpty(limitedSupplyPriceTaskId) ? null : limitedSupplyPriceTaskId, StringUtils.isEmpty(that.limitedSupplyPriceTaskId) ? null : that.limitedSupplyPriceTaskId) &&
                 compareBigDecimal(revenue, that.revenue) &&
                 compareBigDecimal(refund, that.refund) &&
                 compareBigDecimal(allocationRatio, that.allocationRatio) &&
@@ -162,9 +161,14 @@ public class OverseasHostingData extends BaseEntity
                 compareBigDecimal(reshipmentCost, that.reshipmentCost) &&
                 compareBigDecimal(grossProfit, that.grossProfit) &&
                 compareBigDecimal(grossProfitMargin, that.grossProfitMargin) &&
-                Objects.equals(developer.isEmpty() ? null : developer, that.developer.isEmpty() ? null : that.developer) &&
-                Objects.equals(operator.isEmpty() ? null : operator, that.operator.isEmpty() ? null : that.operator) &&
-                Objects.equals(shippingWarehouse.isEmpty() ? null : shippingWarehouse, that.shippingWarehouse.isEmpty() ? null : that.shippingWarehouse);
+                Objects.equals(StringUtils.isEmpty(developer) ? null : developer, StringUtils.isEmpty(that.developer) ? null : that.developer) &&
+                Objects.equals(StringUtils.isEmpty(operator) ? null : operator, StringUtils.isEmpty(that.operator) ? null : that.operator) &&
+                Objects.equals(StringUtils.isEmpty(shippingWarehouse) ? null : shippingWarehouse, StringUtils.isEmpty(that.shippingWarehouse) ? null : that.shippingWarehouse);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, store, settlementTime, orderNumber, productId, brand, sku, category, feeItem, amountCny, platformTransactionNumber, limitedSupplyPriceTaskId, revenue, refund, allocationRatio, purchaseCost, firstMileCost, logisticsFee, packagingCost, otherCosts, reshipmentCost, grossProfit, grossProfitMargin, developer, operator, shippingWarehouse);
     }
 
     private boolean compareBigDecimal(BigDecimal bd1, BigDecimal bd2) {

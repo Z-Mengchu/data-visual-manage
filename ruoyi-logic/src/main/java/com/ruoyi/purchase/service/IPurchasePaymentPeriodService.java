@@ -1,9 +1,9 @@
 package com.ruoyi.purchase.service;
 
+import com.ruoyi.purchase.domain.PurchasePaymentPeriod;
+
 import java.util.List;
 import java.util.Map;
-
-import com.ruoyi.purchase.domain.PurchasePaymentPeriod;
 
 /**
  * 采购账期Service接口

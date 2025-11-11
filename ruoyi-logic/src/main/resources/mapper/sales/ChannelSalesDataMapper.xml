@@ -387,4 +387,69 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectChannelSalesDataByOrderNumbers" resultMap="ChannelSalesDataResult" parameterType="java.util.Set">
+        <include refid="selectChannelSalesDataVo"/>
+        where order_number in
+        <foreach item="orderNumber" collection="orderNumbers" index="index" open="(" separator="," close=")">
+            #{orderNumber}
+        </foreach>
+    </select>
+
+    <select id="selectChannelSalesDataByOrderNumberIsNull" resultMap="ChannelSalesDataResult">
+        <include refid="selectChannelSalesDataVo"/>
+        where order_number IS NULL
+    </select>
+
+    <insert id="batchInsertChannelSalesData" parameterType="java.util.List">
+        insert into channel_sales_data
+        (
+            first_level_category,
+            category, tongtu_sku, product_name,
+            operation_group_name, operator,
+            development_group_name, product_developer,
+            channel, channel_account,
+            operation_department, store_code,
+            region, country, country_region,
+            brand, sales_mode, order_number,
+            payment_settlement_date, shipping_warehouse,
+            shipping_quantity, revenue_rmb,
+            product_cost, first_mile_shipping,
+            packaging_cost, logistics_shipping,
+            channel_transaction_fee_rmb, taxes,
+            refund, reshipment_amount, sample_cost,
+            unsold_subsidy, order_gross_profit,
+            order_gross_profit_rate, advertising_promotion,
+            storage_fee, removal_fee, return_processing_fee,
+            other_fees, unsold_budget, handling_fee,
+            order_net_profit, roi, days_to_positive_cash_flow, verification_formula,
+            is_gross_profit_positive, created_at,
+            updated_at, update_by
+        ) VALUES
+        <foreach item="item" collection="list" separator=",">
+            (
+                #{item.firstLevelCategory},
+                #{item.category}, #{item.tongtuSku}, #{item.productName},
+                #{item.operationGroupName}, #{item.operator},
+                #{item.developmentGroupName}, #{item.productDeveloper},
+                #{item.channel}, #{item.channelAccount},
+                #{item.operationDepartment}, #{item.storeCode},
+                #{item.region}, #{item.country}, #{item.countryRegion},
+                #{item.brand}, #{item.salesMode}, #{item.orderNumber},
+                #{item.paymentSettlementDate}, #{item.shippingWarehouse},
+                #{item.shippingQuantity}, #{item.revenueRmb},
+                #{item.productCost}, #{item.firstMileShipping},
+                #{item.packagingCost}, #{item.logisticsShipping},
+                #{item.channelTransactionFeeRmb}, #{item.taxes},
+                #{item.refund}, #{item.reshipmentAmount}, #{item.sampleCost},
+                #{item.unsoldSubsidy}, #{item.orderGrossProfit},
+                #{item.orderGrossProfitRate}, #{item.advertisingPromotion},
+                #{item.storageFee}, #{item.removalFee}, #{item.returnProcessingFee},
+                #{item.otherFees}, #{item.unsoldBudget}, #{item.handlingFee},
+                #{item.orderNetProfit}, #{item.roi}, #{item.daysToPositiveCashFlow}, #{item.verificationFormula},
+                #{item.isGrossProfitPositive}, sysdate(),
+                sysdate(), #{item.updateBy}
+            )
+        </foreach>
+    </insert>
 </mapper>

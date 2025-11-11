@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.utils.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -260,24 +261,24 @@ public class TEMUOrderDetails extends BaseEntity
         if (o == null || getClass() != o.getClass()) return false;
         TEMUOrderDetails that = (TEMUOrderDetails) o;
         return ((TEMUOrderDetails) o).getShipmentDate() == (that.shipmentDate) &&
-                Objects.equals(isReplenishment != null && isReplenishment.isEmpty() ? null : isReplenishment, that.isReplenishment != null && that.isReplenishment.isEmpty() ? null : that.isReplenishment) &&
-                Objects.equals(tongtuSku != null && tongtuSku.isEmpty() ? null : tongtuSku, that.tongtuSku != null && that.tongtuSku.isEmpty() ? null : that.tongtuSku) &&
-                Objects.equals(productName != null && productName.isEmpty() ? null : productName, that.productName != null && that.productName.isEmpty() ? null : that.productName) &&
-                Objects.equals(category != null && category.isEmpty() ? null : category, that.category != null && that.category.isEmpty() ? null : that.category) &&
+                Objects.equals(StringUtils.isEmpty(isReplenishment) ? null : isReplenishment, StringUtils.isEmpty(that.isReplenishment) ? null : that.isReplenishment) &&
+                Objects.equals(StringUtils.isEmpty(tongtuSku) ? null : tongtuSku, StringUtils.isEmpty(that.tongtuSku) ? null : that.tongtuSku) &&
+                Objects.equals(StringUtils.isEmpty(productName) ? null : productName, StringUtils.isEmpty(that.productName) ? null : that.productName) &&
+                Objects.equals(StringUtils.isEmpty(category) ? null : category, StringUtils.isEmpty(that.category) ? null : that.category) &&
                 Objects.equals(shipmentQuantity, that.shipmentQuantity) &&
-                Objects.equals(channel != null && channel.isEmpty() ? null : channel, that.channel != null && that.channel.isEmpty() ? null : that.channel) &&
-                Objects.equals(channelAccount != null && channelAccount.isEmpty() ? null : channelAccount, that.channelAccount != null && that.channelAccount.isEmpty() ? null : that.channelAccount) &&
-                Objects.equals(salesSite != null && salesSite.isEmpty() ? null : salesSite, that.salesSite != null && that.salesSite.isEmpty() ? null : that.salesSite) &&
-                Objects.equals(shipmentWarehouse != null && shipmentWarehouse.isEmpty() ? null : shipmentWarehouse, that.shipmentWarehouse != null && that.shipmentWarehouse.isEmpty() ? null : that.shipmentWarehouse) &&
-                Objects.equals(packageNumber != null && packageNumber.isEmpty() ? null : packageNumber,  that.packageNumber != null && that.packageNumber.isEmpty() ? null : that.packageNumber) &&
-                Objects.equals(shippingMethod != null && shippingMethod.isEmpty() ? null : shippingMethod,  that.shippingMethod != null && that.shippingMethod.isEmpty() ? null : that.shippingMethod) &&
-                Objects.equals(logisticsNumber != null && logisticsNumber.isEmpty() ? null : logisticsNumber,  that.logisticsNumber != null && that.logisticsNumber.isEmpty() ? null : that.logisticsNumber) &&
-                Objects.equals(orderNumber != null && orderNumber.isEmpty() ? null : orderNumber,  that.orderNumber != null && that.orderNumber.isEmpty() ? null : that.orderNumber) &&
-                Objects.equals(buyerName != null && buyerName.isEmpty() ? null : buyerName,  that.buyerName != null && that.buyerName.isEmpty() ? null : that.buyerName) &&
-                Objects.equals(countryRegion != null && countryRegion.isEmpty() ? null : countryRegion,  that.countryRegion != null && that.countryRegion.isEmpty() ? null : that.countryRegion) &&
+                Objects.equals(StringUtils.isEmpty(channel) ? null : channel, StringUtils.isEmpty(that.channel) ? null : that.channel) &&
+                Objects.equals(StringUtils.isEmpty(channelAccount) ? null : channelAccount, StringUtils.isEmpty(that.channelAccount) ? null : that.channelAccount) &&
+                Objects.equals(StringUtils.isEmpty(salesSite) ? null : salesSite, StringUtils.isEmpty(that.salesSite) ? null : that.salesSite) &&
+                Objects.equals(StringUtils.isEmpty(shipmentWarehouse) ? null : shipmentWarehouse, StringUtils.isEmpty(that.shipmentWarehouse) ? null : that.shipmentWarehouse) &&
+                Objects.equals(StringUtils.isEmpty(packageNumber) ? null : packageNumber, StringUtils.isEmpty(that.packageNumber) ? null : that.packageNumber) &&
+                Objects.equals(StringUtils.isEmpty(shippingMethod) ? null : shippingMethod, StringUtils.isEmpty(that.shippingMethod) ? null : that.shippingMethod) &&
+                Objects.equals(StringUtils.isEmpty(logisticsNumber) ? null : logisticsNumber, StringUtils.isEmpty(that.logisticsNumber) ? null : that.logisticsNumber) &&
+                Objects.equals(StringUtils.isEmpty(orderNumber) ? null : orderNumber, StringUtils.isEmpty(that.orderNumber) ? null : that.orderNumber) &&
+                Objects.equals(StringUtils.isEmpty(buyerName) ? null : buyerName, StringUtils.isEmpty(that.buyerName) ? null : that.buyerName) &&
+                Objects.equals(StringUtils.isEmpty(countryRegion) ? null : countryRegion, StringUtils.isEmpty(that.countryRegion) ? null : that.countryRegion) &&
                 ((TEMUOrderDetails) o).getPaymentDate() == (that.paymentDate) &&
-                Objects.equals(productDeveloper != null && productDeveloper.isEmpty() ? null : productDeveloper,  that.productDeveloper != null && that.productDeveloper.isEmpty() ? null : that.productDeveloper) &&
-                Objects.equals(receiptCurrency != null && receiptCurrency.isEmpty() ? null : receiptCurrency,  that.receiptCurrency != null && that.receiptCurrency.isEmpty() ? null : that.receiptCurrency) &&
+                Objects.equals(StringUtils.isEmpty(productDeveloper) ? null : productDeveloper, StringUtils.isEmpty(that.productDeveloper) ? null : that.productDeveloper) &&
+                Objects.equals(StringUtils.isEmpty(receiptCurrency) ? null : receiptCurrency, StringUtils.isEmpty(that.receiptCurrency) ? null : that.receiptCurrency) &&
                 compareBigDecimal(totalOrderPrice, that.totalOrderPrice) &&
                 compareBigDecimal(totalOrderPriceCny, that.totalOrderPriceCny) &&
                 compareBigDecimal(sellingPrice, that.sellingPrice) &&
@@ -288,12 +289,12 @@ public class TEMUOrderDetails extends BaseEntity
                 compareBigDecimal(firstLegShippingCost, that.firstLegShippingCost) &&
                 compareBigDecimal(firstLegCustomsFee, that.firstLegCustomsFee) &&
                 compareBigDecimal(firstLegOtherFee, that.firstLegOtherFee) &&
-                Objects.equals(packagingMaterial != null && packagingMaterial.isEmpty() ? null : packagingMaterial, that.packagingMaterial != null && that.packagingMaterial.isEmpty() ? null : that.packagingMaterial) &&
+                Objects.equals(StringUtils.isEmpty(packagingMaterial) ? null : packagingMaterial, StringUtils.isEmpty(that.packagingMaterial) ? null : that.packagingMaterial) &&
                 compareBigDecimal(packagingCost, that.packagingCost) &&
                 compareBigDecimal(tongtuShippingCost, that.tongtuShippingCost) &&
                 compareBigDecimal(logisticsShippingCost, that.logisticsShippingCost) &&
-                Objects.equals(orderNotes != null && orderNotes.isEmpty() ? null : orderNotes,that.orderNotes != null && that.orderNotes.isEmpty() ? null : that.orderNotes) &&
-                Objects.equals(sortedOrderNumber != null && sortedOrderNumber.isEmpty() ? null : sortedOrderNumber, that.sortedOrderNumber != null && that.sortedOrderNumber.isEmpty() ? null : that.sortedOrderNumber) &&
+                Objects.equals(StringUtils.isEmpty(orderNotes) ? null : orderNotes, StringUtils.isEmpty(that.orderNotes) ? null : that.orderNotes) &&
+                Objects.equals(StringUtils.isEmpty(sortedOrderNumber) ? null : sortedOrderNumber, StringUtils.isEmpty(that.sortedOrderNumber) ? null : that.sortedOrderNumber) &&
                 compareBigDecimal(firstLegCost, that.firstLegCost) &&
                 compareBigDecimal(refundAmount, that.refundAmount) &&
                 compareBigDecimal(replenishmentCost, that.replenishmentCost) &&
@@ -308,10 +309,15 @@ public class TEMUOrderDetails extends BaseEntity
                 compareBigDecimal(distributionCommission, that.distributionCommission) &&
                 compareBigDecimal(tdActualGrossProfit, that.tdActualGrossProfit) &&
                 compareBigDecimal(tdActualGrossProfitRate, that.tdActualGrossProfitRate) &&
-                Objects.equals(operator != null && operator.isEmpty() ? null : operator, that.operator != null && that.operator.isEmpty() ? null : that.operator) &&
-                Objects.equals(developer != null && developer.isEmpty() ? null : developer, that.developer != null && that.developer.isEmpty() ? null : that.developer) &&
+                Objects.equals(StringUtils.isEmpty(operator) ? null : operator, StringUtils.isEmpty(that.operator) ? null : that.operator) &&
+                Objects.equals(StringUtils.isEmpty(developer) ? null : developer, StringUtils.isEmpty(that.developer) ? null : that.developer) &&
                 Objects.equals(orderQuantity, that.orderQuantity) &&
-                Objects.equals(remarks != null && remarks.isEmpty() ? null : remarks, that.remarks != null && that.remarks.isEmpty() ? null : that.remarks);
+                Objects.equals(StringUtils.isEmpty(remarks) ? null : remarks, StringUtils.isEmpty(that.remarks) ? null : that.remarks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, shipmentDate, isReplenishment, tongtuSku, productName, category, shipmentQuantity, channel, channelAccount, salesSite, shipmentWarehouse, packageNumber, shippingMethod, logisticsNumber, orderNumber, buyerName, countryRegion, paymentDate, productDeveloper, receiptCurrency, totalOrderPrice, totalOrderPriceCny, sellingPrice, sellingPriceCny, productCost, channelFeeCny, incomeCny, firstLegShippingCost, firstLegCustomsFee, firstLegOtherFee, packagingMaterial, packagingCost, tongtuShippingCost, logisticsShippingCost, orderNotes, sortedOrderNumber, firstLegCost, refundAmount, replenishmentCost, otherCosts, backendRefundSubsidy, advertisingFee, clearanceSubsidy, usPlatformLabelFee, ratio, grossProfit, grossProfitRate, distributionCommission, tdActualGrossProfit, tdActualGrossProfitRate, operator, developer, orderQuantity, createdAt, updateAt, remarks);
     }
 
     private boolean compareBigDecimal(BigDecimal bd1, BigDecimal bd2) {

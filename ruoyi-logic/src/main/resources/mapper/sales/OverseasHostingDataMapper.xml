@@ -191,6 +191,79 @@
         </trim>
     </insert>
 
+    <select id="selectOverseasHostingDataByOrderNumbers" resultMap="OverseasHostingDataResult" parameterType="java.util.Set">
+        <include refid="selectOverseasHostingDataVo"/>
+        where order_number in
+        <foreach item="orderNumber" collection="orderNumbers" index="index" open="(" separator="," close=")">
+            #{orderNumber}
+        </foreach>
+    </select>
+
+    <select id="selectOverseasHostingDataByOrderNumberIsNull" resultMap="OverseasHostingDataResult">
+        <include refid="selectOverseasHostingDataVo"/>
+        where order_number IS NULL
+    </select>
+
+    <insert id="batchInsertOverseasHostingData" parameterType="java.util.List">
+        insert into overseas_hosting_data
+        (
+            store,
+            settlement_time,
+            order_number,
+            product_id,
+            brand,
+            sku,
+            category,
+            fee_item,
+            amount_cny,
+            platform_transaction_number,
+            limited_supply_price_task_id,
+            revenue,
+            refund,
+            allocation_ratio,
+            purchase_cost,
+            first_mile_cost,
+            logistics_fee,
+            packaging_cost,
+            other_costs,
+            reshipment_cost,
+            gross_profit,
+            gross_profit_margin,
+            developer,
+            operator,
+            shipping_warehouse
+        ) VALUES
+        <foreach item="item" collection="list" separator=",">
+            (
+                #{item.store},
+                #{item.settlementTime},
+                #{item.orderNumber},
+                #{item.productId},
+                #{item.brand},
+                #{item.sku},
+                #{item.category},
+                #{item.feeItem},
+                #{item.amountCny},
+                #{item.platformTransactionNumber},
+                #{item.limitedSupplyPriceTaskId},
+                #{item.revenue},
+                #{item.refund},
+                #{item.allocationRatio},
+                #{item.purchaseCost},
+                #{item.firstMileCost},
+                #{item.logisticsFee},
+                #{item.packagingCost},
+                #{item.otherCosts},
+                #{item.reshipmentCost},
+                #{item.grossProfit},
+                #{item.grossProfitMargin},
+                #{item.developer},
+                #{item.operator},
+                #{item.shippingWarehouse}
+            )
+        </foreach>
+    </insert>
+
     <update id="updateOverseasHostingData" parameterType="OverseasHostingData">
         update overseas_hosting_data
         <trim prefix="SET" suffixOverrides=",">

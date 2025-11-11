@@ -231,4 +231,51 @@
             <if test="params.beginUpdatedAt != null and params.beginUpdatedAt != '' and params.endUpdatedAt != null and params.endUpdatedAt != ''"> and updated_at between #{params.beginUpdatedAt} and #{params.endUpdatedAt}</if>
         </where>
     </select>
+    <select id="selectPurchasePaymentPeriodByPurchaseOrderNumbers" parameterType="java.util.Set" resultMap="PurchasePaymentPeriodResult">
+        <include refid="selectPurchasePaymentPeriodVo"/>
+        <where>
+            purchase_order_number in
+            <foreach item="item" collection="purchaseOrderNumbers" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+    <select id="selectPurchasePaymentPeriodByPurchaseOrderNumberIsNull" resultMap="PurchasePaymentPeriodResult">
+        <include refid="selectPurchasePaymentPeriodVo"/>
+        <where>
+            purchase_order_number IS NULL
+        </where>
+    </select>
+    <insert id="batchInsertPurchasePaymentPeriod" parameterType="java.util.List">
+        insert into purchase_payment_period
+            (
+                purchase_order_number, purchase_plan_number,
+                account_1688, purchase_warehouse,
+                purchaser, purchase_date,
+                image_url, location,
+                sku, product_name,
+                specifications, purchase_unit_price,
+                purchase_quantity, goods_payment,
+                supplier_name, arrival_date,
+                purchase_notes, payment_period_days,
+                due_payment_date, purchase_department, is_paid,
+                created_at, updated_at, update_by
+            )
+            VALUES
+        <foreach item="item" collection="list" separator=",">
+            (
+                #{item.purchaseOrderNumber}, #{item.purchasePlanNumber},
+                #{item.account1688}, #{item.purchaseWarehouse},
+                #{item.purchaser}, #{item.purchaseDate},
+                #{item.imageUrl}, #{item.location},
+                #{item.sku}, #{item.productName},
+                #{item.specifications}, #{item.purchaseUnitPrice},
+                #{item.purchaseQuantity}, #{item.goodsPayment},
+                #{item.supplierName}, #{item.arrivalDate},
+                #{item.purchaseNotes}, #{item.paymentPeriodDays},
+                #{item.duePaymentDate}, #{item.purchaseDepartment}, #{item.isPaid},
+                NOW(), NULL, #{operName}
+            )
+        </foreach>
+    </insert>
 </mapper>
