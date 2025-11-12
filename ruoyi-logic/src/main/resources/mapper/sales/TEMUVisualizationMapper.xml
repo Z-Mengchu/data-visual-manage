@@ -293,13 +293,14 @@
                 <!-- 如果是大组长，不限制数据 -->
                 <when test="postCodes != null and postCodes.contains('general_leader')">
                 </when>
-                <!-- 如果有岗位但不是大组长 -->
+                <!-- 如果有特定岗位，按岗位限制数据 -->
                 <when test="postCodes != null and postCodes.size() > 0">
-                    and (
+                    <!-- 只对特定岗位进行数据限制 -->
                     <choose>
                         <!-- 组长级别：查看本组数据 -->
                         <when test="postCodes.contains('operation_leader') or postCodes.contains('development_leader')">
                             <!-- 由于TEMU数据中没有运营组和开发组字段，暂时使用操作员和开发员字段进行近似过滤 -->
+                            and (
                             <if test="postCodes.contains('operation_leader') and user.operationGroupName != null and user.operationGroupName != ''">
                                 operator in (select user_name from sys_user where operation_group_name = #{user.operationGroupName})
                             </if>
@@ -307,9 +308,11 @@
                             <if test="postCodes.contains('development_leader') and user.developmentGroupName != null and user.developmentGroupName != ''">
                                 developer in (select user_name from sys_user where development_group_name = #{user.developmentGroupName})
                             </if>
+                            )
                         </when>
                         <!-- 普通员工：查看自己的数据 -->
-                        <otherwise>
+                        <when test="(postCodes.contains('operator') or postCodes.contains('developer')) and user.userName != null and user.userName != ''">
+                            and (
                             <if test="postCodes.contains('operator') and user.userName != null and user.userName != ''">
                                 operator = #{user.userName}
                             </if>
@@ -317,11 +320,14 @@
                             <if test="postCodes.contains('developer') and user.userName != null and user.userName != ''">
                                 developer = #{user.userName}
                             </if>
+                            )
+                        </when>
+                        <!-- 其他岗位不限制 -->
+                        <otherwise>
                         </otherwise>
                     </choose>
-                    )
                 </when>
-                <!-- 防止用户随便增加一些董事长，经理之类的岗位，直接放行权限 -->
+                <!-- 默认不限制数据 -->
                 <otherwise>
                 </otherwise>
             </choose>
