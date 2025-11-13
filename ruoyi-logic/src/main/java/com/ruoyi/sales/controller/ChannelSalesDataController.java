@@ -74,7 +74,7 @@ public class ChannelSalesDataController extends BaseController
         List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
         List<ChannelSalesData> list = channelSalesDataService.selectChannelSalesDataList(channelSalesData, currentUser, userPosts);
         ExcelUtil<ChannelSalesData> util = new ExcelUtil<ChannelSalesData>(ChannelSalesData.class);
-        util.exportExcel(response, list, "全渠道销售数据分析数据");
+        util.exportEasyExcel(response, list, "全渠道销售数据分析数据");
     }
 
     /**
@@ -131,7 +131,7 @@ public class ChannelSalesDataController extends BaseController
     public AjaxResult importData(MultipartFile file) throws Exception
     {
         ExcelUtil<ChannelSalesData> util = new ExcelUtil<>(ChannelSalesData.class);
-        List<ChannelSalesData> salesDataList = util.importExcel(file.getInputStream());
+        List<ChannelSalesData> salesDataList = util.importEasyExcel(file.getInputStream());
         String operName = getUsername();
         String message = channelSalesDataService.importSalesData(salesDataList, operName);
         return success(message);

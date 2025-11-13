@@ -142,7 +142,6 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
      * @return 结果
      */
     @Override
-    @Transactional
     public String importOverseasData(List<OverseasHostingData> overseasHostingData, String operName) {
         if (StringUtils.isNull(overseasHostingData) || overseasHostingData.isEmpty())
         {
@@ -185,7 +184,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
             try {
                 BeanValidators.validateWithException(validator, overseasData);
                 // 忘记42是什么了，反正是读取错误数据（应该是#N/A）自动转换成了42，所以改成空字符串
-                if (overseasData.getCategory().equals("42")) overseasData.setCategory("");
+//                if (overseasData.getCategory().equals("42")) overseasData.setCategory("");
                 // 订单号如果为空，则设置为null，在查询数据库时，不忽略订单号为null的数据
                 if (StringUtils.isEmpty(overseasData.getOrderNumber())) overseasData.setOrderNumber(null);
                 // 检查导入数据内部的重复，使用Set基于equals方法判断
@@ -232,7 +231,7 @@ public class OverseasHostingDataServiceImpl implements IOverseasHostingDataServi
         if (!dataToInsert.isEmpty()) {
             try {
                 // 执行批量插入
-                int batchSize = 1000;
+                int batchSize = 3000;
                 for (int i = 0; i < dataToInsert.size(); i += batchSize) {
                     int end = Math.min(dataToInsert.size(), i + batchSize);
                     List<OverseasHostingData> batchList = dataToInsert.subList(i, end);

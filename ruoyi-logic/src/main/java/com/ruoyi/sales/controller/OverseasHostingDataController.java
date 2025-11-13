@@ -78,7 +78,7 @@ public class OverseasHostingDataController extends BaseController
         List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
         List<OverseasHostingData> list = overseasHostingDataService.selectOverseasHostingDataList(overseasHostingData, currentUser, userPosts);
         ExcelUtil<OverseasHostingData> util = new ExcelUtil<OverseasHostingData>(OverseasHostingData.class);
-        util.exportExcel(response, list, "海外托管业务数据管理数据");
+        util.exportEasyExcel(response, list, "海外托管业务数据管理数据");
     }
 
     /**
@@ -133,7 +133,7 @@ public class OverseasHostingDataController extends BaseController
     public AjaxResult importData(MultipartFile file) throws Exception
     {
         ExcelUtil<OverseasHostingData> util = new ExcelUtil<>(OverseasHostingData.class);
-        List<OverseasHostingData> overseasDataList = util.importExcel(file.getInputStream());
+        List<OverseasHostingData> overseasDataList = util.importEasyExcel(file.getInputStream());
         String operName = getUsername();
         String message = overseasHostingDataService.importOverseasData(overseasDataList, operName);
         return success(message);

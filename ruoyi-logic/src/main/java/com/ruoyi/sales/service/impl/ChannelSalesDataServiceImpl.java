@@ -124,7 +124,6 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
      * @return 结果
      */
     @Override
-    @Transactional
     public String importSalesData(List<ChannelSalesData> salesDataList, String operName) {
         if (StringUtils.isNull(salesDataList) || salesDataList.isEmpty())
         {
@@ -213,7 +212,7 @@ public class ChannelSalesDataServiceImpl implements IChannelSalesDataService
         if (!dataToInsert.isEmpty()) {
             try {
                 // 执行批量插入
-                int batchSize = 1000;
+                int batchSize = 3000;
                 for (int i = 0; i < dataToInsert.size(); i += batchSize) {
                     int end = Math.min(dataToInsert.size(), i + batchSize);
                     List<ChannelSalesData> batchList = dataToInsert.subList(i, end);

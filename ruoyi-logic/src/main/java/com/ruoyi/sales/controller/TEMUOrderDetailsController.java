@@ -74,7 +74,7 @@ public class TEMUOrderDetailsController extends BaseController
         List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
         List<TEMUOrderDetails> list = tEMUOrderDetailsService.selectTEMUOrderDetailsList(tEMUOrderDetails, currentUser, userPosts);
         ExcelUtil<TEMUOrderDetails> util = new ExcelUtil<>(TEMUOrderDetails.class);
-        util.exportExcel(response, list, "Temu订单明细数据");
+        util.exportEasyExcel(response, list, "Temu订单明细数据");
     }
 
     /**
@@ -130,7 +130,7 @@ public class TEMUOrderDetailsController extends BaseController
     public AjaxResult importData(MultipartFile file) throws Exception
     {
         ExcelUtil<TEMUOrderDetails> util = new ExcelUtil<>(TEMUOrderDetails.class);
-        List<TEMUOrderDetails> temuDataList = util.importExcel(file.getInputStream());
+        List<TEMUOrderDetails> temuDataList = util.importEasyExcel(file.getInputStream());
         String operName = getUsername();
         String message = tEMUOrderDetailsService.importTEMUData(temuDataList, operName);
         return success(message);

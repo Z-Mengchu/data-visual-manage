@@ -1,9 +1,16 @@
 package com.ruoyi.sales.domain;
 
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.converter.BooleanStringExportConverter;
+import com.ruoyi.converter.CustomBigDecimalConverter;
+import com.ruoyi.converter.CustomStringConverter;
+import com.ruoyi.converter.ExcelDateConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +30,7 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ExcelIgnoreUnannotated
 public class ChannelSalesData extends BaseEntity
 {
     @Serial
@@ -33,187 +41,234 @@ public class ChannelSalesData extends BaseEntity
 
     /** 一级品类 */
     @Excel(name = "一级品类")
+    @ExcelProperty(value = "一级品类", converter = CustomStringConverter.class)
     private String firstLevelCategory;
 
     /** 品类 */
     @Excel(name = "品类")
+    @ExcelProperty(value = "品类", converter = CustomStringConverter.class)
     private String category;
 
     /** 通途SKU */
     @Excel(name = "通途SKU")
+    @ExcelProperty(value = "通途SKU", converter = CustomStringConverter.class)
     private String tongtuSku;
 
     /** 产品名称 */
     @Excel(name = "产品名称")
+    @ExcelProperty(value = "产品名称", converter = CustomStringConverter.class)
     private String productName;
 
     /** 运营组名 */
     @Excel(name = "运营组名")
+    @ExcelProperty(value = "运营组名", converter = CustomStringConverter.class)
     private String operationGroupName;
 
     /** 运营 */
     @Excel(name = "运营")
+    @ExcelProperty(value = "运营", converter = CustomStringConverter.class)
     private String operator;
 
     /** 开发组名 */
     @Excel(name = "开发组名")
+    @ExcelProperty(value = "开发组名", converter = CustomStringConverter.class)
     private String developmentGroupName;
 
     /** 产品开发员 */
     @Excel(name = "产品开发员")
+    @ExcelProperty(value = "产品开发员", converter = CustomStringConverter.class)
     private String productDeveloper;
 
     /** 渠道 */
     @Excel(name = "渠道")
+    @ExcelProperty(value = "渠道", converter = CustomStringConverter.class)
     private String channel;
 
     /** 渠道账号 */
     @Excel(name = "渠道账号")
+    @ExcelProperty(value = "渠道账号", converter = CustomStringConverter.class)
     private String channelAccount;
 
     /** 运营部门 */
     @Excel(name = "运营部门")
+    @ExcelProperty(value = "运营部门", converter = CustomStringConverter.class)
     private String operationDepartment;
 
     /** 店铺代码 */
     @Excel(name = "店铺代码")
+    @ExcelProperty(value = "店铺代码", converter = CustomStringConverter.class)
     private String storeCode;
 
     /** 地区 */
     @Excel(name = "地区")
+    @ExcelProperty(value = "地区", converter = CustomStringConverter.class)
     private String region;
 
     /** 国家 */
     @Excel(name = "国家")
+    @ExcelProperty(value = "国家", converter = CustomStringConverter.class)
     private String country;
 
     /** 国家/地区 */
     @Excel(name = "国家/地区")
+    @ExcelProperty(value = "国家/地区", converter = CustomStringConverter.class)
     private String countryRegion;
 
     /** 品牌 */
     @Excel(name = "品牌")
+    @ExcelProperty(value = "品牌", converter = CustomStringConverter.class)
     private String brand;
 
     /** 销售模式 */
     @Excel(name = "销售模式")
+    @ExcelProperty(value = "销售模式", converter = CustomStringConverter.class)
     private String salesMode;
 
     /** 订单号 */
     @Excel(name = "订单号")
+    @ExcelProperty(value = "订单号", converter = CustomStringConverter.class)
     private String orderNumber;
 
     /** 付款日期/结算时间 */
     @Excel(name = "付款日期/结算时间", width = 30, dateFormat = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(value = "yyyy-MM-dd")
+    @ExcelProperty(value = "付款日期/结算时间", converter = ExcelDateConverter.class)
     private Date paymentSettlementDate;
 
     /** 发货仓库 */
     @Excel(name = "发货仓库")
+    @ExcelProperty(value = "发货仓库", converter = CustomStringConverter.class)
     private String shippingWarehouse;
 
     /** 发货数量 */
     @Excel(name = "发货数量")
+    @ExcelProperty(value = "发货数量")
     private Integer shippingQuantity;
 
     /** 收入(人民币) */
     @Excel(name = "收入(人民币)")
+    @ExcelProperty(value = "收入(人民币)", converter = CustomBigDecimalConverter.class)
     private BigDecimal revenueRmb;
 
     /** 商品成本 */
     @Excel(name = "商品成本")
+    @ExcelProperty(value = "商品成本", converter = CustomBigDecimalConverter.class)
     private BigDecimal productCost;
 
     /** 头程运费 */
     @Excel(name = "头程运费")
+    @ExcelProperty(value = "头程运费", converter = CustomBigDecimalConverter.class)
     private BigDecimal firstMileShipping;
 
     /** 包装费用 */
     @Excel(name = "包装费用")
+    @ExcelProperty(value = "包装费用", converter = CustomBigDecimalConverter.class)
     private BigDecimal packagingCost;
 
     /** 物流商运费 */
     @Excel(name = "物流商运费")
+    @ExcelProperty(value = "物流商运费", converter = CustomBigDecimalConverter.class)
     private BigDecimal logisticsShipping;
 
     /** 渠道成交费(人民币) */
     @Excel(name = "渠道成交费(人民币)")
+    @ExcelProperty(value = "渠道成交费(人民币)", converter = CustomBigDecimalConverter.class)
     private BigDecimal channelTransactionFeeRmb;
 
     /** 税费 */
     @Excel(name = "税费")
+    @ExcelProperty(value = "税费", converter = CustomBigDecimalConverter.class)
     private BigDecimal taxes;
 
     /** 退款 */
     @Excel(name = "退款")
+    @ExcelProperty(value = "退款", converter = CustomBigDecimalConverter.class)
     private BigDecimal refund;
 
     /** 补发金额 */
     @Excel(name = "补发金额")
+    @ExcelProperty(value = "补发金额", converter = CustomBigDecimalConverter.class)
     private BigDecimal reshipmentAmount;
 
     /** 送样成本 */
     @Excel(name = "送样成本")
+    @ExcelProperty(value = "送样成本", converter = CustomBigDecimalConverter.class)
     private BigDecimal sampleCost;
 
     /** 滞销补贴 */
     @Excel(name = "滞销补贴")
+    @ExcelProperty(value = "滞销补贴", converter = CustomBigDecimalConverter.class)
     private BigDecimal unsoldSubsidy;
 
     /** 订单毛利 */
     @Excel(name = "订单毛利")
+    @ExcelProperty(value = "订单毛利", converter = CustomBigDecimalConverter.class)
     private BigDecimal orderGrossProfit;
 
     /** 订单毛利率 */
     @Excel(name = "订单毛利率")
+    @ExcelProperty(value = "订单毛利率", converter = CustomBigDecimalConverter.class)
     private BigDecimal orderGrossProfitRate;
 
     /** 广告/促销 */
     @Excel(name = "广告/促销")
+    @ExcelProperty(value = "广告/促销", converter = CustomBigDecimalConverter.class)
     private BigDecimal advertisingPromotion;
 
     /** 仓储费 */
     @Excel(name = "仓储费")
+    @ExcelProperty(value = "仓储费", converter = CustomBigDecimalConverter.class)
     private BigDecimal storageFee;
 
     /** 移除费 */
     @Excel(name = "移除费")
+    @ExcelProperty(value = "移除费", converter = CustomBigDecimalConverter.class)
     private BigDecimal removalFee;
 
     /** 退货处理费 */
     @Excel(name = "退货处理费")
+    @ExcelProperty(value = "退货处理费", converter = CustomBigDecimalConverter.class)
     private BigDecimal returnProcessingFee;
 
     /** 其他费用 */
     @Excel(name = "其他费用")
+    @ExcelProperty(value = "其他费用", converter = CustomBigDecimalConverter.class)
     private BigDecimal otherFees;
 
     /** 滞销品预算 */
     @Excel(name = "滞销品预算")
+    @ExcelProperty(value = "滞销品预算", converter = CustomBigDecimalConverter.class)
     private BigDecimal unsoldBudget;
 
     /** 手续费 */
     @Excel(name = "手续费")
+    @ExcelProperty(value = "手续费", converter = CustomBigDecimalConverter.class)
     private BigDecimal handlingFee;
 
     /** 订单净利 */
     @Excel(name = "订单净利")
+    @ExcelProperty(value = "订单净利", converter = CustomBigDecimalConverter.class)
     private BigDecimal orderNetProfit;
 
     /** ROI */
     @Excel(name = "ROI")
+    @ExcelProperty(value = "ROI", converter = CustomBigDecimalConverter.class)
     private BigDecimal roi;
 
     /** 产品现金流为正所需的天数 */
     @Excel(name = "产品现金流为正所需的天数")
+    @ExcelProperty(value = "产品现金流为正所需的天数")
     private Integer daysToPositiveCashFlow;
 
     /** 验算公式 */
     @Excel(name = "验算公式")
+    @ExcelProperty(value = "验算公式", converter = CustomBigDecimalConverter.class)
     private BigDecimal verificationFormula;
 
     /** 毛利是否大于0（0否 1是） */
     @Excel(name = "毛利是否大于0", dictType = "logic_yes_no")
+    @ExcelProperty(value = "毛利是否大于0", converter = BooleanStringExportConverter.class)
     private String isGrossProfitPositive;
 
     /** 创建时间 */

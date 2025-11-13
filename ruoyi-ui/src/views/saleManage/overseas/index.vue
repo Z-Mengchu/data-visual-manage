@@ -327,8 +327,7 @@
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         <div class="el-upload__tip text-center" slot="tip">
           <span>仅允许导入xls、xlsx格式文件。</span><br/>
-          <span>系统将自动去除完全雷同的数据，请勿重复导入。</span><br/>
-          <span>文件大小不能超过10M。</span>
+          <span>系统将自动去除完全雷同的数据，请勿重复导入。</span>
           <el-link type="primary" :underline="false" style="font-size: 12px; vertical-align: baseline" @click="importTemplate">下载模板</el-link>
         </div>
       </el-upload>
@@ -586,11 +585,6 @@ export default {
       const file = this.$refs.upload.uploadFiles
       if (!file || file.length === 0 || !file[0].name.toLowerCase().endsWith('.xls') && !file[0].name.toLowerCase().endsWith('.xlsx')) {
         this.$modal.msgError("请选择后缀为 “xls”或“xlsx”的文件。")
-        return
-      }
-      const isLt10M = file[0].size / 1024 / 1024 <= 10;
-      if(!isLt10M) {
-        this.$modal.msgError("上传文件大小不能超过10M");
         return
       }
       // 关闭导入对话框

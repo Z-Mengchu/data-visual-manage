@@ -3,6 +3,9 @@ package com.ruoyi.purchase.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.read.listener.ReadListener;
+import com.ruoyi.listener.ImportImageListener;
 import com.ruoyi.sales.domain.ChannelSalesData;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -116,8 +119,8 @@ public class PurchasePaymentPeriodController extends BaseController
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file) throws Exception
     {
-        ExcelUtil<PurchasePaymentPeriod> util = new ExcelUtil<>(PurchasePaymentPeriod.class);
-        List<PurchasePaymentPeriod> purchasePaymentPeriodList = util.importExcel(file.getInputStream());
+        ReadListener<PurchasePaymentPeriod> listener = new ImportImageListener(file.getInputStream());
+        List<PurchasePaymentPeriod> purchasePaymentPeriodList = EasyExcel.read(file.getInputStream(), PurchasePaymentPeriod.class, listener).sheet().doReadSync();
         String operName = getUsername();
         String message = purchasePaymentPeriodService.importData(purchasePaymentPeriodList, operName);
         return success(message);
