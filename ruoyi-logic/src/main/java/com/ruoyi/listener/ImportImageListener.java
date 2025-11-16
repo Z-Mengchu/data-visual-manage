@@ -86,6 +86,7 @@ public class ImportImageListener extends AnalysisEventListener<PurchasePaymentPe
         {
             pictures = ExcelUtil.getSheetPictures03((HSSFSheet) sheet, (HSSFWorkbook) workbook);
         }
+        // 防止并发修改异常，使用新的Map修改键值
         Map<String, List<PictureData>> finalPictures = new HashMap<>();
         pictures.forEach((key, value) -> {
             finalPictures.put(key.split("_")[0], value);

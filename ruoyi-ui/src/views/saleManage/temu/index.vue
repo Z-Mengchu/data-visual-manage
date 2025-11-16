@@ -776,6 +776,10 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport() {
+      if (this.importLoading) {
+        this.$modal.msgError("正在导入数据，请不要重复点击")
+        return
+      }
       this.upload.title = "数据导入"
       this.upload.open = true
     },
