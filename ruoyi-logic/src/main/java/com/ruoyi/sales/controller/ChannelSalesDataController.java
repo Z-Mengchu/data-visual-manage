@@ -1,9 +1,12 @@
 package com.ruoyi.sales.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.excel.EasyExcel;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.listener.SalesDataImportListener;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.service.ISysPostService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -130,11 +133,13 @@ public class ChannelSalesDataController extends BaseController
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file) throws Exception
     {
-        ExcelUtil<ChannelSalesData> util = new ExcelUtil<>(ChannelSalesData.class);
-        List<ChannelSalesData> salesDataList = util.importEasyExcel(file.getInputStream());
+        List<ChannelSalesData> validDataList = new ArrayList<>();
+        List<Integer> invalidRowNumbers = new ArrayList<>();
+        EasyExcel.read(file.getInputStream(), ChannelSalesData.class, new SalesDataImportListener(validDataList, invalidRowNumbers)).sheet().doReadSync();
         String operName = getUsername();
-        String message = channelSalesDataService.importSalesData(salesDataList, operName);
-        return success(message);
+        String message = channelSalesDataService.importSalesData(validDataList, operName);
+        String invalidMessage = (!invalidRowNumbers.isEmpty()) ? "第" + invalidRowNumbers + "行数据日期格式不正确" : "";
+        return success(message + "<br>" + invalidMessage);
     }
 
     /**
