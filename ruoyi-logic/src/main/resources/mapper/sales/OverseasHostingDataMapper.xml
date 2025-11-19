@@ -636,7 +636,7 @@
         </where>
     </select>
     <select id="selectWarehouse" resultType="java.lang.String">
-        SELECT DISTINCT shipping_warehouse FROM overseas_hosting_data
+        SELECT DISTINCT shipping_warehouse FROM overseas_hosting_data WHERE shipping_warehouse IS NOT NULL
     </select>
 
     <sql id="postDataFilter">

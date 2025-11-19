@@ -29,28 +29,20 @@ public class TEMUVisualizationServiceImpl implements ITEMUVisualizationService {
 
     @Override
     public Map<String, Object> getKpiData(TEMUVisualQuery query) {
-        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
-        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
-        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
-        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
-        return visualizationMapper.selectKpiData(query, currentUser, postCodes, roleKeys);
+        return executeWithPermission((currentUser, postCodes, roleKeys) ->
+                visualizationMapper.selectKpiData(query, currentUser, postCodes, roleKeys));
     }
 
     @Override
     public Map<String, Object> getAverageMetrics(TEMUVisualQuery query) {
-        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
-        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
-        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
-        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
-        return visualizationMapper.selectAverageMetrics(query, currentUser, postCodes, roleKeys);
+        return executeWithPermission((currentUser, postCodes, roleKeys) ->
+                visualizationMapper.selectAverageMetrics(query, currentUser, postCodes, roleKeys));
     }
 
     @Override
-    public List<Map<String, Object>> getAlertData(TEMUVisualQuery query) {SysUser currentUser = SecurityUtils.getLoginUser().getUser();
-        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
-        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
-        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
-        return visualizationMapper.selectAlertData(query, currentUser, postCodes, roleKeys);
+    public List<Map<String, Object>> getAlertData(TEMUVisualQuery query) {
+        return executeWithPermission((currentUser, postCodes, roleKeys) ->
+                visualizationMapper.selectAlertData(query, currentUser, postCodes, roleKeys));
     }
 
     @Override
@@ -60,46 +52,44 @@ public class TEMUVisualizationServiceImpl implements ITEMUVisualizationService {
 
     @Override
     public List<Map<String, Object>> getOperatorPerspectiveData(TEMUVisualQuery query) {
-        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
-        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
-        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
-        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
-        return visualizationMapper.selectOperatorPerspectiveData(query, currentUser, postCodes, roleKeys);
+        return executeWithPermission((currentUser, postCodes, roleKeys) ->
+                visualizationMapper.selectOperatorPerspectiveData(query, currentUser, postCodes, roleKeys));
     }
 
     @Override
     public List<Map<String, Object>> getDeveloperPerspectiveData(TEMUVisualQuery query) {
-        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
-        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
-        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
-        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
-        return visualizationMapper.selectDeveloperPerspectiveData(query, currentUser, postCodes, roleKeys);
+        return executeWithPermission((currentUser, postCodes, roleKeys) ->
+                visualizationMapper.selectDeveloperPerspectiveData(query, currentUser, postCodes, roleKeys));
     }
 
     @Override
     public List<Map<String, Object>> getCategoryPerspectiveData(TEMUVisualQuery query) {
-        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
-        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
-        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
-        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
-        return visualizationMapper.selectCategoryPerspectiveData(query, currentUser, postCodes, roleKeys);
+        return executeWithPermission((currentUser, postCodes, roleKeys) ->
+                visualizationMapper.selectCategoryPerspectiveData(query, currentUser, postCodes, roleKeys));
     }
 
     @Override
     public List<Map<String, Object>> getOperatorWarehouseData(TEMUVisualQuery query) {
-        SysUser currentUser = SecurityUtils.getLoginUser().getUser();
-        List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
-        List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
-        List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
-        return visualizationMapper.selectOperatorWarehouseData(query, currentUser, postCodes, roleKeys);
+        return executeWithPermission((currentUser, postCodes, roleKeys) ->
+                visualizationMapper.selectOperatorWarehouseData(query, currentUser, postCodes, roleKeys));
     }
 
     @Override
     public List<Map<String, Object>> getDeveloperWarehouseData(TEMUVisualQuery query) {
+        return executeWithPermission((currentUser, postCodes, roleKeys) ->
+                visualizationMapper.selectDeveloperWarehouseData(query, currentUser, postCodes, roleKeys));
+    }
+
+    @FunctionalInterface
+    private interface PermissionQueryHandler<T> {
+        T handle(SysUser currentUser, List<String> postCodes, List<String> roleKeys);
+    }
+
+    private <T> T executeWithPermission(PermissionQueryHandler<T> handler) {
         SysUser currentUser = SecurityUtils.getLoginUser().getUser();
         List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
         List<String> postCodes = userPosts.stream().map(SysPost::getPostCode).collect(Collectors.toList());
         List<String> roleKeys = currentUser.getRoles().stream().map(SysRole::getRoleKey).toList();
-        return visualizationMapper.selectDeveloperWarehouseData(query, currentUser, postCodes, roleKeys);
+        return handler.handle(currentUser, postCodes, roleKeys);
     }
 }
