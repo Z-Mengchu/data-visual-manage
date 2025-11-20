@@ -1058,6 +1058,16 @@ export default {
           top: 'center',
           textStyle: {
             color: '#fff'
+          },
+          formatter: (name) => {
+            // 查找对应的数据项
+            const dataItem = processedData.find(item => item.name === name);
+            if (dataItem) {
+              // 将数值转换为万元并保留两位小数
+              const amountInWan = (dataItem.value / 10000).toFixed(2);
+              return `${name} ${amountInWan}万`;
+            }
+            return name;
           }
         },
         series: [
@@ -1184,6 +1194,16 @@ export default {
           top: 'center',
           textStyle: {
             color: '#fff'
+          },
+          formatter: (name) => {
+            // 查找对应的数据项
+            const dataItem = processedData.find(item => item.name === name);
+            if (dataItem) {
+              // 将数值转换为万元并保留两位小数
+              const amountInWan = (dataItem.value / 10000).toFixed(2);
+              return `${name} ${amountInWan}万`;
+            }
+            return name;
           }
         },
         series: [
@@ -1200,7 +1220,7 @@ export default {
             },
             label: {
               show: true,
-              formatter: '{b}: {d}%',
+              formatter: '{b}',
               color: '#fff',
               fontWeight: 'bold'
             },
@@ -1236,7 +1256,7 @@ export default {
       this.currentChartInstance = echarts.init(chartDom)
 
       // 处理数据，只保留前十项，其余合并为"其他"
-      const processedData = this.processTopTenData(this.channelData, 'revenue', 'channel');
+      const processedData = this.processTopTenData(this.countryData, 'revenue', 'country');
 
       const option = {
         backgroundColor: 'transparent',
@@ -1258,6 +1278,16 @@ export default {
           top: 'center',
           textStyle: {
             color: '#fff'
+          },
+          formatter: (name) => {
+            // 查找对应的数据项
+            const dataItem = processedData.find(item => item.name === name);
+            if (dataItem) {
+              // 将数值转换为万元并保留两位小数
+              const amountInWan = (dataItem.value / 10000).toFixed(2);
+              return `${name} ${amountInWan}万`;
+            }
+            return name;
           }
         },
         series: [
@@ -1274,7 +1304,7 @@ export default {
             },
             label: {
               show: true,
-              formatter: '{b}: {d}%',
+              formatter: '{b}',
               color: '#fff',
               fontWeight: 'bold'
             },

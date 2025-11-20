@@ -90,15 +90,6 @@ export function getChannelDistributionData(params) {
   })
 }
 
-// 获取预警数据
-export function getAlertData(params) {
-  return request({
-    url: '/sale/visual/alerts',
-    method: 'get',
-    params
-  })
-}
-
 // 获取趋势数据
 export function getTrendData(params) {
   return request({
