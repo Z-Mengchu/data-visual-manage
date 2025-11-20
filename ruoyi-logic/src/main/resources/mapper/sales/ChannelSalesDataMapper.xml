@@ -48,6 +48,7 @@
         <result property="unsoldBudget"    column="unsold_budget"    />
         <result property="handlingFee"    column="handling_fee"    />
         <result property="orderNetProfit"    column="order_net_profit"    />
+        <result property="orderNetProfitRate"    column="order_net_profit_rate"    />
         <result property="roi"    column="roi"    />
         <result property="daysToPositiveCashFlow"    column="days_to_positive_cash_flow"    />
         <result property="verificationFormula"    column="verification_formula"    />
@@ -58,7 +59,7 @@
     </resultMap>
 
     <sql id="selectChannelSalesDataVo">
-        select id, first_level_category, category, tongtu_sku, product_name, operation_group_name, operator, development_group_name, product_developer, channel, channel_account, operation_department, store_code, region, country, country_region, brand, sales_mode, order_number, payment_settlement_date, shipping_warehouse, shipping_quantity, revenue_rmb, product_cost, first_mile_shipping, packaging_cost, logistics_shipping, channel_transaction_fee_rmb, taxes, refund, reshipment_amount, sample_cost, unsold_subsidy, order_gross_profit, order_gross_profit_rate, advertising_promotion, storage_fee, removal_fee, return_processing_fee, other_fees, unsold_budget, handling_fee, order_net_profit, roi, days_to_positive_cash_flow, verification_formula, is_gross_profit_positive, created_at, updated_at, update_by from channel_sales_data
+        select id, first_level_category, category, tongtu_sku, product_name, operation_group_name, operator, development_group_name, product_developer, channel, channel_account, operation_department, store_code, region, country, country_region, brand, sales_mode, order_number, payment_settlement_date, shipping_warehouse, shipping_quantity, revenue_rmb, product_cost, first_mile_shipping, packaging_cost, logistics_shipping, channel_transaction_fee_rmb, taxes, refund, reshipment_amount, sample_cost, unsold_subsidy, order_gross_profit, order_gross_profit_rate, advertising_promotion, storage_fee, removal_fee, return_processing_fee, other_fees, unsold_budget, handling_fee, order_net_profit, order_net_profit_rate, roi, days_to_positive_cash_flow, verification_formula, is_gross_profit_positive, created_at, updated_at, update_by from channel_sales_data
     </sql>
 
     <select id="selectChannelSalesDataList" parameterType="ChannelSalesData" resultMap="ChannelSalesDataResult">
@@ -106,6 +107,7 @@
             <if test="unsoldBudget != null "> and unsold_budget = #{unsoldBudget}</if>
             <if test="handlingFee != null "> and handling_fee = #{handlingFee}</if>
             <if test="orderNetProfit != null "> and order_net_profit = #{orderNetProfit}</if>
+            <if test="orderNetProfitRate != null "> and order_net_profit_rate = #{orderNetProfitRate}</if>
             <if test="roi != null "> and roi = #{roi}</if>
             <if test="daysToPositiveCashFlow != null "> and days_to_positive_cash_flow = #{daysToPositiveCashFlow}</if>
             <if test="verificationFormula != null "> and verification_formula = #{verificationFormula}</if>
@@ -168,6 +170,7 @@
             <if test="data.unsoldBudget != null "> and unsold_budget = #{data.unsoldBudget}</if>
             <if test="data.handlingFee != null "> and handling_fee = #{data.handlingFee}</if>
             <if test="data.orderNetProfit != null "> and order_net_profit = #{data.orderNetProfit}</if>
+            <if test="data.orderNetProfitRate != null "> and order_net_profit_rate = #{data.orderNetProfitRate}</if>
             <if test="data.roi != null "> and roi = #{data.roi}</if>
             <if test="data.daysToPositiveCashFlow != null "> and days_to_positive_cash_flow = #{data.daysToPositiveCashFlow}</if>
             <if test="data.verificationFormula != null "> and verification_formula = #{data.verificationFormula}</if>
@@ -263,6 +266,7 @@
             <if test="unsoldBudget != null">unsold_budget,</if>
             <if test="handlingFee != null">handling_fee,</if>
             <if test="orderNetProfit != null">order_net_profit,</if>
+            <if test="orderNetProfitRate != null">order_net_profit_rate,</if>
             <if test="roi != null">roi,</if>
             <if test="daysToPositiveCashFlow != null">days_to_positive_cash_flow,</if>
             <if test="verificationFormula != null">verification_formula,</if>
@@ -313,6 +317,7 @@
             <if test="unsoldBudget != null">#{unsoldBudget},</if>
             <if test="handlingFee != null">#{handlingFee},</if>
             <if test="orderNetProfit != null">#{orderNetProfit},</if>
+            <if test="orderNetProfitRate != null">#{orderNetProfitRate},</if>
             <if test="roi != null">#{roi},</if>
             <if test="daysToPositiveCashFlow != null">#{daysToPositiveCashFlow},</if>
             <if test="verificationFormula != null">#{verificationFormula},</if>
@@ -367,6 +372,7 @@
             <if test="unsoldBudget != null">unsold_budget = #{unsoldBudget},</if>
             <if test="handlingFee != null">handling_fee = #{handlingFee},</if>
             <if test="orderNetProfit != null">order_net_profit = #{orderNetProfit},</if>
+            <if test="orderNetProfitRate != null">order_net_profit_rate = #{orderNetProfitRate},</if>
             <if test="roi != null">roi = #{roi},</if>
             <if test="daysToPositiveCashFlow != null">days_to_positive_cash_flow = #{daysToPositiveCashFlow},</if>
             <if test="verificationFormula != null">verification_formula = #{verificationFormula},</if>
@@ -422,7 +428,7 @@
             order_gross_profit_rate, advertising_promotion,
             storage_fee, removal_fee, return_processing_fee,
             other_fees, unsold_budget, handling_fee,
-            order_net_profit, roi, days_to_positive_cash_flow, verification_formula,
+            order_net_profit, order_net_profit_rate, roi, days_to_positive_cash_flow, verification_formula,
             is_gross_profit_positive, created_at,
             updated_at, update_by
         ) VALUES
@@ -446,7 +452,7 @@
                 #{item.orderGrossProfitRate}, #{item.advertisingPromotion},
                 #{item.storageFee}, #{item.removalFee}, #{item.returnProcessingFee},
                 #{item.otherFees}, #{item.unsoldBudget}, #{item.handlingFee},
-                #{item.orderNetProfit}, #{item.roi}, #{item.daysToPositiveCashFlow}, #{item.verificationFormula},
+                #{item.orderNetProfit}, #{item.orderNetProfitRate}, #{item.roi}, #{item.daysToPositiveCashFlow}, #{item.verificationFormula},
                 #{item.isGrossProfitPositive}, sysdate(),
                 sysdate(), #{item.updateBy}
             )

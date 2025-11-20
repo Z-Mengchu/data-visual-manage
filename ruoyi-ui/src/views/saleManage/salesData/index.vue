@@ -244,7 +244,11 @@
       <el-table-column label="送样成本" align="center" prop="sampleCost" />
       <el-table-column label="滞销补贴" align="center" prop="unsoldSubsidy" />
       <el-table-column label="订单毛利" align="center" prop="orderGrossProfit" />
-      <el-table-column label="订单毛利率" align="center" prop="orderGrossProfitRate" />
+      <el-table-column label="订单毛利率" align="center" prop="orderGrossProfitRate" >
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderGrossProfitRate !== null ? (scope.row.orderGrossProfitRate * 100).toFixed(2) + '%' : '' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="广告/促销" align="center" prop="advertisingPromotion" />
       <el-table-column label="仓储费" align="center" prop="storageFee" />
       <el-table-column label="移除费" align="center" prop="removalFee" />
@@ -253,6 +257,11 @@
       <el-table-column label="滞销品预算" align="center" prop="unsoldBudget" />
       <el-table-column label="手续费" align="center" prop="handlingFee" />
       <el-table-column label="订单净利" align="center" prop="orderNetProfit" />
+      <el-table-column label="订单净利率" align="center" prop="orderNetProfitRate" >
+        <template slot-scope="scope">
+          <span>{{ scope.row.orderNetProfitRate !== null ? (scope.row.orderNetProfitRate * 100).toFixed(2) + '%' : '' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="ROI" align="center" prop="roi" />
       <el-table-column label="产品现金流为正所需的天数" align="center" prop="daysToPositiveCashFlow" />
       <el-table-column label="验算公式" align="center" prop="verificationFormula" />
@@ -428,6 +437,9 @@
         <el-form-item label="订单净利" prop="orderNetProfit">
           <el-input v-model="form.orderNetProfit" placeholder="请输入订单净利" />
         </el-form-item>
+        <el-form-item label="订单净利率" prop="orderNetProfitRate">
+          <el-input v-model="form.orderNetProfitRate" placeholder="请输入订单净利" />
+        </el-form-item>
         <el-form-item label="ROI" prop="roi">
           <el-input v-model="form.roi" placeholder="请输入ROI" />
         </el-form-item>
@@ -547,6 +559,7 @@ export default {
         unsoldBudget: null,
         handlingFee: null,
         orderNetProfit: null,
+        orderNetProfitRate: null,
         roi: null,
         daysToPositiveCashFlow: null,
         verificationFormula: null,
@@ -642,6 +655,7 @@ export default {
         unsoldBudget: null,
         handlingFee: null,
         orderNetProfit: null,
+        orderNetProfitRate: null,
         roi: null,
         daysToPositiveCashFlow: null,
         verificationFormula: null,

@@ -251,6 +251,10 @@ public class ChannelSalesData extends BaseEntity
     @ExcelProperty(value = "订单净利", converter = CustomBigDecimalConverter.class)
     private BigDecimal orderNetProfit;
 
+    /** 订单净利率 */
+    @Excel(name = "订单净利率", type = Excel.Type.EXPORT)
+    private BigDecimal orderNetProfitRate;
+
     /** ROI */
     @Excel(name = "ROI")
     @ExcelProperty(value = "ROI", converter = CustomBigDecimalConverter.class)
@@ -332,6 +336,7 @@ public class ChannelSalesData extends BaseEntity
                 compareBigDecimal(unsoldBudget, that.unsoldBudget) &&
                 compareBigDecimal(handlingFee, that.handlingFee) &&
                 compareBigDecimal(orderNetProfit, that.orderNetProfit) &&
+                compareBigDecimal(orderNetProfitRate, that.orderNetProfitRate) &&
                 compareBigDecimal(roi, that.roi) &&
                 Objects.equals(daysToPositiveCashFlow, that.daysToPositiveCashFlow) &&
                 compareBigDecimal(verificationFormula, that.verificationFormula) &&

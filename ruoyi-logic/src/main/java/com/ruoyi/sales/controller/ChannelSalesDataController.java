@@ -76,8 +76,8 @@ public class ChannelSalesDataController extends BaseController
         // 获取用户岗位列表
         List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
         List<ChannelSalesData> list = channelSalesDataService.selectChannelSalesDataList(channelSalesData, currentUser, userPosts);
-        ExcelUtil<ChannelSalesData> util = new ExcelUtil<ChannelSalesData>(ChannelSalesData.class);
-        util.exportEasyExcel(response, list, "全渠道销售数据分析数据");
+        ExcelUtil<ChannelSalesData> util = new ExcelUtil<>(ChannelSalesData.class);
+        util.exportExcel(response, list, "全渠道销售数据分析数据");
     }
 
     /**

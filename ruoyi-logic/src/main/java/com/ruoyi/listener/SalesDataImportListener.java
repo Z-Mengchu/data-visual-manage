@@ -5,6 +5,7 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.ruoyi.sales.domain.ChannelSalesData;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -33,6 +34,9 @@ public class SalesDataImportListener extends AnalysisEventListener<ChannelSalesD
 
         // 检查paymentSettlementDate是否为空
         if (isPaymentSettlementDateValid(data)) {
+            if (data.getOrderNetProfit() != null && data.getRevenueRmb() != null) {
+                data.setOrderNetProfitRate(data.getOrderNetProfit().divide(data.getRevenueRmb(), 6, RoundingMode.HALF_UP));
+            }
             validDataList.add(data);
             validCount++;
             log.debug("有效数据: {}", data);
