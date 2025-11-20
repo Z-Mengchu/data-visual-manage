@@ -463,7 +463,7 @@
           <span>仅允许导入xls、xlsx格式文件。</span><br/>
           <span>系统将自动去除完全雷同的数据，请勿重复导入。</span><br/>
           <span>请将日期格式修改为：年-月-日或年/月/日 时/分/秒，如2025-01-01或2025/01/01 09:00:00。否则数据将导入失败</span><br/>
-          <el-link type="primary" :underline="false" style="font-size: 12px; vertical-align: baseline" @click="importTemplate">下载模板</el-link>
+          <el-link type="primary" :underline="false" style="font-size: 12px; vertical-align: baseline" @click="importTemplate">下载导入模板</el-link>
         </div>
       </el-upload>
       <div slot="footer" class="dialog-footer">

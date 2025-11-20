@@ -213,7 +213,7 @@ public class PurchasePaymentPeriodServiceImpl implements IPurchasePaymentPeriodS
         if (!dataToInsert.isEmpty()) {
             try {
                 // 执行批量插入
-                int batchSize = 3000;
+                int batchSize = 1000;
                 for (int i = 0; i < dataToInsert.size(); i += batchSize) {
                     int end = Math.min(dataToInsert.size(), i + batchSize);
                     List<PurchasePaymentPeriod> batchList = dataToInsert.subList(i, end);
