@@ -605,8 +605,8 @@ export default {
           formatter: (params) => {
             const category = params[0].name
             const revenue = params[0].value
-            const refund = params[1].value
-            const refundRate = params[2].value
+            const refund = params.length > 1 ? params[1].value : 0
+            const refundRate = params.length > 2 ? params[2].value : 0
             return `品类: ${category}<br/>收入: ¥${revenue}<br/>退款金额: ¥${refund}<br/>退款率: ${(refundRate * 100).toFixed(2)}%`
           },
           backgroundColor: 'rgba(0, 0, 0, 0.8)',
