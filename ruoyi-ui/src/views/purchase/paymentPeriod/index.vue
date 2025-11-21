@@ -68,30 +68,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="采购单价" prop="purchaseUnitPrice">
-        <el-input
-          v-model="queryParams.purchaseUnitPrice"
-          placeholder="请输入采购单价"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="采购数量" prop="purchaseQuantity">
-        <el-input
-          v-model="queryParams.purchaseQuantity"
-          placeholder="请输入采购数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="货款" prop="goodsPayment">
-        <el-input
-          v-model="queryParams.goodsPayment"
-          placeholder="请输入货款"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="供应商名称" prop="supplierName">
         <el-input
           v-model="queryParams.supplierName"
@@ -230,7 +206,7 @@
     </el-row>
     <!-- 付款统计 -->
     <el-row :gutter="10" class="mb8">
-      <el-col :span="6">
+      <el-col :span="4">
         <el-card class="box-card" shadow="hover">
           <div class="card-content">
             <div class="card-info">
@@ -240,7 +216,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="4">
         <el-card class="box-card" shadow="hover">
           <div class="card-content">
             <div class="card-info">
@@ -250,7 +226,17 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="4">
+        <el-card class="box-card" shadow="hover">
+          <div class="card-content">
+            <div class="card-info">
+              <div class="card-title">筛选条目未付款金额</div>
+              <div class="card-count">{{ selectedUnpaidAmount || 0 }}元</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="4">
         <el-card class="box-card" shadow="hover">
           <div class="card-content">
             <div class="card-info">
@@ -260,7 +246,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="4">
         <el-card class="box-card" shadow="hover">
           <div class="card-content">
             <div class="card-info">
@@ -303,6 +289,8 @@
       <el-table-column label="采购单价" align="center" prop="purchaseUnitPrice" />
       <el-table-column label="采购数量" align="center" prop="purchaseQuantity" />
       <el-table-column label="货款" align="center" prop="goodsPayment" />
+      <el-table-column label="运费" align="center" prop="shippingCost" />
+      <el-table-column label="采购单总金额" align="center" prop="purchaseTotalAmount" />
       <el-table-column label="供应商名称" align="center" prop="supplierName" />
       <el-table-column label="到货日期" align="center" prop="arrivalDate" width="180">
         <template slot-scope="scope">
@@ -438,6 +426,12 @@
         <el-form-item label="货款" prop="goodsPayment">
           <el-input v-model="form.goodsPayment" placeholder="请输入货款" />
         </el-form-item>
+        <el-form-item label="运费" prop="shippingCost">
+          <el-input v-model="form.shippingCost" placeholder="请输入运费" />
+        </el-form-item>
+        <el-form-item label="采购单总金额" prop="purchaseTotalAmount">
+          <el-input v-model="form.purchaseTotalAmount" placeholder="请输入采购单总金额" />
+        </el-form-item>
         <el-form-item label="供应商名称" prop="supplierName">
           <el-input v-model="form.supplierName" placeholder="请输入供应商名称" />
         </el-form-item>
@@ -558,6 +552,8 @@ export default {
         purchaseUnitPrice: null,
         purchaseQuantity: null,
         goodsPayment: null,
+        shippingCost: null,
+        purchaseTotalAmount: null,
         supplierName: null,
         arrivalDate: null,
         purchaseNotes: null,
@@ -597,7 +593,8 @@ export default {
         unpaidCount: 0,
         unknownCount: 0
       },
-      importLoading: false
+      importLoading: false,
+      selectedUnpaidAmount: 0, // 存储选中条目的未付款金额
     }
   },
   created() {
@@ -674,6 +671,8 @@ export default {
         purchaseUnitPrice: null,
         purchaseQuantity: null,
         goodsPayment: null,
+        shippingCost: null,
+        purchaseTotalAmount: null,
         supplierName: null,
         arrivalDate: null,
         purchaseNotes: null,
@@ -706,6 +705,9 @@ export default {
       this.ids = selection.map(item => item.id)
       this.single = selection.length!==1
       this.multiple = !selection.length
+
+      // 计算选中条目的未付款金额
+      this.calculateSelectedUnpaidAmount(this.ids);
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -820,6 +822,24 @@ export default {
         this.$modal.msgSuccess("标记成功");
         this.getList();  // 刷新列表
       }).catch(() => {});
+    },
+    /**
+     * 计算选中条目的未付款金额
+     */
+    calculateSelectedUnpaidAmount(selectedIds) {
+      if (!selectedIds || selectedIds.length === 0) {
+        this.selectedUnpaidAmount = 0;
+        return;
+      }
+      // 过滤出选中的条目并计算未付款金额
+      const selectedItems = this.paymentPeriodList.filter(item =>
+        selectedIds.includes(item.id) && item.isPaid !== '1'
+      );
+      selectedItems.log
+      // 计算未付款金额总和
+      this.selectedUnpaidAmount = selectedItems.reduce((sum, item) => {
+        return sum + (parseFloat(item.purchaseTotalAmount) || 0);
+      }, 0);
     }
   }
 }

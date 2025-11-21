@@ -603,8 +603,8 @@ export default {
           trigger: 'axis',
           axisPointer: { type: 'cross' },
           formatter: (params) => {
-            const category = params[0].name
-            const revenue = params[0].value
+            const category = params.length > 0 ? params[0].name : ''
+            const revenue = params.length > 0 ? params[0].value : 0
             const refund = params.length > 1 ? params[1].value : 0
             const refundRate = params.length > 2 ? params[2].value : 0
             return `品类: ${category}<br/>收入: ¥${revenue}<br/>退款金额: ¥${refund}<br/>退款率: ${(refundRate * 100).toFixed(2)}%`
@@ -714,7 +714,12 @@ export default {
           {
             name: '退款金额',
             type: 'bar',
-            data: this.categoryRefundData.map(item => item.refundAmount),
+            data: this.categoryRefundData.map(item => {
+              if (typeof item === 'undefined' || isNaN(item.refundAmount) || item.refundAmount === null) {
+                return 0
+              }
+              return item.refundAmount
+            }),
             itemStyle: {
               color: '#ee6666'
             }
@@ -723,7 +728,12 @@ export default {
             name: '退款率',
             type: 'line',
             yAxisIndex: 1,
-            data: this.categoryRefundData.map(item => item.refundRate),
+            data: this.categoryRefundData.map(item => {
+              if (typeof item === 'undefined' || isNaN(item.refundRate) || item.refundRate === null) {
+                return 0
+              }
+              return item.refundRate
+            }),
             itemStyle: {
               color: '#fac858'
             },

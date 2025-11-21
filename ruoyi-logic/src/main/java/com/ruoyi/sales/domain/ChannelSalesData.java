@@ -345,7 +345,7 @@ public class ChannelSalesData extends BaseEntity
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstLevelCategory, category, tongtuSku, productName, operationGroupName, operator, developmentGroupName, productDeveloper, channel, channelAccount, operationDepartment, storeCode, region, country, countryRegion, brand, salesMode, orderNumber, paymentSettlementDate, shippingWarehouse, shippingQuantity, revenueRmb, productCost, firstMileShipping, packagingCost, logisticsShipping, channelTransactionFeeRmb, taxes, refund, reshipmentAmount, sampleCost, unsoldSubsidy, orderGrossProfit, orderGrossProfitRate, advertisingPromotion, storageFee, removalFee, returnProcessingFee, otherFees, unsoldBudget, handlingFee, orderNetProfit, roi, daysToPositiveCashFlow, verificationFormula, isGrossProfitPositive, createdAt, updatedAt, startTime, endTime);
+        return Objects.hash(id, firstLevelCategory, category, tongtuSku, productName, operationGroupName, operator, developmentGroupName, productDeveloper, channel, channelAccount, operationDepartment, storeCode, region, country, countryRegion, brand, salesMode, orderNumber, paymentSettlementDate, shippingWarehouse, shippingQuantity, revenueRmb, productCost, firstMileShipping, packagingCost, logisticsShipping, channelTransactionFeeRmb, taxes, refund, reshipmentAmount, sampleCost, unsoldSubsidy, orderGrossProfit, orderGrossProfitRate, advertisingPromotion, storageFee, removalFee, returnProcessingFee, otherFees, unsoldBudget, handlingFee, orderNetProfit, orderNetProfitRate, roi, daysToPositiveCashFlow, verificationFormula, isGrossProfitPositive, createdAt, updatedAt, startTime, endTime);
     }
 
     private boolean compareBigDecimal(BigDecimal bd1, BigDecimal bd2) {

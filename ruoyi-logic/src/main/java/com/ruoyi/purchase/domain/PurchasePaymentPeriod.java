@@ -113,6 +113,16 @@ public class PurchasePaymentPeriod extends BaseEntity
     @ExcelProperty(value = "货款", converter = CustomBigDecimalConverter.class)
     private BigDecimal goodsPayment;
 
+    /** 运费 */
+    @Excel(name = "运费")
+    @ExcelProperty(value = "运费", converter = CustomBigDecimalConverter.class)
+    private BigDecimal shippingCost;
+
+    /** 采购单总金额 */
+    @Excel(name = "采购单总金额")
+    @ExcelProperty(value = "采购单总金额", converter = CustomBigDecimalConverter.class)
+    private BigDecimal purchaseTotalAmount;
+
     /** 供应商名称 */
     @Excel(name = "供应商名称", needMerge = true)
     @ExcelProperty(value = "供应商名称", converter = CustomStringConverter.class)
@@ -187,6 +197,8 @@ public class PurchasePaymentPeriod extends BaseEntity
                 compareBigDecimal(purchaseUnitPrice, that.purchaseUnitPrice) &&
                 Objects.equals(purchaseQuantity, that.purchaseQuantity) &&
                 compareBigDecimal(goodsPayment, that.goodsPayment) &&
+                compareBigDecimal(shippingCost, that.shippingCost) &&
+                compareBigDecimal(purchaseTotalAmount, that.purchaseTotalAmount) &&
                 Objects.equals(StringUtils.isEmpty(supplierName) ? null : supplierName, StringUtils.isEmpty(that.supplierName) ? null : that.supplierName) &&
                 ((PurchasePaymentPeriod) o).getArrivalDate() == (that.arrivalDate) &&
                 Objects.equals(StringUtils.isEmpty(purchaseNotes) ? null : purchaseNotes, StringUtils.isEmpty(that.purchaseNotes) ? null : that.purchaseNotes) &&
@@ -198,7 +210,7 @@ public class PurchasePaymentPeriod extends BaseEntity
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, purchaseOrderNumber, purchasePlanNumber, account1688, purchaseWarehouse, purchaser, purchaseDate, imageUrl, location, sku, productName, specifications, purchaseUnitPrice, purchaseQuantity, goodsPayment, supplierName, arrivalDate, purchaseNotes, paymentPeriodDays, duePaymentDate, purchaseDepartment, isPaid, isOverdue, daysUntilDue, createdAt, updatedAt);
+        return Objects.hash(id, purchaseOrderNumber, purchasePlanNumber, account1688, purchaseWarehouse, purchaser, purchaseDate, imageUrl, location, sku, productName, specifications, purchaseUnitPrice, purchaseQuantity, goodsPayment, shippingCost, purchaseTotalAmount, supplierName, arrivalDate, purchaseNotes, paymentPeriodDays, duePaymentDate, purchaseDepartment, isPaid, isOverdue, daysUntilDue, createdAt, updatedAt);
     }
 
     private boolean compareBigDecimal(BigDecimal bd1, BigDecimal bd2) {
