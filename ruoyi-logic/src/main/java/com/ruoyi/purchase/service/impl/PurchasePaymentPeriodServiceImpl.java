@@ -5,6 +5,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.bean.BeanValidators;
 import com.ruoyi.purchase.domain.PurchasePaymentPeriod;
+import com.ruoyi.purchase.dto.PurchasePaymentPeriodUpdateDTO;
 import com.ruoyi.purchase.mapper.PurchasePaymentPeriodMapper;
 import com.ruoyi.purchase.service.IPurchasePaymentPeriodService;
 import jakarta.validation.Validator;
@@ -275,4 +276,89 @@ public class PurchasePaymentPeriodServiceImpl implements IPurchasePaymentPeriodS
 
         return result;
     }
+
+    /**
+     * 根据id批量查询数据
+     */
+    @Override
+    public List<PurchasePaymentPeriod> selectPurchasePaymentPeriodByIds(Integer[] ids) {
+        return purchasePaymentPeriodMapper.selectPurchasePaymentPeriodByIds(ids);
+    }
+
+    /**
+     * 批量更新数据
+     */
+    @Override
+    @Transactional
+    public String batchUpdateData(List<PurchasePaymentPeriodUpdateDTO> updateDTOList, Integer[] originalIds, String operName) {
+        if (StringUtils.isNull(updateDTOList) || updateDTOList.isEmpty()) {
+            throw new ServiceException("更新数据不能为空！");
+        }
+
+        int successNum = 0;
+        int failureNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        StringBuilder failureMsg = new StringBuilder();
+
+        //先验证缓存中的id和导入数据的id是否一致
+        for (int i = 0; i < updateDTOList.size(); i++) {
+            PurchasePaymentPeriodUpdateDTO updateDTO = updateDTOList.get(i);
+            Integer originalId = originalIds[i];
+            if (!originalId.equals(updateDTO.getId())) {
+                throw new ServiceException("批量修改失败，请勿修改数据编号");
+            }
+        }
+
+        for (int i = 0; i < updateDTOList.size(); i++) {
+            PurchasePaymentPeriodUpdateDTO updateDTO = updateDTOList.get(i);
+            Integer originalId = originalIds[i];
+            int currentIndex = i + 1;
+
+            try {
+                // 验证数据
+                BeanValidators.validateWithException(validator, updateDTO);
+
+                // 根据原始ID获取完整实体
+                PurchasePaymentPeriod existing = purchasePaymentPeriodMapper.selectPurchasePaymentPeriodById(originalId);
+                if (existing == null) {
+                    failureNum++;
+                    failureMsg.append("<br/>第 ").append(currentIndex).append(" 条数据对应的原始记录不存在，ID：").append(originalId);
+                    continue;
+                }
+
+                // 将DTO数据复制到实体（不覆盖ID）
+                PurchasePaymentPeriod entityToUpdate = new PurchasePaymentPeriod();
+                BeanUtils.copyProperties(existing, entityToUpdate); // 先复制原有数据
+                BeanUtils.copyProperties(updateDTO, entityToUpdate); // 再用DTO覆盖可修改字段
+                entityToUpdate.setId(originalId); // 确保ID不被修改
+                entityToUpdate.setUpdateBy(operName);
+
+                // 执行更新
+                int updateResult = purchasePaymentPeriodMapper.updatePurchasePaymentPeriod(entityToUpdate);
+                if (updateResult > 0) {
+                    successNum++;
+                    successMsg.append("<br/>第 ").append(currentIndex).append(" 条数据更新成功，ID：").append(originalId);
+                } else {
+                    failureNum++;
+                    failureMsg.append("<br/>第 ").append(currentIndex).append(" 条数据更新失败，ID：").append(originalId);
+                }
+
+            } catch (Exception e) {
+                failureNum++;
+                String msg = "<br/>第 " + currentIndex + " 条数据更新失败：" + e.getMessage();
+                failureMsg.append(msg);
+                log.error(msg, e);
+            }
+        }
+
+        // 生成最终报告
+        if (failureNum > 0) {
+            failureMsg.insert(0, "批量更新完成！成功 " + successNum + " 条，失败 " + failureNum + " 条，失败详情：");
+        } else {
+            successMsg.insert(0, "恭喜您，批量更新成功！共 " + successNum + " 条数据更新成功");
+        }
+
+        return successMsg + failureMsg.toString();
+    }
+
 }

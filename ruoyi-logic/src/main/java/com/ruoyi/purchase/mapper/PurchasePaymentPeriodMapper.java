@@ -103,4 +103,11 @@ public interface PurchasePaymentPeriodMapper
      * @return 插入的行数
      */
     int batchInsertPurchasePaymentPeriod(@Param("list") List<PurchasePaymentPeriod> list, @Param("operName") String operName);
+
+    /**
+     * 根据采购账期id列表查询采购账期数据
+     * @param originalIds 采购账期id列表
+     * @return 采购账期数据列表
+     */
+    List<PurchasePaymentPeriod> selectPurchasePaymentPeriodByIds(@Param("originalIds") Integer[] originalIds);
 }

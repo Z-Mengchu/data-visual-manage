@@ -466,21 +466,197 @@
       </div>
     </el-dialog>
 
-    <!-- 数据导入对话框 -->
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
-      <el-upload ref="upload" :limit="1" accept=".xlsx, .xls" :headers="upload.headers" :action="upload.url" :disabled="upload.isUploading" :on-progress="handleFileUploadProgress" :on-success="handleFileSuccess" :auto-upload="false" drag>
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip text-center" slot="tip">
-          <span>仅允许导入xls、xlsx格式文件。</span><br/>
-          <span>系统将自动去除完全雷同的数据，请勿重复导入。</span><br/>
-          <span>请将日期格式修改为：年-月-日或年/月/日 时/分/秒，如2025-01-01或2025/01/01 09:00:00。否则数据将导入失败</span><br/>
-          <el-link type="primary" :underline="false" style="font-size: 12px; vertical-align: baseline" @click="importTemplate">下载导入模板</el-link>
+    <!-- 数据导入对话框（流程化） -->
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="600px" append-to-body @close="handleImportClose">
+      <div class="import-container">
+        <!-- 步骤1：下载模板 -->
+        <div class="import-step" v-if="upload.step === 1">
+          <div class="step-header">
+            <el-steps :active="1" simple>
+              <el-step title="下载模板" icon="el-icon-download"></el-step>
+              <el-step title="填写数据" icon="el-icon-edit"></el-step>
+              <el-step title="上传文件" icon="el-icon-upload2"></el-step>
+            </el-steps>
+          </div>
+          <div class="step-content">
+            <div class="step-info">
+              <h4>第一步：下载导入模板</h4>
+              <p class="tip-text">请先下载标准模板文件，按照模板格式准备数据</p>
+
+              <div class="template-info">
+                <div class="info-item">
+                  <i class="el-icon-info"></i>
+                  <span>模板包含所有必要字段和格式要求</span>
+                </div>
+                <div class="info-item">
+                  <i class="el-icon-warning"></i>
+                  <span>请严格按照模板格式填写数据</span>
+                </div>
+                <div class="info-item">
+                  <i class="el-icon-success"></i>
+                  <span>建议使用"粘贴为数值"功能避免格式问题</span>
+                </div>
+              </div>
+              <el-button
+                type="primary"
+                icon="el-icon-download"
+                @click="handleDownloadTemplate"
+                class="download-btn">
+                下载导入模板
+              </el-button>
+            </div>
+          </div>
         </div>
-      </el-upload>
+        <!-- 步骤2：填写数据提示 -->
+        <div class="import-step" v-if="upload.step === 2">
+          <div class="step-header">
+            <el-steps :active="2" simple>
+              <el-step title="下载模板" icon="el-icon-download"></el-step>
+              <el-step title="填写数据" icon="el-icon-edit"></el-step>
+              <el-step title="上传文件" icon="el-icon-upload2"></el-step>
+            </el-steps>
+          </div>
+          <div class="step-content">
+            <div class="step-info">
+              <h4>第二步：填写导入数据</h4>
+
+              <div class="data-fill-tips">
+                <el-alert
+                  title="重要提示：请使用'粘贴为数值'功能"
+                  type="warning"
+                  description="从其他系统复制数据时，请务必使用Excel的'粘贴为数值'功能，避免格式问题导致导入失败"
+                  show-icon
+                  :closable="false">
+                </el-alert>
+                <div class="tips-list">
+                  <div class="tip-item">
+                    <div class="tip-icon">1</div>
+                    <div class="tip-content">
+                      <strong>复制数据</strong>
+                      <p>从其他系统或文档中复制需要导入的数据</p>
+                    </div>
+                  </div>
+
+                  <div class="tip-item">
+                    <div class="tip-icon">2</div>
+                    <div class="tip-content">
+                      <strong>粘贴为数值</strong>
+                      <p>在Excel中右键 → 粘贴选项 → 粘贴为数值 (Ctrl+Shift+V)</p>
+                    </div>
+                  </div>
+
+                  <div class="tip-item">
+                    <div class="tip-icon">3</div>
+                    <div class="tip-content">
+                      <strong>检查格式</strong>
+                      <p>请将日期格式修改为：年-月-日或年/月/日 时/分/秒，如2025-01-01或2025/01/01 09:00:00。否则数据将导入失败</p>
+                    </div>
+                  </div>
+
+                  <div class="tip-item">
+                    <div class="tip-icon">4</div>
+                    <div class="tip-content">
+                      <strong>保存文件</strong>
+                      <p>完成数据填写后保存Excel文件</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="action-buttons">
+                <el-button
+                  type="primary"
+                  icon="el-icon-upload"
+                  @click="upload.step = 3">
+                  前往上传
+                </el-button>
+                <el-button
+                  icon="el-icon-download"
+                  @click="handleDownloadTemplate">
+                  重新下载模板
+                </el-button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 步骤3：上传文件 -->
+        <div class="import-step" v-if="upload.step === 3">
+          <div class="step-header">
+            <el-steps :active="3" simple>
+              <el-step title="下载模板" icon="el-icon-download"></el-step>
+              <el-step title="填写数据" icon="el-icon-edit"></el-step>
+              <el-step title="上传文件" icon="el-icon-upload2"></el-step>
+            </el-steps>
+          </div>
+          <div class="step-content">
+            <div class="step-info">
+              <h4>第三步：上传数据文件</h4>
+
+              <el-alert
+                title="请上传已填写数据的Excel文件"
+                type="info"
+                description="系统将自动验证数据格式并导入"
+                show-icon
+                :closable="false"
+                class="upload-alert">
+              </el-alert>
+              <el-upload
+                ref="upload"
+                class="import-upload"
+                :limit="1"
+                accept=".xlsx, .xls"
+                :headers="upload.headers"
+                :action="upload.url"
+                :disabled="upload.isUploading"
+                :on-progress="handleFileUploadProgress"
+                :on-success="handleFileSuccess"
+                :auto-upload="false"
+                drag>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将填写好的Excel文件拖到此处，或<em>点击上传</em></div>
+                <div class="el-upload__tip" slot="tip">
+                  <div class="upload-requirements">
+                    <p><strong>文件要求：</strong></p>
+                    <ul>
+                      <li>仅支持 .xlsx 或 .xls 格式</li>
+                      <li>必须使用下载的模板格式</li>
+                      <li>确保数据已使用"粘贴为数值"</li>
+                    </ul>
+                  </div>
+                </div>
+              </el-upload>
+              <div class="upload-actions">
+                <el-button
+                  type="text"
+                  icon="el-icon-back"
+                  @click="upload.step = 2">
+                  返回上一步
+                </el-button>
+                <el-button
+                  type="text"
+                  icon="el-icon-refresh"
+                  @click="handleResetImport">
+                  重新开始
+                </el-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitFileForm">确 定</el-button>
-        <el-button @click="upload.open = false">取 消</el-button>
+        <el-button
+          v-if="upload.step === 1"
+          type="primary"
+          @click="upload.step = 2"
+          :disabled="!upload.hasDownloaded">
+          下一步
+        </el-button>
+        <el-button
+          v-if="upload.step === 3"
+          type="primary"
+          @click="submitFileForm">
+          确认上传
+        </el-button>
+        <el-button @click="handleImportClose">关闭</el-button>
       </div>
     </el-dialog>
   </div>
@@ -572,7 +748,7 @@ export default {
       // 表单校验
       rules: {
       },
-      // 数据导入参数
+      // 数据导入参数（流程化）
       upload: {
         // 是否显示弹出层（数据导入）
         open: false,
@@ -580,6 +756,10 @@ export default {
         title: "",
         // 是否禁用上传
         isUploading: false,
+        // 当前步骤 (1:下载模板, 2:填写数据, 3:上传文件)
+        step: 1,
+        // 是否已下载模板
+        hasDownloaded: false,
         // 设置上传的请求头部
         headers: { Authorization: "Bearer " + getToken() },
         // 上传的地址
@@ -737,16 +917,37 @@ export default {
     /** 导入按钮操作 */
     handleImport() {
       if (this.importLoading) {
-        this.$modal.msgError("正在导入数据，请不要重复点击")
-        return
+        this.$modal.msgError("正在导入数据，请不要重复点击");
+        return;
       }
-      this.upload.title = "数据导入"
-      this.upload.open = true
+      this.upload.title = "数据导入";
+      this.upload.open = true;
+      this.upload.step = 1;
+      this.upload.hasDownloaded = false;
+      this.upload.isUploading = false;
     },
-    /** 下载模板操作 */
-    importTemplate() {
-      this.download('sale/data/importTemplate', {
-      }, `channel_sales_data_template_${new Date().getTime()}.xlsx`)
+    /** 下载导入模板 */
+    handleDownloadTemplate() {
+      this.download('sale/data/importTemplate', {}, `全渠道销售数据导入模板_${new Date().getTime()}.xlsx`);
+      this.upload.hasDownloaded = true;
+      this.$modal.msgSuccess("模板下载成功！请按照模板格式填写数据");
+    },
+    /** 重置导入流程 */
+    handleResetImport() {
+      this.upload.step = 1;
+      this.upload.hasDownloaded = false;
+      this.upload.isUploading = false;
+      if (this.$refs.upload) {
+        this.$refs.upload.clearFiles();
+      }
+      this.$modal.msg("已重置导入流程，请重新开始");
+    },
+    /** 关闭导入对话框 */
+    handleImportClose() {
+      this.upload.open = false;
+      this.upload.step = 1;
+      this.upload.hasDownloaded = false;
+      this.upload.isUploading = false;
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
@@ -755,7 +956,6 @@ export default {
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
       this.upload.isUploading = false
-      this.$refs.upload.clearFiles()
       this.importLoading = false
       this.$message.closeAll()
       this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true })
@@ -774,9 +974,7 @@ export default {
       this.importLoading = true
       this.$message({
         message: '系统正在导入数据，预计导入时间过长，请耐心等待......',
-        type: 'success',
-        duration: 0, // 0表示不会自动关闭
-        showClose: true
+        type: 'success'
       })
 
       // 提交上传
@@ -785,3 +983,130 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* 数据导入相关样式 */
+.import-container {
+  padding: 10px 0;
+}
+.import-step {
+  margin-bottom: 20px;
+}
+.step-header {
+  margin-bottom: 20px;
+}
+.step-content {
+  text-align: left;
+}
+.step-info h4 {
+  margin-bottom: 15px;
+  color: #303133;
+}
+.tip-text {
+  color: #909399;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.template-info {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.info-item:last-child {
+  margin-bottom: 0;
+}
+.info-item i {
+  margin-right: 8px;
+  font-size: 16px;
+}
+.info-item .el-icon-info {
+  color: #409EFF;
+}
+.info-item .el-icon-warning {
+  color: #E6A23C;
+}
+.info-item .el-icon-success {
+  color: #67C23A;
+}
+.download-btn {
+  margin-top: 10px;
+}
+.data-fill-tips {
+  margin-bottom: 20px;
+}
+.tips-list {
+  margin-top: 15px;
+}
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+.tip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: #409EFF;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+.tip-content strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #303133;
+}
+.tip-content p {
+  margin: 0;
+  color: #606266;
+  font-size: 13px;
+}
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.upload-alert {
+  margin-bottom: 20px;
+}
+.import-upload {
+  margin-top: 10px;
+}
+.upload-requirements {
+  font-size: 13px;
+  color: #606266;
+}
+.upload-requirements p {
+  margin-bottom: 8px;
+}
+.upload-requirements ul {
+  margin: 0;
+  padding-left: 20px;
+}
+.upload-requirements li {
+  margin-bottom: 4px;
+}
+.upload-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ebeef5;
+}
+</style>

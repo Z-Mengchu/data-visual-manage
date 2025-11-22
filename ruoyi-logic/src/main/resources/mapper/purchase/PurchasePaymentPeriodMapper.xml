@@ -294,4 +294,14 @@
             )
         </foreach>
     </insert>
+
+    <select id="selectPurchasePaymentPeriodByIds" resultMap="PurchasePaymentPeriodResult">
+        <include refid="selectPurchasePaymentPeriodVo"/>
+        <where>
+            id in
+            <foreach item="item" collection="originalIds" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
 </mapper>
