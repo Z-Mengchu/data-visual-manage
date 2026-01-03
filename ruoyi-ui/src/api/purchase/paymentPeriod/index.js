@@ -51,3 +51,12 @@ export function countPaymentStatus(query) {
     params: query
   })
 }
+
+// 批量修改采购条目付款状态
+export function batchUpdateIsPaid(data) {
+  return request({
+    url: '/purchase/paymentPeriod/batchUpdateIsPaid',
+    method: 'post',
+    data: data
+  })
+}

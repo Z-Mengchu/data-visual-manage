@@ -361,4 +361,16 @@ public class PurchasePaymentPeriodServiceImpl implements IPurchasePaymentPeriodS
         return successMsg + failureMsg.toString();
     }
 
+    /**
+     * 批量更新付款状态
+     * @param ids ID列表
+     * @param isPaid 是否付款
+     * @param operName 操作人
+     * @return 更新的行数
+     */
+    @Override
+    public int batchUpdateIsPaid(List<Integer> ids, String isPaid, String operName) {
+        return purchasePaymentPeriodMapper.batchUpdateIsPaid(ids, isPaid, operName);
+    }
+
 }

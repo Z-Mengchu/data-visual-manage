@@ -1,5 +1,6 @@
 package com.ruoyi.sales.controller;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class ChannelSalesDataController extends BaseController
         List<SysPost> userPosts = postService.selectPostsByUserName(currentUser.getUserName());
         List<ChannelSalesData> list = channelSalesDataService.selectChannelSalesDataList(channelSalesData, currentUser, userPosts);
         ExcelUtil<ChannelSalesData> util = new ExcelUtil<>(ChannelSalesData.class);
-        util.exportExcel(response, list, "全渠道销售数据分析数据");
+        util.exportEasyExcel(response, list, "全渠道销售数据分析数据");
     }
 
     /**

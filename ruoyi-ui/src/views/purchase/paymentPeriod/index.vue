@@ -213,6 +213,16 @@
           v-hasPermi="['purchase:paymentPeriod:edit']"
         >批量修改</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          @click="handleBatchUpdateIsPaid"
+          v-hasPermi="['purchase:paymentPeriod:edit']"
+        >批量修改付款状态</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
     <!-- 付款统计 -->
@@ -320,6 +330,7 @@
         <template slot-scope="scope">
 <!--          <dict-tag :options="dict.type.logic_yes_no" :value="scope.row.isPaid"/>-->
           <el-button
+            v-if="scope.row.isPaid !== null"
             :type="scope.row.isPaid === '1' ? 'primary' : 'danger'"
             plain
             size="mini"
@@ -668,8 +679,7 @@
         <el-button
           v-if="upload.step === 1"
           type="primary"
-          @click="upload.step = 2"
-          :disabled="!upload.hasDownloaded">
+          @click="upload.step = 2">
           下一步
         </el-button>
         <el-button
@@ -786,12 +796,70 @@
         <el-button @click="handleBatchUpdateClose">关闭</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="batchUpdateIsPaid.title" :visible.sync="batchUpdateIsPaid.open" width="500px" append-to-body>
+      <el-form ref="batchUpdateIsPaidForm" :model="batchUpdateIsPaid" label-width="120px">
+        <el-form-item label="修改方式">
+          <el-radio-group v-model="batchUpdateIsPaid.mode">
+            <el-radio label="selected">修改勾选条目</el-radio>
+            <el-radio label="manual">手动输入编号</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item
+          label="条目编号"
+          v-if="batchUpdateIsPaid.mode === 'manual'"
+          prop="manualIds"
+          :rules="[{ required: true, message: '请输入条目编号', trigger: 'blur' }]">
+          <el-input
+            v-model="batchUpdateIsPaid.manualIds"
+            @input="handleManualIdsInput"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入条目编号，可用英文逗号、中文逗号或空格分隔">
+          </el-input>
+        </el-form-item>
+
+        <el-form-item
+          label="付款状态"
+          prop="isPaid"
+          :rules="[{ required: true, message: '请选择付款状态', trigger: 'change' }]">
+          <el-select v-model="batchUpdateIsPaid.isPaid" placeholder="请选择付款状态">
+            <el-option value="1" label="已付款"></el-option>
+            <el-option value="0" label="未付款"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item v-if="batchUpdateIsPaid.mode === 'selected'" label="待修改条目">
+          <div class="preview-ids">
+            <p>共 {{ batchUpdateIsPaid.selectedIds.length }} 条记录：</p>
+            <div class="ids-list">已选择编号：{{ batchUpdateIsPaid.selectedIds.join(', ') }}</div>
+          </div>
+        </el-form-item>
+
+        <el-form-item v-if="batchUpdateIsPaid.mode === 'manual'" label="待修改条目">
+          <div class="preview-ids">
+            <p>共 {{ batchUpdateIsPaid.parseManualIds.length }} 条记录：</p>
+            <div class="ids-list">已选择编号：{{ batchUpdateIsPaid.parseManualIds.join(', ') }}</div>
+          </div>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="batchUpdateIsPaid.open = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="confirmBatchUpdateIsPaid">
+          确 认
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listPaymentPeriod, getPaymentPeriod, delPaymentPeriod, addPaymentPeriod, updatePaymentPeriod, countPaymentStatus } from "@/api/purchase/paymentPeriod"
-import {getToken} from "@/utils/auth";
+import { addPaymentPeriod, countPaymentStatus, delPaymentPeriod, getPaymentPeriod, listPaymentPeriod, updatePaymentPeriod, batchUpdateIsPaid} from "@/api/purchase/paymentPeriod"
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "PaymentPeriod",
@@ -883,7 +951,7 @@ export default {
       },
       importLoading: false,
       // 付款统计
-      paymentStats: {
+       paymentStats: {
         paidCount: 0,
         unpaidCount: 0,
         unknownCount: 0
@@ -910,6 +978,17 @@ export default {
       },
       // 批量修改选中的ID列表
       batchUpdateIds: [],
+      // 批量修改付款状态参数
+      batchUpdateIsPaid: {
+        open: false,
+        title: "批量修改付款状态",
+        mode: "selected", // selected 或 manual
+        manualIds: "",
+        isPaid: "1",
+        selectedIds: [],
+        parseManualIds: [],
+        previewIds: []
+      }
     }
   },
   created() {
@@ -1168,7 +1247,6 @@ export default {
       const selectedItems = this.paymentPeriodList.filter(item =>
         selectedIds.includes(item.id) && item.isPaid !== '1'
       );
-      selectedItems.log
       // 计算未付款金额总和
       this.selectedUnpaidAmount = selectedItems.reduce((sum, item) => {
         return sum + (parseFloat(item.purchaseTotalAmount) || 0);
@@ -1333,6 +1411,63 @@ export default {
     handleBatchUpdateClose() {
       // 只关闭对话框，不重置状态，保持倒计时继续运行
       this.batchUpdate.open = false;
+    },
+    /** 批量修改付款状态按钮操作 */
+    handleBatchUpdateIsPaid() {
+      // 保存当前勾选的ID
+      this.batchUpdateIsPaid.selectedIds = [...this.ids];
+      // 重置状态
+      this.batchUpdateIsPaid.manualIds = "";
+      this.batchUpdateIsPaid.previewIds = [];
+      this.batchUpdateIsPaid.mode = "selected";
+      this.batchUpdateIsPaid.parseManualIds = [];
+      this.batchUpdateIsPaid.isPaid = "1";
+
+      // 打开对话框
+      this.batchUpdateIsPaid.title = "批量修改付款状态";
+      this.batchUpdateIsPaid.open = true;
+    },
+
+    /** 处理手动输入编号 */
+    handleManualIdsInput() {
+      // 使用正则表达式分割：支持英文逗号、中文逗号、空格
+      let ids = this.batchUpdateIsPaid.manualIds
+        .split(/[,，\s]+/)
+        .map(id => id.trim())
+        .filter(id => id !== "");
+      ids = [...new Set(ids)];
+      this.batchUpdateIsPaid.parseManualIds = ids;
+    },
+
+    /** 确认批量修改付款状态 */
+    confirmBatchUpdateIsPaid() {
+      if (this.batchUpdateIsPaid.mode === "selected") {
+        this.batchUpdateIsPaid.previewIds = [...this.batchUpdateIsPaid.selectedIds];
+      }else if (this.batchUpdateIsPaid.mode === "manual") {
+        this.batchUpdateIsPaid.previewIds = [...this.batchUpdateIsPaid.parseManualIds];
+      }
+
+      if (this.batchUpdateIsPaid.previewIds.length === 0) {
+        this.$modal.msgError("请选择要修改的编号");
+        return;
+      }
+      const ids = this.batchUpdateIsPaid.previewIds;
+      const isPaid = this.batchUpdateIsPaid.isPaid;
+
+      const context = `确定将编号为 ${ids} 共 ${ids.length}条记录 修改为"${isPaid === '1' ? '已付款' : '未付款'}"状态吗？`;
+      this.$modal.confirm(context).then(() => {
+        // 关闭对话框
+        this.batchUpdateIsPaid.open = false;
+        const data = {
+          ids: ids,
+          isPaid: isPaid === "" ? null : isPaid
+        };
+        // 调用批量更新接口
+        return batchUpdateIsPaid(data);
+      }).then(() => {
+        this.$modal.msgSuccess("修改成功");
+        this.getList(); //刷新列表
+      }).catch(() => {});
     }
   },
   // 在组件销毁前清理定时器
@@ -1341,7 +1476,7 @@ export default {
       clearInterval(this.batchUpdate.countdownTimer);
       this.batchUpdate.countdownTimer = null;
     }
-  }
+  },
 }
 </script>
 
@@ -1545,6 +1680,18 @@ export default {
   margin-top: 15px;
   padding-top: 15px;
   border-top: 1px solid #ebeef5;
+}
+
+.preview-ids {
+  font-size: 13px;
+  color: black;
+}
+.ids-list {
+  overflow-y: auto;
+  background-color: #f5f7fa;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 5px;
 }
 
 </style>

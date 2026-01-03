@@ -203,4 +203,19 @@ public class PurchasePaymentPeriodController extends BaseController
         return success(message);
     }
 
+    /**
+     * 批量更新采购账期数据
+     */
+    @PreAuthorize("@ss.hasPermi('purchase:paymentPeriod:edit')")
+    @Log(title = "采购账期", businessType = BusinessType.UPDATE)
+    @PostMapping("/batchUpdateIsPaid")
+    public AjaxResult batchUpdateIsPaid(@RequestBody Map<String, Object> data) {
+        List<Integer> ids = (List<Integer>) data.get("ids");
+        String isPaid = (String) data.get("isPaid");
+        if (ids == null || ids.isEmpty()) {
+            return error("请选择要修改的条目");
+        }
+        return success(purchasePaymentPeriodService.batchUpdateIsPaid(ids, isPaid, getUsername()));
+    }
+
 }

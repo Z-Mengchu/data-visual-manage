@@ -110,4 +110,13 @@ public interface PurchasePaymentPeriodMapper
      * @return 采购账期数据列表
      */
     List<PurchasePaymentPeriod> selectPurchasePaymentPeriodByIds(@Param("originalIds") Integer[] originalIds);
+
+    /**
+     * 批量更新采购账期数据
+     * @param ids 采购账期id列表
+     * @param isPaid 是否支付
+     * @param operName 操作人
+     * @return 更新的行数
+     */
+    int batchUpdateIsPaid(List<Integer> ids, String isPaid, String operName);
 }

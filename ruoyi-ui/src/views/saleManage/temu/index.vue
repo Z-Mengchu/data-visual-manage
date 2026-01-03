@@ -669,8 +669,7 @@
         <el-button
           v-if="upload.step === 1"
           type="primary"
-          @click="upload.step = 2"
-          :disabled="!upload.hasDownloaded">
+          @click="upload.step = 2">
           下一步
         </el-button>
         <el-button

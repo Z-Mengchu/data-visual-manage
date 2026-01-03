@@ -173,6 +173,18 @@
         where id = #{id}
     </update>
 
+    <update id="batchUpdateIsPaid">
+        update purchase_payment_period
+        set
+            <if test="isPaid != null">is_paid = #{isPaid},</if>
+        update_by = #{operName},
+        updated_at = sysdate()
+        where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
     <delete id="deletePurchasePaymentPeriodById" parameterType="Integer">
         delete from purchase_payment_period where id = #{id}
     </delete>

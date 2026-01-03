@@ -92,4 +92,12 @@ public interface IPurchasePaymentPeriodService
      * @return 查询结果列表
      */
     List<PurchasePaymentPeriod> selectPurchasePaymentPeriodByIds(Integer[] ids);
+
+    /**
+     * 批量更新是否付款状态
+     * @param ids ID列表
+     * @param isPaid 是否付款
+     * @param operName 操作人
+     */
+    int batchUpdateIsPaid(List<Integer> ids, String isPaid, String operName);
 }
